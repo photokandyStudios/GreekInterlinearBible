@@ -221,10 +221,16 @@
     function toggleSelection ( o )
     {
         // because iOS fires onClick TWICE! (from: http://forum.jquery.com/topic/tap-fires-twice-with-live-tap)
-        var lastclickpoint = o.getAttribute('data-clickpoint');
-        var curclickpoint = window.event.clientX+'x'+window.event.clientY
-        if (lastclickpoint == curclickpoint) return false;
-        o.setAttribute ('data-clickpoint',curclickpoint);
+        // added larger radius (iPhone freaks out) as in here: http://code.google.com/intl/en/mobile/articles/fast_buttons.html
+        // 25 was too big; trying 15.
+        var lastclickpointX = o.getAttribute('data-clickpointX');
+        var lastclickpointY = o.getAttribute('data-clickpointY');
+        var curclickpointX = window.event.clientX;
+        var curclickpointY = window.event.clientY;
+        if ((Math.abs(curclickpointX - lastclickpointX) < 15) && (Math.abs(curclickpointY - lastclickpointY) < 15)) return false;
+        o.setAttribute ('data-clickpointX',curclickpointX);
+        o.setAttribute ('data-clickpointY',curclickpointY);
+        // TODO: set timeout to clear this?
         
         var ref = o.getAttribute("id");
         selectedVerse [ ref ] = (selectedVerse [ ref ] == "Y" ? "" : "Y" ); // TODO: null?
