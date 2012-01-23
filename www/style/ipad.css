@@ -1,0 +1,9 @@
+.ipad #pnlBodyArea .content
+{
+    padding:1em 2em;
+}
+
+.ipad .iphoneOnly
+{
+    display: none;
+}

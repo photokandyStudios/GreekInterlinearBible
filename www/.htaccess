@@ -1,0 +1,6 @@
+#text/cache-manifest    appcache
+AddType text/cache-manifest    manifest
+ExpiresByType text/cache-manifest "access plus 0 seconds"
+AddCharset utf-8 .js
+AddCharset utf-8 .html
+AddDefaultCharset utf-8

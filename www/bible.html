@@ -1,0 +1,253 @@
+<div class="content white">
+<script type="text/javascript">
+    setPageTitle ("Interlinear");
+    showLoader();
+    //
+    // Books of the bible, chapter count, and verse count obtained from http://www.deafmissions.com/tally/bkchptrvrs.html
+    //
+    var bibleBooks = [ "Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy", "Joshua", "Judges", "Ruth",
+                      "1 Samuel", "2 Samuel", "1 Kings", "2 Kings", "1 Chronicles", "2 Chronicles",
+                      "Ezra", "Nehemia", "Esther", "Job", "Psalms", "Proverbs", "Ecclesiastes",
+                      "Song of Solomon", "Isaiah", "Jeremiah", "Lamentations", "Ezekial", "Daniel",
+                      "Hosea", "Joel", "Amos", "Obadiah", "Jonah", "Micah", "Nahum", "Habakkuk",
+                      "Zephaniah", "Haggai", "Zechariah", "Malachi",
+                      // New Testament
+                      "Matthew", "Mark", "Luke", "John", "Acts", "Romans", "1 Corinthians",
+                      "2 Corinthains", "Galations", "Ephesians", "Philippians", "Colossians",
+                      "1 Thessalonians", "2 Thessalonians", "1 Timothy", "2 Timothy", "Titus",
+                      "Philemon", "Hebrews", "James", "1 Peter", "2 Peter", "1 John", "2 John",
+                      "3 John", "Jude", "Revelation" ];
+    
+    var bibleBookChapters = [ 50, 40, 27, 36, 34, 24, 21, 4, 31, 24, 22, 25, 29, 36, 10, 13, 10, 42, 150,
+                              31, 12 ,8 ,66 ,52, 5, 48, 12, 14, 3, 9, 1, 4, 7, 3, 3, 3, 2, 14, 4,
+                              // New Testament
+                              28, 16, 24, 21, 28, 16, 16, 13, 6, 6, 4, 4, 5, 3, 6, 4, 3, 1, 13, 5, 5, 3, 5, 1, 1, 1, 22];
+
+    var transliteration = [ "a", "b", "g", "d", "e", "z", "e", "th", "i", "c", "l", "m",
+                            "n", "x", "o", "p", "r", "s", "s", "t", "u", "ph", "ch", "ps", "o"];
+                                
+    var settingsGreekLayoutTransliterate = localStorage.getItem("LayoutTransliteration");
+    var settingsLayoutTextSize = localStorage.getItem("LayoutTextSize");
+    if (!settingsLayoutTextSize)
+    {
+        settingsLayoutTextSize = "12pt";
+    }
+
+    var settingsLayoutFontFamily = localStorage.getItem("LayoutFontFamily");
+    if (!settingsLayoutFontFamily)
+    {
+        settingsLayoutFontFamily = "Georgia";
+    }
+    
+    var settingsLayoutColumnWidths = localStorage.getItem("LayoutColumnWidths");
+    if (!settingsLayoutColumnWidths)
+    {
+        settingsLayoutColumnWidths = "600930";
+    }
+
+    var settingsLayoutLineSpacing = localStorage.getItem("LayoutLineSpacing");
+    if (!settingsLayoutLineSpacing)
+    {
+        settingsLayoutLineSpacing = "150";
+    }
+    
+    var leftColumnWidth = settingsLayoutColumnWidths.substr(0,2) + "%";
+    var middleColumnWidth=settingsLayoutColumnWidths.substr(2,2) + "%";
+    var rightColumnWidth= settingsLayoutColumnWidths.substr(4,2) + "%";
+    
+    var passage = "Mat.1";
+    if (!localStorage.passage)
+    {
+        localStorage.passage = passage;
+    }
+    else
+    {
+        passage = localStorage.passage;
+    }
+    
+    function transliterate ( s )
+    {
+        var o = "";
+        var idx = 0;
+        
+        for (var i=0;i<s.length;i++)
+        {
+            idx = s.charCodeAt(i);
+            if (idx<945)
+            {
+                o = o + s[i];
+            }
+            else
+            {
+                idx = idx - 945;
+                if (transliteration[idx])
+                {
+                    o = o + transliteration[ idx ];
+                }
+                else
+                {
+                    o = o + "?";
+                }
+            }
+        }
+        
+        return o;
+    }
+
+    function populateBibleBooks ()
+    {
+        var bookName = passage.substr(0,3);
+        var ihtml = "";
+        for (var i=39; i<bibleBooks.length; i++)
+        {
+            item = "<option %SELECTED% value='%INDEX%'>%BOOK%</option>";
+            item = item.replace ( "%BOOK%", bibleBooks[i] ) ;
+            item = item.replace ( "%INDEX%", i ) ;
+            if (bibleBooks[i].replace(/\s+/g, "").substr(0,3) == bookName)
+            {
+                item = item.replace ( "%SELECTED%", "SELECTED" );
+            }
+            else
+            {
+                item = item.replace ( "%SELECTED%", "" );
+            }
+            ihtml = ihtml + item;
+        }
+            
+        $('lstBibleBooks').innerHTML = ihtml;
+    }
+        
+    function populateChapters ( book )
+    {
+        var bookChapter = passage.substr(4,10);
+        var ihtml = "";
+        for (var i=0; i<bibleBookChapters[book]; i++)
+        {
+            item = "<option %SELECTED% value='%INDEX%'>%NUM%</option>";
+            item = item.replace ( "%INDEX%", i+1 ) ;
+            item = item.replace ( "%NUM%", i+1 ) ;
+            if ((i+1) == bookChapter)
+            {
+                item = item.replace ( "%SELECTED%", "SELECTED" );
+            }
+            else
+            {
+                item = item.replace ( "%SELECTED%", "" );
+            }
+            ihtml = ihtml + item;
+        }
+            
+        $('lstBibleBookChapters').innerHTML = ihtml;
+    }
+    
+    function changePassage()
+    {
+        var bookName = bibleBooks[$("lstBibleBooks").value].replace(/\s+/g, "").substr(0,3);
+        var bookChapter = $("lstBibleBookChapters").value;
+        if (bookName == "")
+        {
+            bookName = "Mat";
+        }
+        if (bookChapter < 1)
+        {
+            bookChapter = 1;
+        }
+        if (bookChapter > bibleBookChapters[$("lstBibleBooks").value])
+        {
+            bookChapter = bibleBookChapters[$("lstBibleBooks").value];
+        }
+        passage = bookName + "." + bookChapter;
+        localStorage.passage = passage;
+        loadBiblePassage ( passage );
+    }
+
+</script>
+    <div id="lstStream">
+        Loading...
+    </div>
+    
+<script type="text/javascript">
+
+    function loadBiblePassage ( passage )
+    {
+        setPageTitle (bibleBooks[$("lstBibleBooks").value] + " " + $("lstBibleBookChapters").value)
+        var ihtml = "<div style='font-family:" + settingsLayoutFontFamily + "; "
+                              + "line-height:" + settingsLayoutLineSpacing + "%; "
+                  + "'><div style='font-size:175%; text-align: center; margin:1em; border-bottom:1px dotted #333333;'>" 
+                  + bibleBooks[$("lstBibleBooks").value] + " " + $("lstBibleBookChapters").value + "</div>";
+        var lhtml = "";
+        var rhtml = "";
+        var nhtml = "";
+        var ref;
+        //alert (ihtml);
+        for (var i=1;bibleLeft[passage+"."+i] || bibleRight[passage+"."+i];i++)
+        {
+            ref = passage+"."+i;
+            // define templates
+            lhtml = "<div style='font-size:%TEXTSIZE%; float: left; width: %LEFTWIDTH%;'>%TEXT%</div>";
+            nhtml = "<div style='text-align: center; font-size:150%; color:#556677; float: left; width: %NUMWIDTH%;'>%TEXT%</div>";
+            rhtml = "<div style='font-size:%TEXTSIZE%; float: right; width: %RIGHTWIDTH%;'>%TEXT%</div>";
+        
+            // process left-hand (greek) side
+            lhtml = lhtml.replace ( "%TEXT%", (settingsGreekLayoutTransliterate=="on") ? transliterate(bibleLeft[ref]) : bibleLeft[ref] );
+            lhtml = lhtml.replace ( "%TEXTSIZE%", settingsLayoutTextSize );
+            lhtml = lhtml.replace ( "%LEFTWIDTH%", leftColumnWidth);
+
+            rhtml = rhtml.replace ( "%TEXT%", bibleRight[ref] );
+            rhtml = rhtml.replace ( "%TEXTSIZE%", settingsLayoutTextSize );
+            rhtml = rhtml.replace ( "%RIGHTWIDTH%", rightColumnWidth);
+
+            nhtml = nhtml.replace ( "%TEXT%", "" + i );
+            nhtml = nhtml.replace ( "%NUMWIDTH%", middleColumnWidth);
+
+            //TODO: highlight class
+            //TODO: note indicator
+            //TODO: bookmark indicator
+            ihtml = ihtml + "<div " + ((selectedVerse[ref]=="Y") ? "class='verseSelected' " : "") 
+                          + "onclick='toggleSelection(this); return false;' id='" + ref + "' style='clear: both'>" + lhtml + nhtml + rhtml + "<div style='clear:both;'></div></div>";
+        }
+        
+        ihtml = ihtml + "</div>";
+        // TODO: keyword highlights (from search)
+        
+        $("lstStream").innerHTML = ihtml;
+        resetContentScrollBar();
+        
+        sb[sbBody].scrollTo(0,0);
+        // TODO: scroll to verse (from search/bookmark/notes, etc.)
+        
+    }
+    
+    function toggleSelection ( o )
+    {
+        // because iOS fires onClick TWICE! (from: http://forum.jquery.com/topic/tap-fires-twice-with-live-tap)
+        var lastclickpoint = o.getAttribute('data-clickpoint');
+        var curclickpoint = window.event.clientX+'x'+window.event.clientY
+        if (lastclickpoint == curclickpoint) return false;
+        o.setAttribute ('data-clickpoint',curclickpoint);
+        
+        var ref = o.getAttribute("id");
+        selectedVerse [ ref ] = (selectedVerse [ ref ] == "Y" ? "" : "Y" ); // TODO: null?
+        $(ref).classList.toggle ( "verseSelected" );
+    }
+    
+    onLongPress = function ( event )
+    {
+        alert (event);
+    }
+
+</script>
+    <div style="clear: both"></div>
+    <br/><br/><br/>Greek text from the Byzantine. English text from Young's Literal Translation.<br/><br/><br/>
+</div>
+<script>
+            setTabBar ( '    <select id="lstBibleBooks" onchange="populateChapters(this.value); changePassage();"><option>...</option></select><select id="lstBibleBookChapters" onchange="changePassage();"><option>...</option></select>');
+            showTabBar();
+
+
+
+            hideLoader();
+            populateBibleBooks();
+            populateChapters( 39 );
+            loadBiblePassage ( passage );
+</script>

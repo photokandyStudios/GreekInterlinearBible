@@ -1,0 +1,47 @@
+<div class="content">
+    <script type="text/javascript">setPageTitle ("Settings");</script>
+    <h3>Layout</h3>
+    <ul class="listGroup">
+        <li class="listItem">Column Widths
+            <select id="ddColumnWidths" class="dropdown" default="600930" localStorage="LayoutColumnWidths">
+                <option value="600930">Wide Greek Column</option>
+                <option value="300960">Wide English Column</option>
+                <option value="450945">Equal Width Columns</option>
+            </select>
+        </li>
+        <li class="listItem">Text Size
+            <select id="ddTextSize" class="dropdown" default="12pt" localStorage="LayoutTextSize">
+                <option value="8pt">Smallest</option>
+                <option value="10pt">Smaller</option>
+                <option value="12pt">Normal</option>
+                <option value="14pt">Larger</option>
+                <option value="16pt">Largest</option>
+            </select>
+        </li>
+        <li class="listItem">Typeface
+            <select id="ddTypeface" class="dropdown" default="Georgia" localStorage="LayoutFontFamily">
+                <option value="Arial">Arial</option>
+                <option value="Courier">Courier</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Helvetica">Helvetica</option>
+                <option value="Palatino">Palatino</option>
+                <option value="Times">Times</option>
+                <option value="Verdana">Verdana</option>
+            </select>
+        </li>
+        <li class="listItem">Line Spacing
+            <select id="ddLineSpacing" class="dropdown" default="150" localStorage="LayoutLineSpacing">
+                <option value="125">Single Spacing</option>
+                <option value="150">Normal Spacing</option>
+                <option value="200">One and one-half Spacing</option>
+                <option value="250">Double Spacing</option>
+            </select>
+        </li>
+        <li class="listItem">English Transliteration<div class="switch"><span class="thumb"></span><input type="checkbox" localStorage="LayoutTransliteration"/></div></li>
+    </ul>
+    <button onclick="localStorage.clear();" class="button">Clear all Settings</button>
+    <script>
+        processCheckBoxes();
+        processDropDowns();
+    </script>
+</div>

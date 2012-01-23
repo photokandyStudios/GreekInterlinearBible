@@ -1,0 +1,23 @@
+body.landscape.iphone
+{
+    width:100%;
+}
+
+body.landscape.iphone #bodyPanel
+{
+    left:0px;
+    right: 0;
+}
+
+body.landscape.iphone #menuPanel
+{
+    display: none;
+}
+
+body.landscape.iphone #tabBar
+{
+    left: 0;
+    right: 0;
+}
+
+

@@ -1,0 +1,54 @@
+.iphone .navBar
+{
+    border-radius: 0 0 0 0;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#7C93B5), to(#73859d));
+    color: #FFFFFF;
+    text-shadow: 0px -1px 1px #4A586E;
+    -webkit-box-shadow: inset 0px 21px 0px rgba(255,255,255,0.125);
+    border-top: 1px solid #C9D1E5;
+    border-bottom: 1px solid #000000;
+    font-size: 18px;
+}
+
+.iphone #navSiteTitle, .iphone #navSiteBullet
+{
+    display: none;
+}
+
+.iphone .navBar #navTitleArea
+{
+    position: absolute;
+    left: 160px;
+    right: 160px;
+}
+
+.iphone #pnlBodyArea .content
+{
+    padding:0.5em 1em;
+}
+
+.iphone .content h1
+{
+    margin-top: 8px;
+    font-size: 24px;    
+}
+
+.iphone .ipad.minor
+{
+    display:none;
+}
+
+.iphone .ipadOnly
+{
+    display:none;
+}
+
+
+.iphone #loader div
+{
+    top: 35%;
+    left: 25%;
+    right: 25%;
+    bottom: 35%;
+    line-height: 400%;
+}

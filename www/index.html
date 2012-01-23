@@ -1,0 +1,119 @@
+<html zmanifest="cache.manifest">
+    <head>
+        <meta name="http-equiv" content="Content-type:text/html; charset=utf-8"/>        
+        <title>
+            Greek Interlinear Bible by photoKandy Studios LLC
+        </title>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+        <link type="text/css" rel="stylesheet" href="./style/ios.css">
+
+        <link type="text/css" rel="stylesheet" href="./style/ipad.css">
+        <link type="text/css" rel="stylesheet" href="./style/ipad-landscape.css">
+        <link type="text/css" rel="stylesheet" href="./style/ipad-portrait.css">
+
+        <link type="text/css" rel="stylesheet" href="./style/iphone.css">
+        <link type="text/css" rel="stylesheet" href="./style/iphone-landscape.css">
+        <link type="text/css" rel="stylesheet" href="./style/iphone-portrait.css">
+
+        <link type="text/css" rel="stylesheet" href="./style/book.css">
+
+        <link type="text/css" rel="stylesheet" href="./style/bible.css">
+
+        <script type="application/javascript" src="./script/ios.js"></script>
+        <script type="application/javascript" src="./script/iscroll.js"></script>
+        <script type="application/javascript" src="./script/utility.js"></script>
+        <script type="application/javascript" src="./script/twitterStream.js"></script>
+        <script type="application/javascript" src="./script/gplusStream.js"></script>
+        <script type="application/javascript" src="./script/podcastList.js"></script>
+    </head>
+    <body class="ipad landscape" id="pnlBody" ontouchmove="BlockMove(event);" >
+        <div class="panel" id="menuPanel">
+            <div class="arrow"><span></span></div>
+            <div class="navBar" id="navMainArea">
+                <span id="navMenuTitle">Menu</span>
+            </div>
+            <div class="container scroll scrollable" id="pnlMainArea" sstyle="overflow: auto; -webkit-overflow-scrolling:touch;">
+                <div class="content" id="menuMain">
+                    <!-- replaced at startup -->
+                </div>
+            </div>
+        </div>
+        <div class="panel" id="bodyPanel">
+            <div class="navBar" id="navBodyArea">
+                <div id="navTitleArea">
+                <span id="navSiteTitle">Site Title</span><span id="navSiteBullet"> &bull; </span><span id="navBodyTitle">Home</span>
+                </div>
+                <a id="btnBack" href="javascript:loadContent (returnTo.pop(), updateMainMenu, 'slideBack')" class="button back black"><span></span>Back</a>
+                <a id="btnMenu" href="javascript:toggleMenu ()" class="button black">Menu</a>
+            </div>
+            <div class="container scroll scrollable"  id="pnlBodyArea"  sstyle="-webkit-overflow-scrolling:touch; overflow: auto;">
+                <!-- this to be replaced by content at startup -->
+            </div>
+            <div id="tabBar" class="bottomTabs">
+            </div>
+            <div id="hideMenu" onclick="toggleMenu ();"></div>
+        </div>
+        <div id="loader">
+            <div>
+                Please Wait...<br>
+                <img src="./images/ajax-loader.gif" alt="Loading"/>
+            </div>
+        </div>
+<script>
+    var selectedVerse = Array();
+    var bookmarkedVerse = Array();
+    var notedVerse = Array();
+    var highlightedVerse = Array();
+    
+    var bibleLeft;
+    var bibleRight;
+    // too buggy for now :-(
+    //new ScrollFix($("pnlBodyArea"));
+    //new ScrollFix($("pnlMainArea"));
+
+    function biblesLoaded()
+    {
+        if (bibleLeft && bibleRight)
+        {
+            hideLoader();
+            startApp( ); // tell our app to start
+
+        }
+    }
+
+    function yltBibleCallback()
+    {
+        bibleRight = ylt;
+        biblesLoaded();
+    }
+
+    function byzBibleCallback()
+    {
+        bibleLeft = byz;
+        biblesLoaded();
+    }
+</script>
+<script type="text/javascript" charset="utf-8" src="./bibles/ylt.js"></script>
+<script type="text/javascript" charset="utf-8" src="./bibles/byz.js"></script>
+        <script>
+//
+// check our cache, and if necessary reload the site.
+// from: http://www.html5rocks.com/en/mobile/mobifying.html
+window.applicationCache.addEventListener('updateready', function(e) {
+  if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+    window.applicationCache.swapCache();
+      console.log ('Cache needs changed, Reloading...');
+      window.location.reload();
+  }
+}, false);
+        
+            // startup variables
+            var mySiteName = "Greek Interlinear";
+            var myMenuName = "Greek Interlinear";
+            var myStartPage = "./home.html";
+            var myStartName = "Home";
+        
+        </script>
+    </body>
+</html>

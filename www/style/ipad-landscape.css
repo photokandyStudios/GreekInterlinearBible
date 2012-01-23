@@ -1,0 +1,21 @@
+body.landscape.ipad
+{
+    width:1024px;
+}
+
+body.landscape.ipad #menuPanel
+{
+    width: 320px;
+}
+
+body.landscape.ipad #bodyPanel
+{
+    left:321px;
+    right: 0;
+}
+
+body.landscape.ipad #tabBar
+{
+    left:321px;
+    right: 0;
+}
