@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6A19776D14CB7E5400DB6AD9 /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A19776C14CB7E5400DB6AD9 /* Default-Landscape~ipad.png */; };
+		6A19777014CB805B00DB6AD9 /* Default-Portrait~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A19776F14CB805B00DB6AD9 /* Default-Portrait~ipad.png */; };
 		6A56E02814CA475000F3F8BB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A56E02714CA475000F3F8BB /* Foundation.framework */; };
 		6A56E02A14CA475000F3F8BB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A56E02914CA475000F3F8BB /* UIKit.framework */; };
 		6A56E02C14CA475000F3F8BB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A56E02B14CA475000F3F8BB /* CoreGraphics.framework */; };
@@ -33,9 +35,12 @@
 		6A56E06214CA475100F3F8BB /* Capture.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6A56E06114CA475100F3F8BB /* Capture.bundle */; };
 		6A56E06414CA475100F3F8BB /* PhoneGap.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6A56E06314CA475100F3F8BB /* PhoneGap.plist */; };
 		6A56E06814CA475100F3F8BB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A56E06714CA475100F3F8BB /* AppDelegate.m */; };
+		6A56E6FB14CA48B500F3F8BB /* www in Resources */ = {isa = PBXBuildFile; fileRef = 6A56E6FA14CA48B500F3F8BB /* www */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6A19776C14CB7E5400DB6AD9 /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape~ipad.png"; sourceTree = "<group>"; };
+		6A19776F14CB805B00DB6AD9 /* Default-Portrait~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait~ipad.png"; sourceTree = "<group>"; };
 		6A56E02314CA475000F3F8BB /* GreekInterlinearBible.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GreekInterlinearBible.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A56E02714CA475000F3F8BB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		6A56E02914CA475000F3F8BB /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -50,10 +55,10 @@
 		6A56E03B14CA475000F3F8BB /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		6A56E03D14CA475000F3F8BB /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		6A56E03F14CA475000F3F8BB /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
-		6A56E04314CA475000F3F8BB /* GreekInterlinearBible-Info.plist */ = {isa = PBXFileReference; path = "GreekInterlinearBible-Info.plist"; sourceTree = "<group>"; };
+		6A56E04314CA475000F3F8BB /* GreekInterlinearBible-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GreekInterlinearBible-Info.plist"; sourceTree = "<group>"; };
 		6A56E04514CA475000F3F8BB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6A56E04714CA475000F3F8BB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		6A56E04914CA475000F3F8BB /* GreekInterlinearBible-Prefix.pch */ = {isa = PBXFileReference; path = "GreekInterlinearBible-Prefix.pch"; sourceTree = "<group>"; };
+		6A56E04914CA475000F3F8BB /* GreekInterlinearBible-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GreekInterlinearBible-Prefix.pch"; sourceTree = "<group>"; };
 		6A56E04A14CA475000F3F8BB /* PhoneGap.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhoneGap.framework; path = /Users/Shared/PhoneGap/Frameworks/PhoneGap.framework; sourceTree = "<absolute>"; };
 		6A56E04F14CA475000F3F8BB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6A56E05314CA475000F3F8BB /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = Resources/es.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -64,9 +69,10 @@
 		6A56E05F14CA475000F3F8BB /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "Resources/splash/Default@2x.png"; sourceTree = "<group>"; };
 		6A56E06114CA475100F3F8BB /* Capture.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Capture.bundle; path = Resources/Capture.bundle; sourceTree = "<group>"; };
 		6A56E06314CA475100F3F8BB /* PhoneGap.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PhoneGap.plist; sourceTree = "<group>"; };
-		6A56E06614CA475100F3F8BB /* AppDelegate.h */ = {isa = PBXFileReference; name = AppDelegate.h; path = Classes/AppDelegate.h; sourceTree = "<group>"; };
+		6A56E06614CA475100F3F8BB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Classes/AppDelegate.h; sourceTree = "<group>"; };
 		6A56E06714CA475100F3F8BB /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Classes/AppDelegate.m; sourceTree = "<group>"; };
-		6A56E06A14CA475100F3F8BB /* README */ = {isa = PBXFileReference; name = README; path = Plugins/README; sourceTree = "<group>"; };
+		6A56E06A14CA475100F3F8BB /* README */ = {isa = PBXFileReference; lastKnownFileType = text; name = README; path = Plugins/README; sourceTree = "<group>"; };
+		6A56E6FA14CA48B500F3F8BB /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; path = www; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +110,8 @@
 		6A56E01514CA474F00F3F8BB = {
 			isa = PBXGroup;
 			children = (
+				6A19776F14CB805B00DB6AD9 /* Default-Portrait~ipad.png */,
+				6A19776C14CB7E5400DB6AD9 /* Default-Landscape~ipad.png */,
 				6A56E04114CA475000F3F8BB /* GreekInterlinearBible */,
 				6A56E02614CA475000F3F8BB /* Frameworks */,
 				6A56E02414CA475000F3F8BB /* Products */,
@@ -165,6 +173,7 @@
 		6A56E04C14CA475000F3F8BB /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				6A56E6FA14CA48B500F3F8BB /* www */,
 				6A56E06114CA475100F3F8BB /* Capture.bundle */,
 				6A56E04D14CA475000F3F8BB /* en.lproj */,
 				6A56E05114CA475000F3F8BB /* es.lproj */,
@@ -291,6 +300,9 @@
 				6A56E06014CA475000F3F8BB /* Default@2x.png in Resources */,
 				6A56E06214CA475100F3F8BB /* Capture.bundle in Resources */,
 				6A56E06414CA475100F3F8BB /* PhoneGap.plist in Resources */,
+				6A56E6FB14CA48B500F3F8BB /* www in Resources */,
+				6A19776D14CB7E5400DB6AD9 /* Default-Landscape~ipad.png in Resources */,
+				6A19777014CB805B00DB6AD9 /* Default-Portrait~ipad.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -477,6 +489,7 @@
 				6A56E06F14CA475100F3F8BB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
