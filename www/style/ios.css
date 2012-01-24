@@ -8,6 +8,7 @@ body
     color: #333;
     background-color: #000;
     -webkit-tap-highlight-color:transparent;
+    -webkit-transform:translate3d(0,0,0);
 }
 
 .panel
@@ -22,6 +23,7 @@ body
     -webkit-user-select: none;
     background-color: #717880;
     background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#E1E4E9), to(#DDDFE3));
+    -webkit-transform:translate3d(0,0,0);
 }
 .navBar
 {
