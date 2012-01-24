@@ -75,7 +75,7 @@ var m = Math,
 			useTransition: false,
 			topOffset: 0,
 			checkDOMChanges: false,		// Experimental
-            longpresstime: 1000,
+            longpresstime: 500,
 			// Scrollbar
 			hScrollbar: true,
 			vScrollbar: true,

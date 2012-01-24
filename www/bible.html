@@ -25,6 +25,8 @@
 
     var transliteration = [ "a", "b", "g", "d", "e", "z", "e", "th", "i", "c", "l", "m",
                             "n", "x", "o", "p", "r", "s", "s", "t", "u", "ph", "ch", "ps", "o"];
+                            
+    var highlightColors = [ "", "255,255,128,0.5", "255,128,255,0.5", "128,255,255,0.5" ];
                                 
     var settingsGreekLayoutTransliterate = localStorage.getItem("LayoutTransliteration");
     var settingsLayoutTextSize = localStorage.getItem("LayoutTextSize");
@@ -49,6 +51,12 @@
     if (!settingsLayoutLineSpacing)
     {
         settingsLayoutLineSpacing = "150";
+    }
+
+    var settingsLayoutVerseSpacing = localStorage.getItem("LayoutVerseSpacing");
+    if (!settingsLayoutVerseSpacing)
+    {
+        settingsLayoutVerseSpacing = "1em";
     }
     
     var leftColumnWidth = settingsLayoutColumnWidths.substr(0,2) + "%";
@@ -179,6 +187,8 @@
         var rhtml = "";
         var nhtml = "";
         var ref;
+        var highlight="";
+        var highlightNum;
         //alert (ihtml);
         for (var i=1;bibleLeft[passage+"."+i] || bibleRight[passage+"."+i];i++)
         {
@@ -203,8 +213,20 @@
             //TODO: highlight class
             //TODO: note indicator
             //TODO: bookmark indicator
-            ihtml = ihtml + "<div " + ((selectedVerse[ref]=="Y") ? "class='verseSelected' " : "") 
-                          + "onclick='toggleSelection(this); return false;' id='" + ref + "' style='clear: both'>" + lhtml + nhtml + rhtml + "<div style='clear:both;'></div></div>";
+            
+            // check for a highlight...
+            highlight = "";
+            if (localStorage.getItem ( "hl_" + ref ))
+            {
+                highlightNum = localStorage.getItem ( "hl_" + ref );
+                highlight = "style='background-color:rgba(";
+                highlight = highlight + highlightColors [ highlightNum ];
+                highlight = highlight + ")' ";
+            }
+            
+            ihtml = ihtml + "<div " + ((selectedVerse[ref]=="Y") ? "class='verseSelected' " : "") + " " + highlight + " "
+                          + "onclick='toggleSelection(this); return false;' id='" + ref + "' style='clear: both'>" + lhtml + nhtml + rhtml + "<div style='clear:both; height:"
+                          + settingsLayoutVerseSpacing + ";'></div></div>";
         }
         
         ihtml = ihtml + "</div>";
@@ -218,34 +240,120 @@
         
     }
     
+   
     function toggleSelection ( o )
     {
-        // because iOS fires onClick TWICE! (from: http://forum.jquery.com/topic/tap-fires-twice-with-live-tap)
-        // added larger radius (iPhone freaks out) as in here: http://code.google.com/intl/en/mobile/articles/fast_buttons.html
-        // 25 was too big; trying 15.
-        var lastclickpointX = o.getAttribute('data-clickpointX');
-        var lastclickpointY = o.getAttribute('data-clickpointY');
-        var curclickpointX = window.event.clientX;
-        var curclickpointY = window.event.clientY;
-        if ((Math.abs(curclickpointX - lastclickpointX) < 15) && (Math.abs(curclickpointY - lastclickpointY) < 15)) return false;
-        o.setAttribute ('data-clickpointX',curclickpointX);
-        o.setAttribute ('data-clickpointY',curclickpointY);
-        // TODO: set timeout to clear this?
-        
-        var ref = o.getAttribute("id");
-        selectedVerse [ ref ] = (selectedVerse [ ref ] == "Y" ? "" : "Y" ); // TODO: null?
-        $(ref).classList.toggle ( "verseSelected" );
+        //if ( !ignoreClick ( window.event.clientX, window.event.clientY ) )
+        //{
+            var ref = o.getAttribute("id");
+            selectedVerse [ ref ] = (selectedVerse [ ref ] == "Y" ? "" : "Y" ); // TODO: null?
+            $(ref).classList.toggle ( "verseSelected" );
+        //}
     }
+
     
     onLongPress = function ( event )
     {
-        alert (event);
+        var x = event.touches[0].clientX;
+        var y = event.touches[0].clientY;
+        showPopOver ( "poSelectCommands", x, y); 
+    }
+    
+    function copySelection ()
+    {
+        var s = "";
+        for (i in selectedVerse)
+        {
+            var ref = i;                    
+            var vnum = i.substr( i.lastIndexOf(".")+1, 10 );
+            if ( selectedVerse [i] == "Y" )
+            {                               
+                s = s + "\n[" + i + "] " + bibleLeft[i]
+                      + "\n[" + i + "] " + bibleRight[i];
+            }
+        }
+        alert (window);
+        alert (window.plugins);
+        alert (window.plugins.clipboardPlugin);
+        window.plugins.clipboardPlugin.setText ( s );
+        alert ("Kill selection.");
+        cancelSelection();
+    }
+    
+    function addHighlight ( c )
+    {
+        for (i in selectedVerse)
+        {
+            if ( selectedVerse [i] == "Y" )
+            {
+                localStorage.setItem ( "hl_" + i, c ); // store color # to note_ref
+                if ($(i))
+                {
+                    $(i).style.backgroundColor = "rgba(" + highlightColors [c]+")";
+                }
+            }
+        }
+        cancelSelection();
+    }
+    
+    function removeHighlight ()
+    {
+        for (i in selectedVerse)
+        {
+            if ( selectedVerse [i] == "Y" )
+            {
+                localStorage.removeItem ( "hl_" + i )
+                if ($(i))
+                {
+                    $(i).style.backgroundColor = "transparent";
+                }
+            }
+        }
+        cancelSelection();
+    }
+    
+    function cancelSelection()
+    {                                               
+        for (i in selectedVerse)
+        {                                           
+            if ( selectedVerse [i] == "Y" )
+            {
+                selectedVerse[i] = null;
+                if ($(i))
+                {
+                    $(i).classList.toggle("verseSelected");
+                }
+            }
+        }
+        selectedVerse = Array();
+        hidePopOver();
     }
 
 </script>
     <div style="clear: both"></div>
     <br/><br/><br/>Greek text from the Byzantine. English text from Young's Literal Translation.<br/><br/><br/>
 </div>
+    <div id="hidePopOver" onclick="hidePopOver ();"></div>
+    <div class="popover" id="poSelectCommands">
+      <div class="popover-content">
+        <div class="arrow"><span></span></div>
+        <div class="popover-body">
+            <ul class="listGroup" style="margin:0">
+                <li class="listItem" onclick="copySelection();">Copy Selection</li>
+                <li class="listItem" onclick="addHighlight(1);" style="background-color:#FFFF80">Highlight Selection</li>
+                <li class="listItem" onclick="addHighlight(2);" style="background-color:#FF80FF">Highlight Selection</li>
+                <li class="listItem" onclick="addHighlight(3);" style="background-color:#80FFFF">Highlight Selection</li>
+                <li class="listItem" onclick="removeHighlight();">Remove Highlight</li>
+                <li class="listItem" onclick="createBookmark();">Create Bookmark...</li>
+                <li class="listItem" onclick="searchBible();">Search Bible...</li>
+                <li class="listItem" onclick="findRefs();">Find References...</li>
+                <li class="listItem" onclick="searchWiki();">Search Wikipedia...</li>
+                <li class="listItem" onclick="cancelSelection();">Cancel Selection</li>
+            </ul>
+        </div>
+      </div>
+    </div>
+
 <script>
             setTabBar ( '    <select id="lstBibleBooks" onchange="populateChapters(this.value); changePassage();"><option>...</option></select><select id="lstBibleBookChapters" onchange="changePassage();"><option>...</option></select>');
             showTabBar();

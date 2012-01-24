@@ -11,7 +11,7 @@
 	<key>AutoHideSplashScreen</key>
 	<true/>
 	<key>ShowSplashScreenSpinner</key>
-	<true/>
+	<false/>
 	<key>MediaPlaybackRequiresUserAction</key>
 	<false/>
 	<key>AllowInlineMediaPlayback</key>
@@ -34,6 +34,8 @@
 		<string>PGDebugConsole</string>
 		<key>com.phonegap.file</key>
 		<string>PGFile</string>
+		<key>ClipboardPlugin</key>
+		<string>ClipboardPlugin</string>
 		<key>com.phonegap.filetransfer</key>
 		<string>PGFileTransfer</string>
 		<key>com.phonegap.geolocation</key>

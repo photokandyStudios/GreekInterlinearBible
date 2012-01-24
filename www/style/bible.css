@@ -1,4 +1,4 @@
 .verseSelected
 {
-    background-color: #CCCCCC;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#C0E0FF), to(#C0E0FF));
 }

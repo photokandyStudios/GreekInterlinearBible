@@ -623,6 +623,7 @@ textarea
         .popover {
         position:absolute;
         width:236px;
+        z-index:1000;
         }
         
         .popover .popover-content {
@@ -663,3 +664,15 @@ textarea
         border-left:1px solid #000;
         border-top:1px solid #000;
         }
+        
+#hidePopOver
+{
+    display: none;
+    position: absolute;
+    z-index:999;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+}

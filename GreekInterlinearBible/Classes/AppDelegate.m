@@ -29,7 +29,10 @@
  * This is main kick off after the app inits, the views and Settings are setup here. (preferred - iOS4 and up)
  */
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{    
+{
+    // Uncomment to enable remote debugging
+    [NSClassFromString(@"WebView") _enableRemoteInspector];
+    
     NSURL* url = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
     if (url && [url isKindOfClass:[NSURL class]])
     {

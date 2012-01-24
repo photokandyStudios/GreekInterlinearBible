@@ -17,6 +17,7 @@
  */
 
 // variables
+var lastpo; // last popover
 var sbMenu = 0;
 var sbBody = 1;
 var sb = Array(); // scrollers for the various areas.
@@ -25,6 +26,54 @@ var sbAreas = Array("pnlMainArea","pnlBodyArea");
 var returnTo = Array(); // stack for back-button history
 
 var onLongPress = null; // can be used to point to long press handler
+
+// clickbuster stuff (inspired by http://code.google.com/intl/en/mobile/articles/fast_buttons.html)
+// and because iOS is stoopid.
+var clickPointX = Array();
+var clickPointY = Array();
+
+function addClick ( x, y, nopop )
+{
+    clickPointX.push (x);
+    clickPointY.push (y);
+    if (!nopop)
+    {
+        setTimeout (popClick, 2500)
+    }
+}
+
+function popClick ()
+{
+    clickPointX.splice(0,1);
+    clickPointY.splice(0,1);
+}
+
+function ignoreClick (x, y, nopop)
+{
+    for (var i=0;i<clickPointX.length;i++)
+    {
+        var testX = clickPointX[i];
+        var testY = clickPointY[i];
+        if ( ( Math.abs(x - testX) < 15 ) && ( Math.abs(y - testY) < 15 ) )
+        {
+            return true;
+        }
+    }
+    addClick (x, y, nopop);
+    return false;
+}
+
+function clickBuster (event)
+{
+    if (ignoreClick(event.clientX, event.clientY))
+    {
+        event.stopPropagation();
+        event.preventDefault();
+    }
+}
+
+document.addEventListener ( 'click', clickBuster, true );
+
 // common functions
 
 /*
@@ -40,6 +89,7 @@ function allClasses(selector)
 {
     return Array.prototype.slice.call(document.querySelectorAll(selector));
 }
+
 
 function longpress ( event )
 {
@@ -294,6 +344,62 @@ function setTabBar ( s )
     $("tabBar").innerHTML = s;
 }
 
+    
+function showPopOver ( e, x, y )
+{
+    // if we have a previous popover, hide it.
+    if (lastpo)
+    {
+        $(lastpo).style.display = "hidden";
+    }
+    
+    addClick (x, y); // to prevent spurious hiding of this popover.
+    // set lastpo to this one
+    lastpo = e;
+    
+    // get the popover and coords
+    var po = $(e);
+    po.style.display = "block";
+
+    var newY = y-28;
+    var newX = (x - 48 - (isLandscape() ? 321 : 0));
+    var newH = 0 + po.offsetHeight; //alert (newH);
+    var newW = 236; // currently popovers are 236w
+    // now try prevent the popover from going out-of-bounds
+    if ( isLandscape() && isIPad() )
+    {
+        if (newX + newW > 703) { newX = 703-newW; }
+        if (newY + newH > 670) { newY = 670-newH; }
+    }
+    // TODO: etc.
+    
+    // set position and display
+    po.style.top = newY + "px";
+    po.style.left =  newX + "px";
+    
+    // and show the transparent div that will kill the popover if clicks occur elsewhere.
+    $("hidePopOver").style.display = "block";
+}
+
+function hidePopOver ()
+{
+/*    if ( window.event.clientX && ignoreClick ( window.event.clientX, window.event.clientY ) )
+    {
+        return false; // we're too close to a click; ignore this request.
+    }
+ */
+    if (lastpo)
+    {
+        $(lastpo).style.display = "none";
+        lastpo=null;
+    }
+    if ($("hidePopOver"))
+    {
+        $("hidePopOver").style.display = "none";
+    }
+}
+
+
 /*
  * loadContent ( url, callback, animate, backTo )
  * ----------------------------------------------
@@ -378,6 +484,9 @@ function loadContent(url, callback, animate, backTo) {
     
     // unset longpress, if set.
     onLongPress = null;
+    
+    // no more popover, either:
+    lastpo = null;
 
 
     

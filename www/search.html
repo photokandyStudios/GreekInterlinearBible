@@ -1,0 +1,16 @@
+<div class="content">
+    <h3>Search Speed</h3>
+    <p id="lstResults"></p>
+<script>
+    var searchWord = "divine";
+    var results = "";
+    for (v in bibleRight)
+    {
+        if (bibleRight[v].toLowerCase().indexOf(searchWord)>-1)
+        {
+            results = results + v + "</br>";
+        }
+    }
+    $("lstResults").innerHTML = results;
+</script>
+</div>

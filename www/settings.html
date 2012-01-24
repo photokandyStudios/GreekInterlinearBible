@@ -37,6 +37,13 @@
                 <option value="250">Double Spacing</option>
             </select>
         </li>
+        <li class="listItem">Verse Spacing
+            <select id="ddVerseSpacing" class="dropdown" default="1em" localStorage="LayoutVerseSpacing">
+                <option value="0">None</option>
+                <option value="1em">Small</option>
+                <option value="2em">Large</option>
+            </select>
+        </li>
         <li class="listItem">English Transliteration<div class="switch"><span class="thumb"></span><input type="checkbox" localStorage="LayoutTransliteration"/></div></li>
     </ul>
     <button onclick="localStorage.clear();" class="button">Clear all Settings</button>
