@@ -527,8 +527,15 @@ function loadContent(url, callback, animate, backTo) {
                 {
                     $("pnlBodyArea").style.webkitAnimation = "";
                     setTimeout ( function () { 
-                    $("pnlBodyArea").style.webkitAnimation = animate + " 0.5s 1";
+                    $("pnlBodyArea").style.webkitAnimation = animate + " 1.25s 1";
                     }, 0);
+                    
+                   /* setTimeout ( function () {
+                        $("pnlBodyArea").style.webkitAnimation = "";
+                        setTimeout ( function () { 
+                        $("pnlBodyArea").style.webkitAnimation = animate + "Finish 0.25s 1";
+                        }, 0);                    
+                    }, 300) */
                 }
                 if (tid) clearTimeout(tid);
                 hideLoader();
@@ -894,7 +901,7 @@ if (text_nodes.length > 0) {
   var original_content = hit_elem.innerHTML;
 //                                                        console.log ('871');
   //wrap every word in every node in a dom element
-  hit_elem.innerHTML = hit_elem.textContent.replace(/([^\s]*)/g, "<word>$1</word>");
+  hit_elem.innerHTML = hit_elem.textContent.replace(/([^\s\.\,\/\?\!\-\:\;\(\)\`]*)/g, "<word>$1</word>");
 //                                                        console.log ('876');
   //get the exact word under cursor
   var hit_word_elem = document.elementFromPoint(x, y);
