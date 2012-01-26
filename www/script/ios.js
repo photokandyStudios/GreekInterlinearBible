@@ -25,6 +25,8 @@ var sbAreas = Array("pnlMainArea","pnlBodyArea");
 
 var returnTo = Array(); // stack for back-button history
 
+var argsParsed = {}; // arguments passed to any page
+
 var onLongPress = null; // can be used to point to long press handler
 
 // clickbuster stuff (inspired by http://code.google.com/intl/en/mobile/articles/fast_buttons.html)
@@ -38,7 +40,7 @@ function addClick ( x, y, nopop )
     clickPointY.push (y);
     if (!nopop)
     {
-        setTimeout (popClick, 2500)
+        setTimeout (popClick, 5000)
     }
 }
 
@@ -74,6 +76,28 @@ function clickBuster (event)
 
 document.addEventListener ( 'click', clickBuster, true );
 
+function parseArgs( url )
+{
+    var args = url.substring(1).split('&');
+
+    argsParsed = {};
+
+    for (i=0; i < args.length; i++)
+    {
+        arg = unescape(args[i]);
+
+        if (arg.indexOf('=') == -1)
+        {
+            argsParsed[arg.trim()] = true;
+        }
+        else
+        {
+            kvp = arg.split('=');
+            argsParsed[kvp[0].trim()] = kvp[1].trim();
+        }
+    }
+}
+
 // common functions
 
 /*
@@ -102,7 +126,7 @@ function longpress ( event )
 function _resetSB ( o )
 {
     var refreshed = false;
-    console.log ( 'Really Resetting ' + o  );
+    //console.log ( 'Really Resetting ' + o  );
     
     if (sb[o])
     {
@@ -134,7 +158,7 @@ function _resetSB ( o )
 
 function resetSB ( o, dly )
 {
-    console.log ( 'Resetting ' + o + ' in ' + (dly ? dly : 125) );
+    //console.log ( 'Resetting ' + o + ' in ' + (dly ? dly : 125) );
     setTimeout ( function () { _resetSB (o); }, (dly ? dly : 125) );
 }
 
@@ -508,6 +532,8 @@ function loadContent(url, callback, animate, backTo) {
                 }
                 if (tid) clearTimeout(tid);
                 hideLoader();
+                console.log ('Loaded Content:' + url);
+                parseArgs(url);
         
                 // fill content
                 setTimeout ( function () {
@@ -853,6 +879,46 @@ var processDropDowns = function()
     }
 };
 
+/*
+ * getWordFromPoint
+ * from http://stackoverflow.com/questions/3855322/how-to-get-word-under-cursor
+ */
+function getHitWord(hit_elem,x,y) {
+var hit_word = '';
+//                                                        console.log ('862');
+//text contents of hit element
+var text_nodes = hit_elem.childNodes;
+//                                                        console.log ('867');
+//bunch of text under cursor? break it into words
+if (text_nodes.length > 0) {
+  var original_content = hit_elem.innerHTML;
+//                                                        console.log ('871');
+  //wrap every word in every node in a dom element
+  hit_elem.innerHTML = hit_elem.textContent.replace(/([^\s]*)/g, "<word>$1</word>");
+//                                                        console.log ('876');
+  //get the exact word under cursor
+  var hit_word_elem = document.elementFromPoint(x, y);
+//                                                        console.log ('879');
+  if (hit_word_elem.nodeName != 'WORD') {
+    console.log("missed!");
+  }
+  else  {
+    hit_word = hit_word_elem.textContent;
+    console.log("got it: "+hit_word);
+  }
+//                                                        console.log ('887');
+  hit_elem.innerHTML = original_content;
+}
+//                                                        console.log ('890');
+return hit_word;
+}
+
+function getWordFromPoint (x, y)
+{
+    console.log ("Trying to get word at " + x + ", " + y);
+      return getHitWord(document.elementFromPoint(x, y),x,y);
+}
+
 /**
  * ScrollFix v0.1
  * http://www.joelambert.co.uk
@@ -885,3 +951,9 @@ var ScrollFix = function(elem) {
 	}, false);
    
 };
+
+function openWebPage ( url )
+{
+    PhoneGap.exec ("ChildBrowserCommand.showWebPage", url );
+    return false;
+}

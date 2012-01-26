@@ -13,7 +13,7 @@
                       "Zephaniah", "Haggai", "Zechariah", "Malachi",
                       // New Testament
                       "Matthew", "Mark", "Luke", "John", "Acts", "Romans", "1 Corinthians",
-                      "2 Corinthains", "Galations", "Ephesians", "Philippians", "Colossians",
+                      "2 Corinthians", "Galations", "Ephesians", "Philippians", "Colossians",
                       "1 Thessalonians", "2 Thessalonians", "1 Timothy", "2 Timothy", "Titus",
                       "Philemon", "Hebrews", "James", "1 Peter", "2 Peter", "1 John", "2 John",
                       "3 John", "Jude", "Revelation" ];
@@ -71,6 +71,16 @@
     else
     {
         passage = localStorage.passage;
+    }
+    var scrollTo = "";
+    var incomingRef = argsParsed["ref"];
+    if (incomingRef)
+    {
+        // we've an incoming passage. Handle with care!
+        scrollTo = incomingRef;
+        passage = incomingRef.substr(0, incomingRef.lastIndexOf("."));
+        console.log ('Forced navigation to ' + passage);
+        localStorage.passage = passage; // not sure?
     }
     
     function transliterate ( s )
@@ -194,9 +204,9 @@
         {
             ref = passage+"."+i;
             // define templates
-            lhtml = "<div style='font-size:%TEXTSIZE%; float: left; width: %LEFTWIDTH%;'>%TEXT%</div>";
+            lhtml = "<div class='greek' style='font-size:%TEXTSIZE%; float: left; width: %LEFTWIDTH%;'>%TEXT%</div>";
             nhtml = "<div style='text-align: center; font-size:150%; color:#556677; float: left; width: %NUMWIDTH%;'>%TEXT%</div>";
-            rhtml = "<div style='font-size:%TEXTSIZE%; float: right; width: %RIGHTWIDTH%;'>%TEXT%</div>";
+            rhtml = "<div class='english' style='font-size:%TEXTSIZE%; float: right; width: %RIGHTWIDTH%;'>%TEXT%</div>";
         
             // process left-hand (greek) side
             lhtml = lhtml.replace ( "%TEXT%", (settingsGreekLayoutTransliterate=="on") ? transliterate(bibleLeft[ref]) : bibleLeft[ref] );
@@ -235,8 +245,18 @@
         $("lstStream").innerHTML = ihtml;
         resetContentScrollBar();
         
-        sb[sbBody].scrollTo(0,0);
         // TODO: scroll to verse (from search/bookmark/notes, etc.)
+        setTimeout ( function() {
+        if (scrollTo)
+        {
+            sb[sbBody].scrollToElement ($(scrollTo),0);
+            scrollTo = null;
+        }
+        else
+        {
+            sb[sbBody].scrollTo(0,0);
+        }
+        },500);
         
     }
     
@@ -251,12 +271,20 @@
         //}
     }
 
-    
+    var theWord;
+    var whichSide;
     onLongPress = function ( event )
     {
         var x = event.touches[0].clientX;
         var y = event.touches[0].clientY;
-        showPopOver ( "poSelectCommands", x, y); 
+        var overElement = document.elementFromPoint ( x, y );
+        whichSide = 0;
+        if (overElement)
+        {
+            whichSide = (overElement.className=="greek") ? 1 : 2;
+        }
+        theWord = getWordFromPoint (x,y);
+        showPopOver ( "poSelectCommands", x, y);
     }
     
     function copySelection ()
@@ -272,11 +300,7 @@
                       + "\n[" + i + "] " + bibleRight[i];
             }
         }
-        alert (window);
-        alert (window.plugins);
-        alert (window.plugins.clipboardPlugin);
         window.plugins.clipboardPlugin.setText ( s );
-        alert ("Kill selection.");
         cancelSelection();
     }
     
@@ -328,6 +352,47 @@
         selectedVerse = Array();
         hidePopOver();
     }
+    
+    function define()
+    {
+        // this deals with the currently selected word, set when the popover was triggered.
+        var url;
+        
+        if (whichSide == 1)
+        {   // greek
+//            url = "http://www.greek-dictionary.net/" + transliterate(theWord);
+              url = "https://www.google.com/search?q=" + transliterate(theWord) + "+site:greek-dictionary.net";
+        }
+        if (whichSide == 2)
+        {
+            // english
+            url = "http://dictionary.reference.com/browse/" + theWord;
+        }
+        hidePopOver();
+        if (url)
+        {
+            openWebPage ( url );
+        }
+    }
+    
+    function searchBible()
+    {
+        // will search the bible for the selected word.
+        var url = "./search.html?ignore";
+        if (whichSide == 1)
+        {
+            url = url + "&greek=" + theWord;
+        }
+        if (whichSide == 2)
+        {
+            url = url + "&search=" + theWord;
+        }
+        hidePopOver();
+        if (url)
+        {
+            loadContent(url, updateMainMenu,'slideOut', './bible.html' );
+        }
+    }
 
 </script>
     <div style="clear: both"></div>
@@ -344,10 +409,11 @@
                 <li class="listItem" onclick="addHighlight(2);" style="background-color:#FF80FF">Highlight Selection</li>
                 <li class="listItem" onclick="addHighlight(3);" style="background-color:#80FFFF">Highlight Selection</li>
                 <li class="listItem" onclick="removeHighlight();">Remove Highlight</li>
-                <li class="listItem" onclick="createBookmark();">Create Bookmark...</li>
+<!--                <li class="listItem" onclick="createBookmark();">Create Bookmark...</li>
+                    <li class="listItem" onclick="createNote();">Create Note...</li>
+  -->
                 <li class="listItem" onclick="searchBible();">Search Bible...</li>
-                <li class="listItem" onclick="findRefs();">Find References...</li>
-                <li class="listItem" onclick="searchWiki();">Search Wikipedia...</li>
+                <li class="listItem" onclick="define();">Define (Online)...</li>
                 <li class="listItem" onclick="cancelSelection();">Cancel Selection</li>
             </ul>
         </div>

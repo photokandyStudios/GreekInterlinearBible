@@ -1,16 +1,136 @@
 <div class="content">
-    <h3>Search Speed</h3>
-    <p id="lstResults"></p>
+<!--    <h3>Search Speed</h3>
+    <input type="search" id="txtSearch"/> -->
+    <div id="lstResults"></div>
 <script>
-    var searchWord = "divine";
-    var results = "";
-    for (v in bibleRight)
+    var englishWord = argsParsed["search"];      // incoming search
+    var greekWord = argsParsed["greek"];          // same
+    var curPage = argsParsed["page"];
+    var scrollTo = argsParsed["scrollto"];
+    if (!curPage)
     {
-        if (bibleRight[v].toLowerCase().indexOf(searchWord)>-1)
+        curPage = 1;
+    }
+    
+    if (!englishWord)
+    {
+        englishWord = "";
+    }
+    
+    if (!greekWord)
+    {
+        greekWord = "";
+    }
+    
+    if (!scrollTo)
+    {
+        scrollTo = "";
+    }
+    
+    console.log ("on search page. args:" + englishWord + ", " + greekWord + ", " + curPage);
+
+    function search( searchArray, searchTerm, allRequired, pageStart, pageEnd )
+    {
+        var results = Array();
+        var terms = searchTerm.split(" ");
+        var c = 0;
+        for (v in searchArray)
         {
-            results = results + v + "</br>";
+            // search the verse for the searchTerm
+            var verse = searchArray[v];
+            var vhit = 0;
+            for (var i=0;i<terms.length;i++)
+            {
+                if ( verse.toLowerCase().trim().indexOf( terms[i].toLowerCase().trim() ) > -1 )
+                {
+                    vhit = vhit + 1; // found a hit.
+                }
+            }
+            
+            // based on allRequired, we only require 1 or all the terms to be matched
+            if (allRequired)
+            {
+                if (vhit == terms.length)
+                {
+                    c = c + 1;
+                    if (c>=pageStart && c<=pageEnd) { results.push ( v ); }
+                }
+            }
+            else
+            {
+                if (vhit > 0 )
+                {
+                    c = c + 1;
+                    if (c>=pageStart && c<=pageEnd) { results.push ( v ); }
+                }
+            }
+        }
+        return results;
+    }
+    
+    function searchBible ( theWord, whichSide, allRequired, thePage)
+    {
+        var page = (thePage) ? thePage : 1;
+        var pageStart = ( (page-1) * 100) + 1;
+        var pageEnd   = ( page * 100 );
+        var searchArray = (whichSide==1) ? bibleLeft : bibleRight;
+        
+        console.log ( "SearchBible: " + thePage + ", " + pageStart + ", " + pageEnd + ", " + theWord + ", " + whichSide );
+        
+        var results = search( searchArray, theWord, allRequired, pageStart, pageEnd );
+        
+        console.log ( "SearchBible: " + results.length );
+        
+        var ihtml = "<div class='listGroup'>";
+       
+        for (var i=0;i<results.length;i++)
+        {
+            var ref = results[i];
+            var topText = (whichSide==1) ? bibleLeft[ref] : bibleRight[ref];
+            var bottomText = (whichSide==1) ? bibleRight[ref] : bibleLeft[ref];
+            //TODO: does allow a back trail make sense here? 
+            var url = 'loadContent("./bible.html?ignore&ref=' + ref + '", updateMainMenu,"slideOut", "./search.html?ignore&' + 
+                      'search=' + englishWord + '&' +
+                      'greek=' + greekWord + '&' +
+                      'page=' + curPage + '&' +
+                      'scrollto=item' + i +
+                      '");'
+            var item = "<a id='item%NUM%' class='listItem arrow' href='#' onclick='%LINK%'><span style='display: block; float:left; width:15%'>%REF%</span><span style='width:84%; display: block; float:right;'><span style='display: block'>%TOP%</span><span style='display: block'>%BOTTOM%</span></span><span style='display: block; clear: both'></span></a>";
+            item = item.replace ( "%REF%", ref);
+            item = item.replace ( "%TOP%", topText);
+            item = item.replace ( "%BOTTOM%", bottomText);
+            item = item.replace ( "%LINK%", url);
+            item = item.replace ( "%NUM%", i );
+            //console.log (item);
+            ihtml = ihtml + item;
+        }
+        
+        ihtml = ihtml + "</div>";
+        
+        $("lstResults").innerHTML = ihtml;
+        resetContentScrollBar();
+        setTimeout (function() {
+        if (scrollTo)
+        {
+            sb[sbBody].scrollToElement ($(scrollTo),0);
+            scrollTo = null;
+        }
+        },500);
+    }
+    
+    if (englishWord || greekWord)
+    {
+        if (englishWord)
+        {
+            console.log ("searching english");
+            searchBible ( englishWord, 2, true, curPage );
+        }
+        else
+        {
+            console.log ("searching greek");
+            searchBible ( greekWord, 1, true, curPage);
         }
     }
-    $("lstResults").innerHTML = results;
+
 </script>
 </div>

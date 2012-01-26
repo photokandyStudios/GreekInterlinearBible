@@ -19,7 +19,22 @@
 	<key>OpenAllWhitelistURLsInWebView</key>
 	<false/>
 	<key>ExternalHosts</key>
-	<array/>
+	<array>
+		<string>www.greek-dictionary.net</string>
+		<string>ulrikp.org</string>
+		<string>www.hum.aau.dk</string>
+		<string>staticccel.org</string>
+		<string>dictionary.reference.com</string>
+		<string>www.ccel.org</string>
+		<string>m.ccel.org</string>
+		<string>www.google.com</string>
+		<string>www.google-analytics.com</string>
+		<string>*.box.com</string>
+		<string>*.boxcdn.net</string>
+		<string>*.box.net</string>
+		<string>*.photokandy.com</string>
+		<string>*.tumblr.com</string>
+	</array>
 	<key>Plugins</key>
 	<dict>
 		<key>com.phonegap.accelerometer</key>
@@ -36,6 +51,10 @@
 		<string>PGFile</string>
 		<key>ClipboardPlugin</key>
 		<string>ClipboardPlugin</string>
+		<key>ChildBrowser</key>
+		<string>ChildBrowser</string>
+		<key>ChildBrowserCommand</key>
+		<string>ChildBrowserCommand</string>
 		<key>com.phonegap.filetransfer</key>
 		<string>PGFileTransfer</string>
 		<key>com.phonegap.geolocation</key>

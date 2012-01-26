@@ -16,6 +16,6 @@ body.landscape.ipad #bodyPanel
 
 body.landscape.ipad #tabBar
 {
-    left:321px;
+    zleft:321px;
     right: 0;
 }
