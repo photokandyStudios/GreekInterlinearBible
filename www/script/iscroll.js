@@ -102,7 +102,7 @@ var m = Math,
 		return;
 	}
     // check to see if we're in a white content area (let special things through)
-    var t = e.target;
+/*    var t = e.target;
     for (t=e.target;t.tagName.toLowerCase()!="body";t=t.parentNode)
     {
         if (t.className.toLowerCase().indexOf("white") > -1 &&
@@ -110,7 +110,7 @@ var m = Math,
         {
             return;
         }
-    }    
+    }    */
 	e.preventDefault();
 },
 			onScrollStart: null,

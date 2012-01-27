@@ -64,6 +64,7 @@
     var rightColumnWidth= settingsLayoutColumnWidths.substr(4,2) + "%";
     
     var passage = "Mat.1";
+    var curBook=39;
     if (!localStorage.passage)
     {
         localStorage.passage = passage;
@@ -124,6 +125,7 @@
             if (bibleBooks[i].replace(/\s+/g, "").substr(0,3) == bookName)
             {
                 item = item.replace ( "%SELECTED%", "SELECTED" );
+                curBook = i;
             }
             else
             {
@@ -235,7 +237,7 @@
             }
             
             ihtml = ihtml + "<div " + ((selectedVerse[ref]=="Y") ? "class='verseSelected' " : "") + " " + highlight + " "
-                          + "onclick='toggleSelection(this); return false;' id='" + ref + "' style='clear: both'>" + lhtml + nhtml + rhtml + "<div style='clear:both; height:"
+                          + "onclick='toggleSelection(this);' id='" + ref + "' style='clear: both'>" + lhtml + nhtml + rhtml + "<div style='clear:both; height:"
                           + settingsLayoutVerseSpacing + ";'></div></div>";
         }
         
@@ -284,6 +286,11 @@
             whichSide = (overElement.className=="greek") ? 1 : 2;
         }
         theWord = getWordFromPoint (x,y);
+        // determine visibility of certain popover elements
+        $("cmdDefine").style.display = (theWord && window.navigator.onLine) ? "block" : "none";
+        $("cmdSearch").style.display = (theWord) ? "block" : "none";
+        //TODO: hide Copy & Highlight if no selection.
+        //TODO: hide Remove Highlight if no highlight.
         showPopOver ( "poSelectCommands", x, y);
     }
     
@@ -404,7 +411,7 @@
         <div class="arrow"><span></span></div>
         <div class="popover-body">
             <ul class="listGroup" style="margin:0">
-                <li class="listItem" onclick="copySelection();">Copy Selection</li>
+                <li class="listItem" id="cmdSelect" onclick="copySelection();">Copy Selection</li>
                 <li class="listItem" onclick="addHighlight(1);" style="background-color:#FFFF80">Highlight Selection</li>
                 <li class="listItem" onclick="addHighlight(2);" style="background-color:#FF80FF">Highlight Selection</li>
                 <li class="listItem" onclick="addHighlight(3);" style="background-color:#80FFFF">Highlight Selection</li>
@@ -412,9 +419,9 @@
 <!--                <li class="listItem" onclick="createBookmark();">Create Bookmark...</li>
                     <li class="listItem" onclick="createNote();">Create Note...</li>
   -->
-                <li class="listItem" onclick="searchBible();">Search Bible...</li>
-                <li class="listItem" onclick="define();">Define (Online)...</li>
-                <li class="listItem" onclick="cancelSelection();">Cancel Selection</li>
+                <li class="listItem" id="cmdSearch" onclick="searchBible();">Search Bible...</li>
+                <li class="listItem" id="cmdDefine" onclick="define();">Define (Online)...</li>
+                <li class="listItem" id="cmdCancel" onclick="cancelSelection();">Cancel Selection</li>
             </ul>
         </div>
       </div>
@@ -429,6 +436,6 @@
             hideLoader();
             populateBibleBooks(); 
             //TODO: We need to load the chapters for the incoming book.
-            populateChapters( 39 );
+            populateChapters( curBook );
             loadBiblePassage ( passage );
 </script>

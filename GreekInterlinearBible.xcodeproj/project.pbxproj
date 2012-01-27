@@ -35,6 +35,7 @@
 		6A56E06214CA475100F3F8BB /* Capture.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6A56E06114CA475100F3F8BB /* Capture.bundle */; };
 		6A56E06414CA475100F3F8BB /* PhoneGap.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6A56E06314CA475100F3F8BB /* PhoneGap.plist */; };
 		6A56E06814CA475100F3F8BB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A56E06714CA475100F3F8BB /* AppDelegate.m */; };
+		6AB8EF6A14D26A2800CD7189 /* GreekInterlinearBibleIcon-iPad72.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AB8EF6914D26A2800CD7189 /* GreekInterlinearBibleIcon-iPad72.png */; };
 		6AC0324614CE6DB4001F06EF /* clipboardPlugin.js in Sources */ = {isa = PBXBuildFile; fileRef = 6AC0324314CE6DB4001F06EF /* clipboardPlugin.js */; };
 		6AC0324714CE6DB4001F06EF /* ClipboardPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC0324414CE6DB4001F06EF /* ClipboardPlugin.m */; };
 		6AC0324814CE6DB4001F06EF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 6AC0324514CE6DB4001F06EF /* README.md */; };
@@ -81,6 +82,7 @@
 		6A56E06614CA475100F3F8BB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Classes/AppDelegate.h; sourceTree = "<group>"; };
 		6A56E06714CA475100F3F8BB /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Classes/AppDelegate.m; sourceTree = "<group>"; };
 		6A56E06A14CA475100F3F8BB /* README */ = {isa = PBXFileReference; lastKnownFileType = text; name = README; path = Plugins/README; sourceTree = "<group>"; };
+		6AB8EF6914D26A2800CD7189 /* GreekInterlinearBibleIcon-iPad72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreekInterlinearBibleIcon-iPad72.png"; sourceTree = "<group>"; };
 		6AC0324214CE6DB4001F06EF /* ClipboardPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClipboardPlugin.h; sourceTree = "<group>"; };
 		6AC0324314CE6DB4001F06EF /* clipboardPlugin.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = clipboardPlugin.js; sourceTree = "<group>"; };
 		6AC0324414CE6DB4001F06EF /* ClipboardPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClipboardPlugin.m; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 		6A56E01514CA474F00F3F8BB = {
 			isa = PBXGroup;
 			children = (
+				6AB8EF6914D26A2800CD7189 /* GreekInterlinearBibleIcon-iPad72.png */,
 				6AC0324914CE714A001F06EF /* www */,
 				6A19776F14CB805B00DB6AD9 /* Default-Portrait~ipad.png */,
 				6A19776C14CB7E5400DB6AD9 /* Default-Landscape~ipad.png */,
@@ -356,6 +359,7 @@
 				6AE9628C14D09D0D0016DF97 /* ChildBrowser.bundle in Resources */,
 				6AE9629014D09D0D0016DF97 /* ChildBrowserViewController.xib in Resources */,
 				6AE9629514D09D0D0016DF97 /* README.txt in Resources */,
+				6AB8EF6A14D26A2800CD7189 /* GreekInterlinearBibleIcon-iPad72.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -449,7 +453,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -467,7 +471,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -484,6 +488,7 @@
 				GCC_PREFIX_HEADER = "GreekInterlinearBible/GreekInterlinearBible-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "PHONEGAP_FRAMEWORK=YES";
 				INFOPLIST_FILE = "GreekInterlinearBible/GreekInterlinearBible-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					UIKit,
@@ -495,7 +500,7 @@
 					/usr/lib/libSystem.B.dylib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -511,6 +516,7 @@
 				GCC_PREFIX_HEADER = "GreekInterlinearBible/GreekInterlinearBible-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "PHONEGAP_FRAMEWORK=YES";
 				INFOPLIST_FILE = "GreekInterlinearBible/GreekInterlinearBible-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					UIKit,
@@ -522,7 +528,7 @@
 					/usr/lib/libSystem.B.dylib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
 			};

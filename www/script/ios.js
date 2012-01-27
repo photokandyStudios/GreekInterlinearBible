@@ -126,8 +126,11 @@ function ignoreClick (x, y, nopop)
  */
 function clickBuster (event)
 {
+    console.log ("Clicked " + event.clientX + ", " + event.clientY );
     if (ignoreClick(event.clientX, event.clientY) || isScrolling())
     {
+        console.log ("... and ignored it.");
+        setTimeout ( function() { sbScrolling=Array(false, false); console.log ("Nuked scrolling."); }, 1000 );
         event.stopPropagation();
         event.preventDefault();
     }
@@ -224,6 +227,55 @@ function longpress ( event )
 //
 // BEGIN SCROLLING STUFF
 //
+var scrollingTimeout;
+function handleScrolling ( me, e, scrolling )
+{
+    // first, set who is or is not scrolling.
+    if (scrolling)
+    {
+        sbScrolling[me.whichScrollerAmI] = scrolling;
+        console.log ( 'Scrolling for ' + me.whichScrollerAmI + ' is ' + scrolling );
+    }
+    else
+    {
+        // reset me in a few ms.
+        if (scrollingTimeout)
+        {
+            clearTimeout (scrollingTimeout);
+        }
+        scrollingTimeout = setTimeout ( function() { 
+            sbScrolling[me.whichScrollerAmI] = false;
+            console.log ( 'Scrolling for ' + me.whichScrollerAmI + ' is false' );
+        }, 1000 );
+    }
+    
+    try
+    {
+        if (scrolling)
+        {
+            //console.log ( "Scrolling, touch at " + window.event.touches[0].clientX + ", " + window.event.touches[0].clientY );
+            //addClick(window.event.touches[0].clientX, window.event.touches[0].clientY);
+        }
+    }
+    catch (except)
+    {
+        ;
+    }
+    finally
+    {
+        ;
+    }
+    // next, do we have an event? if so, add it as a click
+    if (e)
+    {
+        console.log ( e );
+        addClick(e.touches[0].clientX, e.touches[0].clientY);
+    }
+    
+    // furthermore, set up a timer to say we aren't scrolling anymore in 5s.
+    //setTimeout ( function() { sbScrolling = Array(false, false); }, 5000);
+
+}
 
 /**
  *
@@ -253,22 +305,26 @@ function _resetSB ( o )
         {
             if (!refreshed)
             {
-                if (sbAreas[o]!="pnlBodyArea") { sb[o] = new iScroll ( sbAreas[o], { onScrollMove: function(e) {sbScrolling[this.whichScrollerAmI]=true;},
-                                                                                     onScrollEnd:  function(e) {sbScrolling[this.whichScrollerAmI]=false;} 
+                if (sbAreas[o]!="pnlBodyArea") { sb[o] = new iScroll ( sbAreas[o], { onScrollMove: function(me) {handleScrolling(this,null, true);},
+                                                                                     onScrollEnd:  function(me) {handleScrolling(this,null, false);}, 
+                                                                                     zonTouchEnd:  function(me) {handleScrolling(this,null, false);} 
                                                                                     } ); } else
-                                               { sb[o] = new iScroll ( sbAreas[o], { onScrollMove: function(e) {sbScrolling[this.whichScrollerAmI]=true;},
-                                                                                     onScrollEnd:  function(e) {sbScrolling[this.whichScrollerAmI]=false;},
+                                               { sb[o] = new iScroll ( sbAreas[o], { onScrollMove: function(me) {handleScrolling(this,null, true);},
+                                                                                     onScrollEnd:  function(me) {handleScrolling(this,null, false);},
+                                                                                     zonTouchEnd:  function(me) {handleScrolling(this,null, false);}, 
                                                                                      longpress: function (e) { longpress(e); } } ); }
             }
         }
     }
     else
     {
-                if (sbAreas[o]!="pnlBodyArea") { sb[o] = new iScroll ( sbAreas[o], { onScrollMove: function(e) {sbScrolling[this.whichScrollerAmI]=true;},
-                                                                                     onScrollEnd:  function(e) {sbScrolling[this.whichScrollerAmI]=false;} 
+                if (sbAreas[o]!="pnlBodyArea") { sb[o] = new iScroll ( sbAreas[o], { onScrollMove: function(me) {handleScrolling(this,null, true);},
+                                                                                     onScrollEnd:  function(me) {handleScrolling(this,null, false);}, 
+                                                                                     zonTouchEnd:  function(me) {handleScrolling(this,null, false);} 
                                                                                     } ); } else
-                                               { sb[o] = new iScroll ( sbAreas[o], { onScrollMove: function(e) {sbScrolling[this.whichScrollerAmI]=true;},
-                                                                                     onScrollEnd:  function(e) {sbScrolling[this.whichScrollerAmI]=false;},
+                                               { sb[o] = new iScroll ( sbAreas[o], { onScrollMove: function(me, e) {handleScrolling(this,null, true);},
+                                                                                     onScrollEnd:  function(me) {handleScrolling(this,null, false);},
+                                                                                     zonTouchEnd:  function(me) {handleScrolling(this,null, false);}, 
                                                                                      longpress: function (e) { longpress(e); } } ); }
     }
     sb[o].whichScrollerAmI = o;
@@ -776,7 +832,7 @@ function loadContent(url, callback, animate, backTo) {
                 {
                     $("pnlBodyArea").style.webkitAnimation = "";
                     setTimeout ( function () { 
-                    $("pnlBodyArea").style.webkitAnimation = animate + " 0.75s 1";
+                    $("pnlBodyArea").style.webkitAnimation = animate + " 1.25s 1";
                     }, 0);
                     
                    /* setTimeout ( function () {
