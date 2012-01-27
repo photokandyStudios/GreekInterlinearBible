@@ -1,13 +1,18 @@
-/*
+/**
+ * @file        ios.js
+ * @author      Kerri Shotts <kerrishotts@gmail.com>
+ * @version     2012.01.26.2149
  *
- * Application Layer to simulate iOS
+ * @section LICENSE
  * Copyright 2011 photoKandy Studios LLC
- * Portions used and modified from other sources where noted.
- * ----------------------------------------------------------
  * This code is hereby released under the Creative Commons Share-and-Share-Alike Attribution License v3.
  * This means you can freely use the code in your commercial and non-commercial applications, but you must
  * provide any changes back to the community, and you must indicate that we are the original creators.
- * -------------------------------------------------------------------------------------------------------
+ *
+ * @section DESCRIPTION
+ *
+ * Application Layer to simulate iOS
+ * Portions used and modified from other sources where noted.
  *
  * The following script, ios.js, simulates some of the more basic elements in iOS for the website. Things
  * such as buttons, navbars, panels, scrolling, text shadows, borders, etc., are provided for. Orientation
@@ -16,24 +21,55 @@
  *
  */
 
-// variables
-var lastpo; // last popover
-var sbMenu = 0;
-var sbBody = 1;
-var sb = Array(); // scrollers for the various areas.
-var sbAreas = Array("pnlMainArea","pnlBodyArea");
 
-var returnTo = Array(); // stack for back-button history
+/**
+ *
+ * Global Variables (consider them internal. Some are useful. Some aren't intended to be used.)
+ *
+ */
 
-var argsParsed = {}; // arguments passed to any page
+// Popovers //
+var lastpo;                                                         // PRIVATE: last popover, if any
 
-var onLongPress = null; // can be used to point to long press handler
+// Scrolling //
+var sbMenu = 0;                                                     // PUBLIC:  # for Menu's Scroller
+var sbBody = 1;                                                     // PUBLIC:  # for Body's Scroller
+var sb = Array();                                                   // PUBLIC:  scrollers for the various areas.
+var sbAreas = Array("pnlMainArea","pnlBodyArea");                   // PUBLIC:  scroller's associated elements
+var sbScrolling = Array(false, false);                              // PUBLIC:  indicate if a scroller is scrolling.
 
-// clickbuster stuff (inspired by http://code.google.com/intl/en/mobile/articles/fast_buttons.html)
-// and because iOS is stoopid.
-var clickPointX = Array();
-var clickPointY = Array();
+// Back-button History//
+var returnTo = Array();                                             // PRIVATE: stack for back-button history
 
+// Query-Line Parsing //
+var argsParsed = {};                                                // PUBLIC:  arguments passed to any page 
+
+// Event Handlers //
+var onLongPress = null;                                             // PUBLIC: can be used to point to long press handler
+
+/**
+ *
+ * "Fast Buttons" / Ghost Click Buster.
+ * Based on http://code.google.com/intl/en/mobile/articles/fast_buttons.html
+ * Required because sometimes iOS's webkit is stupid when it comes to onclick firing twice.
+ *
+ */
+//
+// START CLICKBUSTER
+//
+
+var clickPointX = Array();                                          // PRIVATE:  last X coordinate of a touch
+var clickPointY = Array();                                          // PRIVATE:  last Y coordiante of a touch
+
+/**
+ *
+ * add a click to the clickPointX/Y array. if nopop is specified, no timeout is set to clear the click.
+ *
+ * @param x     x-coordinate
+ * @param y     y-coordinate
+ * @param nopop if not specified, or FALSE, the coordinate is removed from the array after 5s. if TRUE, remains
+ *              there forever.
+ */ 
 function addClick ( x, y, nopop )
 {
     clickPointX.push (x);
@@ -44,12 +80,28 @@ function addClick ( x, y, nopop )
     }
 }
 
+/**
+ *
+ * Removes the first item off the clickPointX/Y array.
+ *
+ */
 function popClick ()
 {
     clickPointX.splice(0,1);
     clickPointY.splice(0,1);
 }
 
+/**
+ *
+ * Determines if a click is within 15 pixels of a previous click in the clickPointX/Y array.
+ * If it is, it is added to via addClick. Returns TRUE if the click SHOULD BE IGNORED;
+ * false if it is not to be ignored.
+ *
+ * @param x     x-coordinate
+ * @param y     y-coordinate
+ * @param nopop no use here; passed on to addclick
+ *
+ */
 function ignoreClick (x, y, nopop)
 {
     for (var i=0;i<clickPointX.length;i++)
@@ -65,9 +117,16 @@ function ignoreClick (x, y, nopop)
     return false;
 }
 
+/**
+ *
+ * Attached to the document in order to prevent duplicate clicks from occuring.
+ * iOS' webkit has a nasty habit of throwing duplicate onClick events. Not good.
+ *
+ * Also prevents (or tries to) a click if the scrollers are in movement.
+ */
 function clickBuster (event)
 {
-    if (ignoreClick(event.clientX, event.clientY))
+    if (ignoreClick(event.clientX, event.clientY) || isScrolling())
     {
         event.stopPropagation();
         event.preventDefault();
@@ -76,6 +135,23 @@ function clickBuster (event)
 
 document.addEventListener ( 'click', clickBuster, true );
 
+//
+// END CLICKBUSTER
+//
+
+
+/**
+ *
+ * Parses the arguments in url (similar to parsing a query string).
+ * One bug: doesn't seem to catch the first parameter after a ?
+ * so use something like ?ignore&parms...
+ * TODO: Fix that.
+ *
+ * @source      http://stackoverflow.com/a/7826782
+ *
+ * @param url   url containing query string.
+ *
+ */
 function parseArgs( url )
 {
     var args = url.substring(1).split('&');
@@ -98,23 +174,45 @@ function parseArgs( url )
     }
 }
 
-// common functions
-
 /*
  * $ ( id )
  * --------
  * Emulate a quick jQuery $ function. Only handles IDs
  ******************************************************/
+
+/**
+ *
+ * $ emulates jQuery's $ function, with a caveat: only handles IDs, nothing else.
+ *
+ * If you are using jQuery, be sure to nuke this particular function.
+ *
+ * @param id    id of element
+ *
+ */
 function $(id)
 {
     return document.getElementById(id);
 }
+
+/**
+ *
+ * allClasses returns an array of elements matching selector. Similar to $$.
+ *
+ * @param selector      selector to query for
+ *
+ */
 function allClasses(selector)
 {
     return Array.prototype.slice.call(document.querySelectorAll(selector));
 }
 
-
+/**
+ *
+ * Determines if the onLongPress event handler exists, and if so, calls it.
+ *
+ * @param event     the event triggering the longpress; passed to the event handler.
+ *
+ */
 function longpress ( event )
 {
     if (onLongPress)
@@ -123,6 +221,17 @@ function longpress ( event )
     }
 }
 
+//
+// BEGIN SCROLLING STUFF
+//
+
+/**
+ *
+ * _resetSB is intended for internal use only. See resetSB.
+ *
+ * @param o     an index to sb[] indicating which scroll bar to reset.
+ *
+ */
 function _resetSB ( o )
 {
     var refreshed = false;
@@ -144,24 +253,60 @@ function _resetSB ( o )
         {
             if (!refreshed)
             {
-                if (sbAreas[o]!="pnlBodyArea") { sb[o] = new iScroll ( sbAreas[o] ); } else
-                                               { sb[o] = new iScroll ( sbAreas[o], { longpress: function (e) { longpress(e); } } ); }
+                if (sbAreas[o]!="pnlBodyArea") { sb[o] = new iScroll ( sbAreas[o], { onScrollMove: function(e) {sbScrolling[this.whichScrollerAmI]=true;},
+                                                                                     onScrollEnd:  function(e) {sbScrolling[this.whichScrollerAmI]=false;} 
+                                                                                    } ); } else
+                                               { sb[o] = new iScroll ( sbAreas[o], { onScrollMove: function(e) {sbScrolling[this.whichScrollerAmI]=true;},
+                                                                                     onScrollEnd:  function(e) {sbScrolling[this.whichScrollerAmI]=false;},
+                                                                                     longpress: function (e) { longpress(e); } } ); }
             }
         }
     }
     else
     {
-                if (sbAreas[o]!="pnlBodyArea") { sb[o] = new iScroll ( sbAreas[o] ); } else
-                                               { sb[o] = new iScroll ( sbAreas[o], { longpress: function (e) { longpress(e); } } ); }
+                if (sbAreas[o]!="pnlBodyArea") { sb[o] = new iScroll ( sbAreas[o], { onScrollMove: function(e) {sbScrolling[this.whichScrollerAmI]=true;},
+                                                                                     onScrollEnd:  function(e) {sbScrolling[this.whichScrollerAmI]=false;} 
+                                                                                    } ); } else
+                                               { sb[o] = new iScroll ( sbAreas[o], { onScrollMove: function(e) {sbScrolling[this.whichScrollerAmI]=true;},
+                                                                                     onScrollEnd:  function(e) {sbScrolling[this.whichScrollerAmI]=false;},
+                                                                                     longpress: function (e) { longpress(e); } } ); }
     }
+    sb[o].whichScrollerAmI = o;
 }
 
+/**
+ *
+ * resetSB will reset the desired scrollbar after the given delay. If no delay is supplied,
+ * a standard delay of 125ms is used.
+ *
+ * @param o     An index to sb[] indicating which scrollbar to reset. Typically sbMenu or sbBody.
+ *
+ */
 function resetSB ( o, dly )
 {
     //console.log ( 'Resetting ' + o + ' in ' + (dly ? dly : 125) );
     setTimeout ( function () { _resetSB (o); }, (dly ? dly : 125) );
 }
 
+/**
+ *
+ * isScrolling will return TRUE if any scroller has indicated it is in a scrolling state, and
+ * FALSE if no scroller is scrolling.
+ *
+ */
+function isScrolling()
+{
+    return sbScrolling[0] || sbScrolling[1];
+}
+
+/**
+ *
+ * destroySB will try to destroy the desired scrollbar. Regardless of the success,
+ * the array item (marked by o) is reset to null.
+ *
+ * @param o     index to sb[]. Typically sbMenu or sbBody.
+ *
+ */
 function destroySB ( o )
 {
     try {
@@ -177,32 +322,90 @@ function destroySB ( o )
     }
 }
 
-/*
- * isIPad(), isIPhone
- * ------------------
- * Returns TRUE if running on the device in question.
- *****************************************************/
+/**
+ *
+ * resets the content (sbBody) scrollbar.
+ *
+ */
+function resetContentScrollBar ()
+{
+    resetSB ( sbBody );
+    return true;
+}
 
+/**
+ * ScrollFix v0.1
+ * http://www.joelambert.co.uk
+ *
+ * Copyright 2011, Joe Lambert.
+ * Free to use under the MIT license.
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+var ScrollFix = function(elem) {
+	// Variables to track inputs
+	var startY, startTopScroll;
+
+	elem = elem || document.querySelector(elem);
+
+	// If there is no element, then do nothing	
+	if(!elem)
+		return;
+
+	// Handle the start of interactions
+	elem.addEventListener('touchstart', function(event){
+		startY = event.touches[0].pageY;
+		startTopScroll = elem.scrollTop;
+
+		if(startTopScroll <= 0)
+			elem.scrollTop = 1;
+
+		if(startTopScroll + elem.offsetHeight >= elem.scrollHeight)
+			elem.scrollTop = elem.scrollHeight - elem.offsetHeight - 1;
+	}, false);
+   
+};
+
+
+//
+// END SCROLLING STUFF
+//
+
+/**
+ *
+ * isIPad() returns TRUE if the device is an iPad; FALSE if not.
+ *
+ */
 function isIPad()
 {
     return navigator.platform == "iPad" || window.location.href.indexOf("?ipad")>-1;
 }
 
+/**
+ *
+ * isIPhone() returns TRUE if the device is an iPhone; FALSE if not.
+ *
+ */
 function isIPhone()
 {
     return navigator.platform == "iPhone" || window.location.href.indexOf("?iphone")>-1;
 }
 
-/*
- * isPortrait(), isLandscape()
- * ---------------------------
- * Returns TRUE if the device is in the orientation in question.
- ***************************************************************/
+/**
+ *
+ * isPortrait returns TRUE if the device's orientation is PORTRAIT; FALSE if not.
+ *
+ */
 function isPortrait()
 {
     return window.orientation == 0 || window.orientation == 180 || window.location.href.indexOf("&portrait")>-1;
 }
 
+/**
+ *
+ * isLandscape returns TRUE if the device's orientation is LANDSCAPE; FALSE if not.
+ *
+ */
 function isLandscape()
 {
     if (window.location.href.indexOf("&landscape")>-1)
@@ -210,39 +413,46 @@ function isLandscape()
         return true;
     }
     return !isPortrait();
-    //return (window.orientation != 0 && window.orientation != 180) || window.location.href.indexOf("&landscape")>-1;
 }
 
-/*
+/**
  * BlockMove ( event )
- * from http://matt.might.net/articles/how-to-native-iphone-ipad-apps-in-javascript/
- * ----------------------------------------------------------------------------------
+ * @source http://matt.might.net/articles/how-to-native-iphone-ipad-apps-in-javascript/
+ *
  * This ensures that Safari on iDevices will not move the window, giving away that we
  * aren't a native app.
- *************************************************************************************/
+ *
+ * @event       event to block
+ *
+ */
+ 
  function BlockMove(event) {
   // Tell Safari not to move the window.
-/*  var t = event.target;
-  for (t=event.target;t.tagName.toLowerCase()!="body";t=t.parentNode)
-  {
-   // alert (t.id);
-    if (t.id == "pnlBodyArea" || t.id == "pnlMainArea" )
-    {
-        return true;
-    }
-  }*/
   event.preventDefault() ;
+                                    // this was from a good idea. Might still come in handy down the road.
+                                    /*  var t = event.target;
+                                      for (t=event.target;t.tagName.toLowerCase()!="body";t=t.parentNode)
+                                      {
+                                       // alert (t.id);
+                                        if (t.id == "pnlBodyArea" || t.id == "pnlMainArea" )
+                                        {
+                                            return true;
+                                        }
+                                      }*/
  }
 
-/*
+/**
  * processScriptTags ( id )
- * from http://bytes.com/topic/javascript/answers/513633-innerhtml-script-tag
- * --------------------------------------------------------------------------
+ * @source http://bytes.com/topic/javascript/answers/513633-innerhtml-script-tag
+ * 
  * Given the element id, processes any script tags and adds them to the DOM.
  * This is necessary because just loading a page with script tags in it via
  * AJAX will not execute script. Altered by pK to support script tags with
  * src attributes.
- *****************************************************************************/
+ *
+ * @param id        id to attach the script tags to.
+ *
+ */
 function processScriptTags ( id )
 {
     var d = $(id).getElementsByTagName("script");
@@ -265,12 +475,13 @@ function processScriptTags ( id )
     }    
 }
 
-/*
+/**
  * updateOrientation()
- * -------------------
+ * 
  * This function will check our current orientation and adjust the interface
  * if necessary by adding the device and orientation to the BODY's class.
- ****************************************************************************/
+ *
+ */
 function updateOrientation()
 {
     var curDevice;
@@ -299,17 +510,12 @@ function updateOrientation()
     return true;
 }
 
-/* AJAX SUPPORT */
-/* MODIFIED FROM http://www.tek-tips.com/viewthread.cfm?qid=1622697&page=13*/
-
-var rootdomain="http://"+window.location.hostname
-
-/*
+/**
  * toggleMenu()
- * ------------
+ * 
  * This is used to show the #menuPanel if it is not visible, and hides it
  * if it is. This is triggered by clicking on "menu" in portrait mode.
- ************************************************************************/
+ */
 function toggleMenu()
 {
     var curState = $("menuPanel").style.display;
@@ -330,45 +536,70 @@ function toggleMenu()
     return true;
 }
 
-/*
+/**
  * showLoader()
- * ------------
+ *
  * This will display the #loader spinner
- ***************************************/
+ */
 function showLoader()
 {
     $("loader").style.display = "block";
     setTimeout ( function() { hideLoader();}, 10000 );
 }
 
-/*
+/**
  * hideLoader()
- * ------------
+ *
  * This will hide the #loader spinner
- ***************************************/
+ */
 function hideLoader()
 {
     $("loader").style.display = "none";
 }
 
+/**
+ *
+ * showTabBar() will display the tab bar for the content area.
+ *
+ */
 function showTabBar()
 {
     $("tabBar").style.display = "block";
     $("pnlBodyArea").style.bottom = "43px";
 }
 
+/**
+ *
+ * hideTabBar() will hide the tab bar for the content area.
+ *
+ */
 function hideTabBar()
 {
     $("tabBar").style.display = "none";
     $("pnlBodyArea").style.bottom = "0px";
 }
 
+/**
+ *
+ * setTabBar will set the Tab Bar's HTML code to the supplied string.
+ *
+ * @param s     html code that should be inside the tab bar
+ *
+ */
 function setTabBar ( s )
 {
     $("tabBar").innerHTML = s;
 }
 
-    
+/**
+ * showPopover displays the popover named e at coordinates x,y. If
+ * the popover would go offscreen, the coordinates are adjusted.
+ *
+ * @param e     popover element
+ * @param x     x-coordinate
+ * @param y     y-coordinate
+ *
+ */
 function showPopOver ( e, x, y )
 {
     // if we have a previous popover, hide it.
@@ -395,7 +626,7 @@ function showPopOver ( e, x, y )
         if (newX + newW > 703) { newX = 703-newW; }
         if (newY + newH > 670) { newY = 670-newH; }
     }
-    // TODO: etc.
+    // TODO: isPortrait & isiPad.
     
     // set position and display
     po.style.top = newY + "px";
@@ -405,8 +636,13 @@ function showPopOver ( e, x, y )
     $("hidePopOver").style.display = "block";
 }
 
+/**
+ * hidePopover hides the last displayed popover (via lastpo).
+ *
+ */
 function hidePopOver ()
 {
+                    // this code was used before clickbuster. Might still make a comeback.
 /*    if ( window.event.clientX && ignoreClick ( window.event.clientX, window.event.clientY ) )
     {
         return false; // we're too close to a click; ignore this request.
@@ -424,9 +660,16 @@ function hidePopOver ()
 }
 
 
-/*
+//
+// AJAX SUPPORT
+// MODIFIED FROM http://www.tek-tips.com/viewthread.cfm?qid=1622697&page=13*/
+//
+
+var rootdomain="http://"+window.location.hostname
+
+/**
  * loadContent ( url, callback, animate, backTo )
- * ----------------------------------------------
+ * 
  * Loads url into #pnlBodyArea using AJAX. If the url is loaded successfully,
  * we will call "callback" (usually updateMenu()), passing the url, so that
  * other parts of the interface can be updated.
@@ -448,7 +691,13 @@ function hidePopOver ()
  * are still items in the returnTo stack. The returnTo stack is destroyed
  * if both animate and backTo are empty, indicating the user is going
  * a new direction.
- **************************************************************************/
+ *
+ * @param url           the address to load
+ * @param callback      the function to call when loading is complete
+ * @param animate       the animation (if desired)
+ * @param backTo        the address to return back to when BACK is pressed.
+ *
+ */
 
 function loadContent(url, callback, animate, backTo) {
     var page_request = false;
@@ -527,7 +776,7 @@ function loadContent(url, callback, animate, backTo) {
                 {
                     $("pnlBodyArea").style.webkitAnimation = "";
                     setTimeout ( function () { 
-                    $("pnlBodyArea").style.webkitAnimation = animate + " 1.25s 1";
+                    $("pnlBodyArea").style.webkitAnimation = animate + " 0.75s 1";
                     }, 0);
                     
                    /* setTimeout ( function () {
@@ -585,9 +834,9 @@ function loadContent(url, callback, animate, backTo) {
     return true;
 }
 
-/*
+/**
  * updateMainMenu ( url, title )
- * -----------------------------
+ * 
  * The main menu is #grpMainMenu and should be updated to indicate the currently
  * selected page (if possible). This does so by comparing the incoming url with
  * the url in the HREF of each anchor within the group. If it matches, the item
@@ -602,7 +851,11 @@ function loadContent(url, callback, animate, backTo) {
  * the selected menu item.
  *
  * This function is generally called as a callback from loadContent().
- *********************************************************************************/
+ *
+ * @param url   the incoming url
+ * @param title the title of the body area.
+ *
+ */
 function updateMainMenu( url, title )
 {
     var mnu = $("grpMainMenu");
@@ -630,13 +883,16 @@ function updateMainMenu( url, title )
     return true;
 }
 
-/*
+/**
  * loadMenu ( url, callback )
- * ----------------------------------------------
+ * 
  * Loads url into #pnlMainArea using AJAX. If the url is loaded successfully,
  * we will call "callback" (usually updateMenu()), passing the url, so that
  * other parts of the interface can be updated.
- **************************************************************************/
+ *
+ * @param url       the address of the menu
+ * @param callback  the callback function, if desired.
+ */
 
 function loadMenu(url, callback) {
     var page_request = false;
@@ -717,34 +973,49 @@ function loadMenu(url, callback) {
 }
 
 
-/*
+/**
  * setPageTitle ( title )
- * ----------------------
+ *
  * Sets the content of #navBodyTitle to the title specified. If no title is passed,
  * sets it to "Home". Assumes the existence of #navBodyTitle.
- **********************************************************************************/
+ *
+ * @param title     Page Title
+ */
 function setPageTitle ( title )
 {
     $("navBodyTitle").innerHTML = title ? title : "Home";
 }
 
+/**
+ * setSiteTitle sets the #navSiteTitle to the title specified. If no title is passed,
+ * the default is "My Site".
+ *
+ * @param title     Site Title
+ */
 function setSiteTitle ( title )
 {
     $("navSiteTitle").innerHTML = title ? title : "My Site";
 }
 
+/**
+ * setMenuTitle sets the #navMenuTitle to the title specified. If no title is passed,
+ * the default is "Menu"
+ *
+ * @param title     Menu Title
+ */
 function setMenuTitle ( title )
 {
     $("navMenuTitle").innerHTML = title ? title : "Menu";
 }
 
 
-/*
+/**
  * loaded()
- * --------
+ * 
  * This function is called when the DOM is complete. Various initialization
  * functions will be called, including an update of our orientation.
- ***************************************************************************/
+ */
+ 
 function loaded() {
     //First things first, update our orientation (we can't assume the
     //user is in any particular orientation when loading)
@@ -774,17 +1045,13 @@ function loaded() {
 
 }
 
-function resetContentScrollBar ()
-{
-    resetSB ( sbBody );
-    return true;
-}
-/*
+
+/**
  * startApp()
- * ----------
+ * 
  * This function is called from the bottom of the index page in order to kick off
  * the rest of our app.
- *********************************************************************************/
+ */
 function startApp ()
 {
     // add a listener call "loaded" when the DOM is ready.
@@ -797,14 +1064,16 @@ function startApp ()
     };
 }
 
-/*
+/**
  *
  * processCheckBoxes()
- * -------------------
+ * 
+ * @source http://vxjs.org/switch.html
+ *
  * this function uses the iOS switches as seen on http://vxjs.org/switch.html and
  * handles their values and appearance appropriately. It must be called on all
  * pages that have checkboxes.
- *********************************************************************************/
+ */
 var processCheckBoxes = function() 
 {
     var checkbox;
@@ -849,6 +1118,17 @@ var processCheckBoxes = function()
     }
 };
 
+/**
+ *
+ * processDropDowns()
+ * 
+ * @inspiration http://vxjs.org/switch.html
+ *
+ * this function adds code to all dropdowns on the page to handle storing their values
+ * to localStorage ( and retrieving them for display ).
+ *
+ */
+
 var processDropDowns = function() 
 {
     var objs = allClasses(".dropdown");                     //alert (objs.length);
@@ -886,9 +1166,9 @@ var processDropDowns = function()
     }
 };
 
-/*
- * getWordFromPoint
- * from http://stackoverflow.com/questions/3855322/how-to-get-word-under-cursor
+/**
+ * getWordFromPoint returns the word under the given x,y coords.
+ * @source http://stackoverflow.com/questions/3855322/how-to-get-word-under-cursor
  */
 function getHitWord(hit_elem,x,y) {
 var hit_word = '';
@@ -920,47 +1200,33 @@ if (text_nodes.length > 0) {
 return hit_word;
 }
 
+/*
+ * getWordFromPoint will attempt to return the word underneth the given x,y coords.
+ *
+ * @param x     x-coordinate
+ * @param y     y-coordinate
+ */
 function getWordFromPoint (x, y)
 {
     console.log ("Trying to get word at " + x + ", " + y);
       return getHitWord(document.elementFromPoint(x, y),x,y);
 }
 
+//
+// phoneGap stuff
+//
+
 /**
- * ScrollFix v0.1
- * http://www.joelambert.co.uk
+ * openWebPage opens a childbrowser with the specified url.
  *
- * Copyright 2011, Joe Lambert.
- * Free to use under the MIT license.
- * http://www.opensource.org/licenses/mit-license.php
+ * @param url   web address
  */
-
-var ScrollFix = function(elem) {
-	// Variables to track inputs
-	var startY, startTopScroll;
-
-	elem = elem || document.querySelector(elem);
-
-	// If there is no element, then do nothing	
-	if(!elem)
-		return;
-
-	// Handle the start of interactions
-	elem.addEventListener('touchstart', function(event){
-		startY = event.touches[0].pageY;
-		startTopScroll = elem.scrollTop;
-
-		if(startTopScroll <= 0)
-			elem.scrollTop = 1;
-
-		if(startTopScroll + elem.offsetHeight >= elem.scrollHeight)
-			elem.scrollTop = elem.scrollHeight - elem.offsetHeight - 1;
-	}, false);
-   
-};
-
 function openWebPage ( url )
 {
     PhoneGap.exec ("ChildBrowserCommand.showWebPage", url );
     return false;
 }
+
+//
+// end ios.js
+//
