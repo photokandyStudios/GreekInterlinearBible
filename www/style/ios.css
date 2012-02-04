@@ -108,6 +108,7 @@ body
     background-position: right center;
     padding-right: 24px;
     float: right;    
+    width: 250px;
 }
 
 .container
@@ -505,9 +506,34 @@ textarea
 			-webkit-background-clip: content
 		}
 
+#theSearch
+{
+    position: absolute;
+    right: 16px;
+    top: 6px;
+    width: 160px;
+    border: 1px solid #000;
+    background-image: url(../images/icons/06-magnify.png);
+    background-repeat: no-repeat;
+    background-position: 4px center;
+    background-color: white;
+    border-radius: 16px;
+    padding-left: 32px;
+    -webkit-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+#theSearch input
+{
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    background: transparent;
+    -webkit-appearance: none;
+    line-height: 28px;
+    border: none;
+}
 
 /* some basic hide/show to get the app in the base state */
-                #btnBack, #btnMenu
+                #btnBack, #btnMenu, #theSearch
                 {
                     display: none;
                 }
