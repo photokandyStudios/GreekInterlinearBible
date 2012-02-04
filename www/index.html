@@ -54,6 +54,7 @@
                 </div>
                 <a id="btnBack" href="javascript:loadContent (returnTo.pop(), updateMainMenu, 'slideBack')" class="button back black"><span></span>Back</a>
                 <a id="btnMenu" href="javascript:toggleMenu ()" class="button black">Menu</a>
+                <div id="theSearch"><input onchange="doSearch();" id="txtSearch" type="search" size=20 /></div>
             </div>
             <div class="container scroll scrollable"  id="pnlBodyArea" >
                 <!-- this to be replaced by content at startup -->
@@ -69,6 +70,47 @@
             </div>
         </div>
 <script>
+
+    //
+    // Books of the bible, chapter count, and verse count obtained from http://www.deafmissions.com/tally/bkchptrvrs.html
+    //
+    var bibleBooks = [ "Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy", "Joshua", "Judges", "Ruth",
+                      "1 Samuel", "2 Samuel", "1 Kings", "2 Kings", "1 Chronicles", "2 Chronicles",
+                      "Ezra", "Nehemia", "Esther", "Job", "Psalms", "Proverbs", "Ecclesiastes",
+                      "Song of Solomon", "Isaiah", "Jeremiah", "Lamentations", "Ezekial", "Daniel",
+                      "Hosea", "Joel", "Amos", "Obadiah", "Jonah", "Micah", "Nahum", "Habakkuk",
+                      "Zephaniah", "Haggai", "Zechariah", "Malachi",
+                      // New Testament
+                      "Matthew", "Mark", "Luke", "John", "Acts", "Romans", "1 Corinthians",
+                      "2 Corinthians", "Galations", "Ephesians", "Philippians", "Colossians",
+                      "1 Thessalonians", "2 Thessalonians", "1 Timothy", "2 Timothy", "Titus",
+                      "Philemon", "Hebrews", "James", "1 Peter", "2 Peter", "1 John", "2 John",
+                      "3 John", "Jude", "Revelation" ];
+    
+    var bibleBooks3LC = [ "Gen", "Exo", "Lev", "Num", "Deu", "Jos", "Jdg", "Rut",
+                          "1Sa", "2Sa", "1Ki", "2Ki", "1Ch", "2Ch",
+                          "Ezr", "Neh", "Est", "Job", "Psa", "Pro", "Ecc",
+                          "Sos", "Isa", "Jer", "Lam", "Eze", "Dan",
+                          "Hos", "Joe", "Amo", "Oba", "Jon", "Mic", "Nah", "Hab",
+                          "Zep", "Hag", "Zec", "Mal",
+                          // New Testament
+                          "Mat", "Mar", "Luk", "Joh", "Act", "Rom", "1Co",
+                          "2Co", "Gal", "Eph", "Phi", "Col",
+                          "1Th", "2Th", "1Ti", "2Ti", "Tit",
+                          "Phl", "Heb", "Jas", "1Pe", "2Pe", "1Jo", "2Jo",
+                          "3Jo", "Jud", "Rev" ];
+    
+    var bibleBookChapters = [ 50, 40, 27, 36, 34, 24, 21, 4, 31, 24, 22, 25, 29, 36, 10, 13, 10, 42, 150,
+                              31, 12 ,8 ,66 ,52, 5, 48, 12, 14, 3, 9, 1, 4, 7, 3, 3, 3, 2, 14, 4,
+                              // New Testament
+                              28, 16, 24, 21, 28, 16, 16, 13, 6, 6, 4, 4, 5, 3, 6, 4, 3, 1, 13, 5, 5, 3, 5, 1, 1, 1, 22];
+
+    var transliteration = [ "a", "b", "g", "d", "e", "z", "e", "th", "i", "c", "l", "m",
+                            "n", "x", "o", "p", "r", "s", "s", "t", "u", "ph", "ch", "ps", "o"];
+
+    var betaCode = [ "a", "b", "g", "d", "e", "z", "h", "q", "i", "k", "l", "m",
+                            "n", "c", "o", "p", "r", "s", "s", "t", "u", "f", "x", "y", "w"];
+
     var selectedVerse = Array();
     var bookmarkedVerse = Array();
     var notedVerse = Array();
@@ -76,6 +118,53 @@
     
     var bibleLeft;
     var bibleRight;
+
+    function transliterate ( s, a )
+    {
+        var t;
+        var o = "";
+        var idx = 0;
+        
+        if (a)
+        {
+            t=a;
+        }
+        else
+        {
+            t=transliteration;
+        }
+        
+        for (var i=0;i<s.length;i++)
+        {
+            idx = s.charCodeAt(i);
+            if (idx<945)
+            {
+                o = o + s[i];
+            }
+            else
+            {
+                idx = idx - 945;
+                if (t[idx])
+                {
+                    o = o + t[ idx ];
+                }
+                else
+                {
+                    o = o + "?";
+                }
+            }
+        }
+        
+        return o;
+    }
+
+    
+    var selectedGreekText = localStorage.getItem("TextGreekText");
+    if (!selectedGreekText)
+    {
+        selectedGreekText = "byz";
+    }
+    
     // too buggy for now :-(
     //new ScrollFix($("pnlBodyArea"));
     //new ScrollFix($("pnlMainArea"));
@@ -98,12 +187,68 @@
 
     function byzBibleCallback()
     {
-        bibleLeft = byz;
+        if (selectedGreekText == "byz") { bibleLeft = byz; }
         biblesLoaded();
     }
+    
+    function steBibleCallback()
+    {
+        if (selectedGreekText == "ste") { bibleLeft = ste; }
+        biblesLoaded();
+    }
+    
+    function scrBibleCallback()
+    {
+        if (selectedGreekText == "scr") { bibleLeft = scr; }
+        biblesLoaded();
+    }
+    
+    function wchBibleCallback()
+    {
+        if (selectedGreekText == "wch") { bibleLeft = wch; }
+        biblesLoaded();
+    }
+    
+    function doSearchBible()
+    {
+        var theWord = $("txtSearch").value;
+        $("txtSearch").value = "";  // clear the search after the fact (?)
+        var url = "./search.html?ignore";
+        showLoader();
+        var whichSide = 2;
+        for (i=0;i<theWord.length;i++)
+        {
+            if (theWord.charCodeAt(i) >= 945)
+            {
+                whichSide = 1;
+            }
+        }
+        if (theWord.toLowerCase().indexOf("greek:")>-1)
+        {
+            whichSide = 1;
+            theWord = theWord.substr( theWord.toLowerCase().indexOf("greek:")+6, theWord.length );
+        }
+        if (whichSide == 1)
+        {
+            url = url + "&greek=" + theWord;
+        }
+        if (whichSide == 2)
+        {
+            url = url + "&search=" + theWord;
+        }
+        if (url)
+        {
+            loadContent(url, updateMainMenu,null, currentPageURL );
+        }
+        
+    }
+    
 </script>
 <script type="text/javascript" charset="utf-8" src="./bibles/ylt.js"></script>
 <script type="text/javascript" charset="utf-8" src="./bibles/byz.js"></script>
+<script type="text/javascript" charset="utf-8" src="./bibles/ste.js"></script>
+<script type="text/javascript" charset="utf-8" src="./bibles/scr.js"></script>
+<script type="text/javascript" charset="utf-8" src="./bibles/wch.js"></script>
         <script>
 //
 // check our cache, and if necessary reload the site.
