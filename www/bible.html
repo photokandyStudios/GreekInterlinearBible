@@ -1,30 +1,19 @@
 <div class="content white">
 <script type="text/javascript">
     setPageTitle ("Interlinear");
+    showSearch( doSearchBible );
     showLoader();
-    //
-    // Books of the bible, chapter count, and verse count obtained from http://www.deafmissions.com/tally/bkchptrvrs.html
-    //
-    var bibleBooks = [ "Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy", "Joshua", "Judges", "Ruth",
-                      "1 Samuel", "2 Samuel", "1 Kings", "2 Kings", "1 Chronicles", "2 Chronicles",
-                      "Ezra", "Nehemia", "Esther", "Job", "Psalms", "Proverbs", "Ecclesiastes",
-                      "Song of Solomon", "Isaiah", "Jeremiah", "Lamentations", "Ezekial", "Daniel",
-                      "Hosea", "Joel", "Amos", "Obadiah", "Jonah", "Micah", "Nahum", "Habakkuk",
-                      "Zephaniah", "Haggai", "Zechariah", "Malachi",
-                      // New Testament
-                      "Matthew", "Mark", "Luke", "John", "Acts", "Romans", "1 Corinthians",
-                      "2 Corinthians", "Galations", "Ephesians", "Philippians", "Colossians",
-                      "1 Thessalonians", "2 Thessalonians", "1 Timothy", "2 Timothy", "Titus",
-                      "Philemon", "Hebrews", "James", "1 Peter", "2 Peter", "1 John", "2 John",
-                      "3 John", "Jude", "Revelation" ];
-    
-    var bibleBookChapters = [ 50, 40, 27, 36, 34, 24, 21, 4, 31, 24, 22, 25, 29, 36, 10, 13, 10, 42, 150,
-                              31, 12 ,8 ,66 ,52, 5, 48, 12, 14, 3, 9, 1, 4, 7, 3, 3, 3, 2, 14, 4,
-                              // New Testament
-                              28, 16, 24, 21, 28, 16, 16, 13, 6, 6, 4, 4, 5, 3, 6, 4, 3, 1, 13, 5, 5, 3, 5, 1, 1, 1, 22];
 
-    var transliteration = [ "a", "b", "g", "d", "e", "z", "e", "th", "i", "c", "l", "m",
-                            "n", "x", "o", "p", "r", "s", "s", "t", "u", "ph", "ch", "ps", "o"];
+    selectedGreekText = localStorage.getItem("TextGreekText");
+    if (!selectedGreekText)
+    {
+        selectedGreekText = "byz";
+    }
+
+    if (selectedGreekText == "byz") { bibleLeft = byz; }
+    if (selectedGreekText == "ste") { bibleLeft = ste; }
+    if (selectedGreekText == "scr") { bibleLeft = scr; }
+    if (selectedGreekText == "wch") { bibleLeft = wch; }
                             
     var highlightColors = [ "", "255,255,128,0.5", "255,128,255,0.5", "128,255,255,0.5" ];
                                 
@@ -74,6 +63,7 @@
         passage = localStorage.passage;
     }
     var scrollTo = "";
+    var highlightText = argsParsed["highlight"];
     var incomingRef = argsParsed["ref"];
     if (incomingRef)
     {
@@ -84,34 +74,6 @@
         localStorage.passage = passage; // not sure?
     }
     
-    function transliterate ( s )
-    {
-        var o = "";
-        var idx = 0;
-        
-        for (var i=0;i<s.length;i++)
-        {
-            idx = s.charCodeAt(i);
-            if (idx<945)
-            {
-                o = o + s[i];
-            }
-            else
-            {
-                idx = idx - 945;
-                if (transliteration[idx])
-                {
-                    o = o + transliteration[ idx ];
-                }
-                else
-                {
-                    o = o + "?";
-                }
-            }
-        }
-        
-        return o;
-    }
 
     function populateBibleBooks ()
     {
@@ -122,7 +84,7 @@
             item = "<option %SELECTED% value='%INDEX%'>%BOOK%</option>";
             item = item.replace ( "%BOOK%", bibleBooks[i] ) ;
             item = item.replace ( "%INDEX%", i ) ;
-            if (bibleBooks[i].replace(/\s+/g, "").substr(0,3) == bookName)
+            if (bibleBooks3LC[i] == bookName)
             {
                 item = item.replace ( "%SELECTED%", "SELECTED" );
                 curBook = i;
@@ -162,7 +124,7 @@
     
     function changePassage()
     {
-        var bookName = bibleBooks[$("lstBibleBooks").value].replace(/\s+/g, "").substr(0,3);
+        var bookName = bibleBooks3LC[$("lstBibleBooks").value];
         var bookChapter = $("lstBibleBookChapters").value;
         if (bookName == "")
         {
@@ -188,7 +150,7 @@
     
 <script type="text/javascript">
 
-    function loadBiblePassage ( passage )
+    function loadBiblePassage ( passage, noscroll )
     {
         setPageTitle (bibleBooks[$("lstBibleBooks").value] + " " + $("lstBibleBookChapters").value)
         var ihtml = "<div style='font-family:" + settingsLayoutFontFamily + "; "
@@ -200,8 +162,11 @@
         var nhtml = "";
         var ref;
         var highlight="";
+        var middleText="";
         var highlightNum;
         //alert (ihtml);
+        var leftVerse;
+        var rightVerse;
         for (var i=1;bibleLeft[passage+"."+i] || bibleRight[passage+"."+i];i++)
         {
             ref = passage+"."+i;
@@ -209,17 +174,41 @@
             lhtml = "<div class='greek' style='font-size:%TEXTSIZE%; float: left; width: %LEFTWIDTH%;'>%TEXT%</div>";
             nhtml = "<div style='text-align: center; font-size:150%; color:#556677; float: left; width: %NUMWIDTH%;'>%TEXT%</div>";
             rhtml = "<div class='english' style='font-size:%TEXTSIZE%; float: right; width: %RIGHTWIDTH%;'>%TEXT%</div>";
-        
+            
             // process left-hand (greek) side
-            lhtml = lhtml.replace ( "%TEXT%", (settingsGreekLayoutTransliterate=="on") ? transliterate(bibleLeft[ref]) : bibleLeft[ref] );
+            leftVerse = (settingsGreekLayoutTransliterate=="on") ? transliterate(bibleLeft[ref]) : bibleLeft[ref];
+            rightVerse = bibleRight[ref];
+            
+            if (highlightText)
+            {
+                var terms = highlightText.toLowerCase().trim().split(" ");
+                for (var k=0;k<terms.length;k++)
+                {
+                    var p = new RegExp ( "(" + terms[k] + ")", "gi" );
+                    leftVerse=leftVerse.replace( p, "<span style='background-color: #FF0;'>$1</span>" );
+                    rightVerse=rightVerse.replace( p, "<span style='background-color: #FF0;'>$1</span>" );
+                }
+            }            
+            lhtml = lhtml.replace ( "%TEXT%", leftVerse );
             lhtml = lhtml.replace ( "%TEXTSIZE%", settingsLayoutTextSize );
             lhtml = lhtml.replace ( "%LEFTWIDTH%", leftColumnWidth);
 
-            rhtml = rhtml.replace ( "%TEXT%", bibleRight[ref] );
+            rhtml = rhtml.replace ( "%TEXT%", rightVerse );
             rhtml = rhtml.replace ( "%TEXTSIZE%", settingsLayoutTextSize );
             rhtml = rhtml.replace ( "%RIGHTWIDTH%", rightColumnWidth);
-
-            nhtml = nhtml.replace ( "%TEXT%", "" + i );
+            
+            middleText = "" + i;
+            // determine if bookmarked?
+            if (localStorage.getItem ("bm_" + ref ))
+            {
+                middleText = middleText + "</br><img src='./images/tabs/Star.png'/>";
+            }
+            if (localStorage.getItem ("note_" + ref ))
+            {
+                middleText = middleText + "</br><img src='./images/tabs/Tag.png'/>";
+            }
+            
+            nhtml = nhtml.replace ( "%TEXT%", middleText);
             nhtml = nhtml.replace ( "%NUMWIDTH%", middleColumnWidth);
 
             //TODO: highlight class
@@ -248,18 +237,20 @@
         resetContentScrollBar();
         
         // TODO: scroll to verse (from search/bookmark/notes, etc.)
-        setTimeout ( function() {
-        if (scrollTo)
+        if (!noscroll)
         {
-            sb[sbBody].scrollToElement ($(scrollTo),0);
-            scrollTo = null;
+            setTimeout ( function() {
+            if (scrollTo)
+            {
+                sb[sbBody].scrollToElement ($(scrollTo),0);
+                scrollTo = null;
+            }
+            else
+            {
+                sb[sbBody].scrollTo(0,0);
+            }
+            },500);
         }
-        else
-        {
-            sb[sbBody].scrollTo(0,0);
-        }
-        },500);
-        
     }
     
    
@@ -286,11 +277,60 @@
             whichSide = (overElement.className=="greek") ? 1 : 2;
         }
         theWord = getWordFromPoint (x,y);
+        
+        var numSelected = 0;
+        var numBookmarked = 0;
+        var numNoted = 0;
+        var numHighlighted = 0;
+        for (i in selectedVerse)
+        {
+            if ( selectedVerse [i] == "Y" )
+            {
+                numSelected = numSelected + 1;
+                if (localStorage.getItem ("bm_" + i )) { numBookmarked = numBookmarked + 1; }
+                if (localStorage.getItem ("note_" + i )) { numNoted = numNoted + 1; }
+                if (localStorage.getItem ("hl_" + i )) { numHighlighted = numHighlighted + 1; }
+            }
+        }
+        
         // determine visibility of certain popover elements
-        $("cmdDefine").style.display = (theWord && window.navigator.onLine) ? "block" : "none";
+        $("cmdDefine").style.display = (theWord && window.navigator.onLine && (whichSide == 2 || (whichSide==1 && settingsGreekLayoutTransliterate!="on") ) ) ? "block" : "none";
         $("cmdSearch").style.display = (theWord) ? "block" : "none";
-        //TODO: hide Copy & Highlight if no selection.
-        //TODO: hide Remove Highlight if no highlight.
+        $("cmdDefinition").style.display = (theWord && window.navigator.onLine && whichSide==2) ? "block" : "none";
+        $("cmdLexiConc").style.display = (theWord && window.navigator.onLine && whichSide==2) ? "block" : "none";
+        
+        if (numSelected == 0)
+        {
+            // most things won't work. Sorry!
+            $("cmdSelect").style.display = "none";
+            $("cmdHighlight1").style.display = "none";
+            $("cmdHighlight2").style.display = "none";
+            $("cmdHighlight3").style.display = "none";
+            $("cmdRemoveHighlight").style.display = "none";
+            $("cmdAddBookmark").style.display = "none";
+            $("cmdRemoveBookmark").style.display = "none";
+            $("cmdAddNote").style.display = "none";    
+            $("cmdEditNote").style.display = "none";
+            $("cmdRemoveNote").style.display = "none";  
+            $("cmdCancel").innerHTML = "Cancel";      
+        }
+        else
+        {
+            // we have selected, allow copying and highlighting
+            $("cmdSelect").style.display = "block";
+            $("cmdHighlight1").style.display = "block";
+            $("cmdHighlight2").style.display = "block";
+            $("cmdHighlight3").style.display = "block";
+
+            $("cmdRemoveHighlight").style.display = (numHighlighted>0) ? "block" : "none";
+            $("cmdAddBookmark").style.display = (numBookmarked < numSelected) ? "block" : "none";
+            $("cmdRemoveBookmark").style.display = (numBookmarked>0) ? "block" : "none";
+            $("cmdAddNote").style.display = (numNoted < numSelected) ? "block" : "none";            
+            $("cmdEditNote").style.display = (numNoted == 1 ) ? "block" : "none";
+            $("cmdRemoveNote").style.display = (numNoted>0) ? "block" : "none";        
+
+            $("cmdCancel").innerHTML = "Clear Selection";      
+        }
         showPopOver ( "poSelectCommands", x, y);
     }
     
@@ -327,6 +367,40 @@
         cancelSelection();
     }
     
+    function addBookmark ()
+    {
+        for (i in selectedVerse)
+        {
+            if ( selectedVerse [i] == "Y" )
+            {
+                localStorage.setItem ( "bm_" + i, "Y" ); 
+            }
+        }
+        cancelSelection();
+        loadBiblePassage ( passage, true );
+    }
+    
+    function removeBookmark ( ref )
+    {
+        if (ref)
+        {
+            localStorage.removeItem ( "bm_" + ref );
+            loadBiblePassage ( passage, true );
+        }
+        else
+        {
+        for (i in selectedVerse)
+        {
+            if ( selectedVerse [i] == "Y" )
+            {
+                localStorage.removeItem ( "bm_" + i ); 
+            }
+        }
+        cancelSelection();
+        loadBiblePassage ( passage, true );
+        }
+    }
+    
     function removeHighlight ()
     {
         for (i in selectedVerse)
@@ -360,7 +434,7 @@
         hidePopOver();
     }
     
-    function define()
+    function define( s )
     {
         // this deals with the currently selected word, set when the popover was triggered.
         var url;
@@ -368,18 +442,35 @@
         if (whichSide == 1)
         {   // greek
 //            url = "http://www.greek-dictionary.net/" + transliterate(theWord);
-              url = "https://www.google.com/search?q=" + transliterate(theWord) + "+site:greek-dictionary.net";
+//            url = "https://www.google.com/search?q=" + transliterate(theWord) + "+site:greek-dictionary.net";
+              // try using Perseus
+              url = "http://www.perseus.tufts.edu/hopper/searchresults?q=" + transliterate(theWord, betaCode);
         }
         if (whichSide == 2)
         {
             // english
-            url = "http://dictionary.reference.com/browse/" + theWord;
+            if (s)
+            {
+                url = "http://dictionary.reference.com/browse/" + theWord;
+            }
+            else
+            {
+                url = "http://www.perseus.tufts.edu/hopper/definitionlookup?type=begin&q=" + theWord + "&target=greek";
+            }
+            
         }
         hidePopOver();
         if (url)
         {
             openWebPage ( url );
         }
+    }
+    
+    function lexiConc()
+    {
+        url = "http://www.blueletterbible.org/search/lexiconc.cfm?ss=" + theWord + "&searchtype=any";
+        hidePopOver();
+        openWebPage(url);
     }
     
     function searchBible()
@@ -403,7 +494,7 @@
 
 </script>
     <div style="clear: both"></div>
-    <br/><br/><br/>Greek text from the Byzantine. English text from Young's Literal Translation.<br/><br/><br/>
+    <br/><br/><br/><br/><br/><br/>
 </div>
     <div id="hidePopOver" onclick="hidePopOver ();"></div>
     <div class="popover" id="poSelectCommands">
@@ -412,15 +503,19 @@
         <div class="popover-body">
             <ul class="listGroup" style="margin:0">
                 <li class="listItem" id="cmdSelect" onclick="copySelection();">Copy Selection</li>
-                <li class="listItem" onclick="addHighlight(1);" style="background-color:#FFFF80">Highlight Selection</li>
-                <li class="listItem" onclick="addHighlight(2);" style="background-color:#FF80FF">Highlight Selection</li>
-                <li class="listItem" onclick="addHighlight(3);" style="background-color:#80FFFF">Highlight Selection</li>
-                <li class="listItem" onclick="removeHighlight();">Remove Highlight</li>
-<!--                <li class="listItem" onclick="createBookmark();">Create Bookmark...</li>
-                    <li class="listItem" onclick="createNote();">Create Note...</li>
-  -->
+                <li class="listItem" id="cmdHighlight1" onclick="addHighlight(1);" style="background-color:#FFFF80">Highlight Selection</li>
+                <li class="listItem" id="cmdHighlight2" onclick="addHighlight(2);" style="background-color:#FF80FF">Highlight Selection</li>
+                <li class="listItem" id="cmdHighlight3" onclick="addHighlight(3);" style="background-color:#80FFFF">Highlight Selection</li>
+                <li class="listItem" id="cmdRemoveHighlight" onclick="removeHighlight();">Remove Highlight</li>
+                <li class="listItem" id="cmdAddBookmark" onclick="addBookmark();">Add Bookmark...</li>
+                <li class="listItem" id="cmdRemoveBookmark" onclick="removeBookmark();">Remove Bookmark(s)...</li>
+                <li class="listItem" id="cmdAddNote" onclick="addNote();">Create Note...</li>
+                <li class="listItem" id="cmdEditNote" onclick="editNote();">Edit Note...</li>
+                <li class="listItem" id="cmdRemoveNote" onclick="removeNote();">Remove Note(s)...</li>
                 <li class="listItem" id="cmdSearch" onclick="searchBible();">Search Bible...</li>
-                <li class="listItem" id="cmdDefine" onclick="define();">Define (Online)...</li>
+                <li class="listItem" id="cmdDefine" onclick="define();">Search Perseus (Online)...</li>
+                <li class="listItem" id="cmdDefinition" onclick="define(true);">Definition (Online)...</li>
+                <li class="listItem" id="cmdLexiConc" onclick="lexiConc();">BLB LexiConc (Online)...</li>
                 <li class="listItem" id="cmdCancel" onclick="cancelSelection();">Cancel Selection</li>
             </ul>
         </div>
