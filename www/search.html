@@ -1,4 +1,8 @@
 <div class="content">
+    <script>
+//        showSearch( doSearchBible ); // no search
+        setPageTitle ("Search Results");
+    </script>
 <!--    <h3>Search Speed</h3>
     <input type="search" id="txtSearch"/> -->
     <div id="lstResults"></div>
@@ -29,7 +33,7 @@
     
     console.log ("on search page. args:" + englishWord + ", " + greekWord + ", " + curPage);
 
-    function search( searchArray, searchTerm, allRequired, pageStart, pageEnd )
+    function search( searchArray, searchTerm, allRequired, pageStart, pageEnd, translit )
     {
         var results = Array();
         var terms = searchTerm.split(" ");
@@ -38,12 +42,20 @@
         {
             // search the verse for the searchTerm
             var verse = searchArray[v];
+            var tverse = transliterate(searchArray[v]);
             var vhit = 0;
             for (var i=0;i<terms.length;i++)
             {
                 if ( verse.toLowerCase().trim().indexOf( terms[i].toLowerCase().trim() ) > -1 )
                 {
                     vhit = vhit + 1; // found a hit.
+                }
+                if (translit)
+                {
+                    if ( tverse.toLowerCase().trim().indexOf( terms[i].toLowerCase().trim() ) > -1 )
+                    {
+                        vhit = vhit + 1; // found a hit.
+                    }                    
                 }
             }
             
@@ -68,8 +80,9 @@
         return results;
     }
     
-    function searchBible ( theWord, whichSide, allRequired, thePage)
+    function searchBible ( theWord, whichSide, allRequired, thePage, translit)
     {
+        showLoader();
         var page = (thePage) ? thePage : 1;
         var pageStart = ( (page-1) * 100) + 1;
         var pageEnd   = ( page * 100 );
@@ -77,7 +90,7 @@
         
         console.log ( "SearchBible: " + thePage + ", " + pageStart + ", " + pageEnd + ", " + theWord + ", " + whichSide );
         
-        var results = search( searchArray, theWord, allRequired, pageStart, pageEnd );
+        var results = search( searchArray, theWord, allRequired, pageStart, pageEnd, translit );
         
         console.log ( "SearchBible: " + results.length );
         
@@ -88,8 +101,17 @@
             var ref = results[i];
             var topText = (whichSide==1) ? bibleLeft[ref] : bibleRight[ref];
             var bottomText = (whichSide==1) ? bibleRight[ref] : bibleLeft[ref];
-            //TODO: does allow a back trail make sense here? 
-            var url = 'loadContent("./bible.html?ignore&ref=' + ref + '", updateMainMenu,"slideOut", "./search.html?ignore&' + 
+            //TODO: need to follow transliteration setting
+            
+            var terms = theWord.toLowerCase().trim().split(" ");
+            for (var k=0;k<terms.length;k++)
+            {
+                var p = new RegExp ( "(" + terms[k] + ")", "gi" );
+                topText=topText.replace( p, "<span style='background-color: #FF0;'>$1</span>" );
+                bottomText=bottomText.replace( p, "<span style='background-color: #FF0;'>$1</span>" );
+            }
+            
+            var url = 'loadContent("./bible.html?ignore&ref=' + ref + '&highlight=' + theWord +'", updateMainMenu,"slideOut", "./search.html?ignore&' + 
                       'search=' + englishWord + '&' +
                       'greek=' + greekWord + '&' +
                       'page=' + curPage + '&' +
@@ -116,6 +138,7 @@
             scrollTo = null;
         }
         },500);
+        hideLoader();
     }
     
     if (englishWord || greekWord)
@@ -123,12 +146,12 @@
         if (englishWord)
         {
             console.log ("searching english");
-            searchBible ( englishWord, 2, true, curPage );
+            searchBible ( englishWord, 2, true, curPage, false );
         }
         else
         {
             console.log ("searching greek");
-            searchBible ( greekWord, 1, true, curPage);
+            searchBible ( greekWord, 1, true, curPage, true);
         }
     }
 
