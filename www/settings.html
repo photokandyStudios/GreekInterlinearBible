@@ -1,5 +1,23 @@
 <div class="content">
-    <script type="text/javascript">setPageTitle ("Settings");</script>
+    <script>
+//        showSearch( doSearchBible );
+        setPageTitle ("Settings");
+    </script>
+    <h3>Text</h3>
+    <ul class="listGroup">
+        <li class="listItem">Greek Text
+            <select id="ddGreekText" class="dropdown" default="byz" localStorage="TextGreekText">
+                <option value="byz">Byzantine (2005)</option>
+                <option value="scr">Scrivener (1894)</option>
+                <option value="ste">Stephanos (1550)</option>
+                <option value="wch">Westcott-Hort</option>
+            </select>
+        </li>
+        <li class="listItem">English Transliteration<div class="switch"><span class="thumb"></span><input type="checkbox" localStorage="LayoutTransliteration"/></div></li>
+    </ul>
+    <p style="text-align: center">English Transliteration takes the selected Greek text and converts the Greek characters into characters English speakers are more
+    familiar with. For example, the Greek "Alpha" would become the English "a". There are multiple methods to do this, some more readable than others. This program
+    uses one which hopefully makes the text reasonably readable.</p>
     <h3>Layout</h3>
     <ul class="listGroup">
         <li class="listItem">Column Widths
@@ -11,11 +29,15 @@
         </li>
         <li class="listItem">Text Size
             <select id="ddTextSize" class="dropdown" default="12pt" localStorage="LayoutTextSize">
-                <option value="8pt">Smallest</option>
-                <option value="10pt">Smaller</option>
-                <option value="12pt">Normal</option>
-                <option value="14pt">Larger</option>
-                <option value="16pt">Largest</option>
+                <option value="8pt">8pt</option>
+                <option value="10pt">10pt</option>
+                <option value="12pt">12pt</option>
+                <option value="14pt">14pt</option>
+                <option value="16pt">16pt</option>
+                <option value="18pt">18pt</option>
+                <option value="20pt">20pt</option>
+                <option value="22pt">22pt</option>
+                <option value="24pt">24pt</option>
             </select>
         </li>
         <li class="listItem">Typeface
@@ -44,7 +66,6 @@
                 <option value="2em">Large</option>
             </select>
         </li>
-        <li class="listItem">English Transliteration<div class="switch"><span class="thumb"></span><input type="checkbox" localStorage="LayoutTransliteration"/></div></li>
     </ul>
     <button onclick="localStorage.clear();" class="button">Clear all Settings</button>
     <script>
