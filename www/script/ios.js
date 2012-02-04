@@ -27,6 +27,8 @@
  * Global Variables (consider them internal. Some are useful. Some aren't intended to be used.)
  *
  */
+ 
+var currentPageURL;                                                 // PUBLIC
 
 // Popovers //
 var lastpo;                                                         // PRIVATE: last popover, if any
@@ -46,6 +48,7 @@ var argsParsed = {};                                                // PUBLIC:  
 
 // Event Handlers //
 var onLongPress = null;                                             // PUBLIC: can be used to point to long press handler
+var onSearch = null;                                                // PUBLIC: called when the search box text changes
 
 /**
  *
@@ -221,6 +224,19 @@ function longpress ( event )
     if (onLongPress)
     {
         onLongPress ( event );
+    }
+}
+
+/**
+ *
+ * If there is an onSearch event handler, call it.
+ *
+ */
+function doSearch ()
+{
+    if (onSearch)
+    {
+        onSearch();
     }
 }
 
@@ -715,6 +731,20 @@ function hidePopOver ()
     }
 }
 
+function showSearch(callback)
+{
+    if (callback)
+    {
+        onSearch = callback;
+    }
+    $("theSearch").style.display = "block";
+}
+
+function hideSearch()
+{
+    onSearch = null;
+    $("theSearch").style.display = "none";
+}
 
 //
 // AJAX SUPPORT
@@ -814,6 +844,8 @@ function loadContent(url, callback, animate, backTo) {
     // unset longpress, if set.
     onLongPress = null;
     
+
+    
     // no more popover, either:
     lastpo = null;
 
@@ -835,6 +867,8 @@ function loadContent(url, callback, animate, backTo) {
                     $("pnlBodyArea").style.webkitAnimation = animate + " 1.25s 1";
                     }, 0);
                     
+                    setTimeout ( function() {document.getElementById('pnlBodyArea').innerHTML = ""; }, 250 );
+                    
                    /* setTimeout ( function () {
                         $("pnlBodyArea").style.webkitAnimation = "";
                         setTimeout ( function () { 
@@ -843,18 +877,23 @@ function loadContent(url, callback, animate, backTo) {
                     }, 300) */
                 }
                 if (tid) clearTimeout(tid);
-                hideLoader();
                 console.log ('Loaded Content:' + url);
+                currentPageURL = url;
                 parseArgs(url);
         
                 // fill content
                 setTimeout ( function () {
                     // nuke our scrollbar
                     destroySB ( sbBody );
+                    document.getElementById('pnlBodyArea').innerHTML = "";  // just in case things don't fill in until later...
+    // nuke the search handler
+    onSearch = null;
+    hideSearch();                    
                     // set the content
                     document.getElementById('pnlBodyArea').innerHTML = page_request.responseText;
                     // process scripts
                     processScriptTags('pnlBodyArea');
+                hideLoader();
                     
                     // if we have items in the returnTo stack, show the back button
                     if (returnTo.length > 0)
@@ -867,7 +906,7 @@ function loadContent(url, callback, animate, backTo) {
                     }
                     
                     resetSB ( sbBody, 375 );                    
-                }, 250 );
+                }, (animate) ? 325 : 250 );
                 returnValue = true;
             }
             
@@ -1098,6 +1137,9 @@ function loaded() {
     resetSB ( sbBody );
     
     }, 300 );
+    
+    setTimeout (loadLocalStorageAndSync, 500); // kick off a load in 500ms
+
 
 }
 
@@ -1282,6 +1324,133 @@ function openWebPage ( url )
     PhoneGap.exec ("ChildBrowserCommand.showWebPage", url );
     return false;
 }
+
+//
+// localStorage loading & saving
+//
+// Turns out that under iOS 5.1 (b3), the localStorage is stored in a vulnerable location.
+// So, we need to ensure that the settings are consistently loaded at app startup and saved
+// again at periodic times. The main app will continue to use localStorage as if nothing
+// is wrong, but these functions will load and save the data to persistent storage.
+//
+// Author: Kerri Shotts, photoKandy Studios LLC. License: MIT. v0.2
+//
+
+var syncLocalStorageInterval = 30000;
+
+var persistentStorage = function()
+{
+    var self = this;
+    self.gotFStoWrite = function (fileSystem)
+    {
+        fileSystem.root.getFile("localStorage.dat", {create: true, exclusive: false}, self.gotFileEntrytoWrite, self.fail);
+    }
+    self.gotFStoRead = function (fileSystem)
+    {
+        fileSystem.root.getFile("localStorage.dat", null, self.gotFileEntrytoRead, self.fail);
+    }
+    
+    self.gotFileEntrytoWrite = function (fileEntry)
+    {
+        fileEntry.createWriter (self.gotFileWriter, self.fail);
+    }
+
+    self.gotFileEntrytoRead = function (fileEntry)
+    {
+        fileEntry.file (self.gotFileReader, self.fail);
+    }
+    
+    self.gotFileReader = function (file)
+    {
+        var reader = new FileReader();
+        reader.onloadend = function (evt) { 
+            console.log ("Syncing localStorage from persistent store.");
+            var ls = evt.target.result.split("[EOK]");
+            //localStorage.clear(); // do I need to do this?
+            for (var i=0;i<ls.length;i++)
+            {
+                var kv = ls[i].split("[EQ]");
+                localStorage.setItem ( kv[0], kv[1] );
+            }
+            console.log ("Sync complete.");
+            if (self.readCallback)
+            {
+                self.readCallback();
+            }
+        };
+        reader.readAsText (file);
+    }
+
+    self.gotFileWriter = function (writer)
+    {
+        console.log ("Syncing localStorage to persistent store.");
+        
+        var s = "";
+        
+        for (var i=0; i<localStorage.length; i++)
+        {
+            var key = localStorage.key(i);
+            var value = localStorage[key];
+            //TODO: There's got to be a better way!
+            s = s + key + "[EQ]" + value + "[EOK]";
+            
+        }
+        writer.write ( s );
+        
+        console.log ("Sync Complete.");
+        
+        if (self.writeCallback)
+        {
+            self.writeCallback();
+        }
+    }
+    
+    self.fail = function (error)
+    {
+        console.log ("Error: " + error.code);
+            if (self.readCallback)
+            {
+                self.readCallback();
+            }
+    }
+
+    self.write = function ( callback )
+    {
+        if (callback)
+        {
+            self.writeCallback = callback;
+        }
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, self.gotFStoWrite, self.fail);
+    }
+    
+    self.read = function( callback )
+    {
+        if (callback)
+        {
+            self.readCallback = callback;
+        }
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, self.gotFStoRead, self.fail);
+    }
+}
+
+function saveLocalStorage()
+{
+    var o = new persistentStorage();
+    o.write(function() {     setTimeout (saveLocalStorage, syncLocalStorageInterval);     });
+    
+}
+
+function loadLocalStorage( callback )
+{
+    var o = new persistentStorage();
+    o.read( callback );
+}
+
+function loadLocalStorageAndSync()
+{
+    loadLocalStorage(function() {    setTimeout (saveLocalStorage, syncLocalStorageInterval);});
+}
+
 
 //
 // end ios.js
