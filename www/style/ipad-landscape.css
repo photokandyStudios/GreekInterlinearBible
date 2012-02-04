@@ -19,3 +19,9 @@ body.landscape.ipad #tabBar
     zleft:321px;
     right: 0;
 }
+
+body.landscape.ipad #navSiteTitle, body.landscape.ipad #navSiteBullet
+{
+    display: none;
+}
+
