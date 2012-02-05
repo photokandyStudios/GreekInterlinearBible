@@ -234,7 +234,7 @@
         // TODO: keyword highlights (from search)
         
         $("lstStream").innerHTML = ihtml;
-        resetContentScrollBar();
+        resetContentScrollBar( (scrollTo ? 1125: 500) );
         
         // TODO: scroll to verse (from search/bookmark/notes, etc.)
         if (!noscroll)
@@ -249,7 +249,7 @@
             {
                 sb[sbBody].scrollTo(0,0);
             }
-            },500);
+            },(scrollTo ? 1250 : 500));
         }
     }
     
@@ -266,11 +266,13 @@
 
     var theWord;
     var whichSide;
+    
     onLongPress = function ( event )
     {
         var x = event.touches[0].clientX;
         var y = event.touches[0].clientY;
         var overElement = document.elementFromPoint ( x, y );
+        var items = Array();
         whichSide = 0;
         if (overElement)
         {
@@ -293,46 +295,65 @@
             }
         }
         
+        if (numSelected != 0)
+        {
+            // we have selected, allow copying and highlighting
+            items.push ("Copy Selection");              //console.log ("1");
+            items.push ("Highlight Yellow");
+            items.push ("Highlight Magenta");
+            items.push ("Highlight Blue");           //console.log ("2");
+
+            if(numHighlighted>0)            { items.push ("Remove Highlight"); }
+            if(numBookmarked<numSelected)   { items.push ("Add Bookmark"); }
+            if(numBookmarked>0)             { items.push ("Remove Bookmark"); }
+            if(numNoted<numSelected)        { items.push ("Add Note"); }
+            if(numNoted==1)                 { items.push ("Edit Note"); }
+            if(numNoted>0)                  { items.push ("Remove Note"); }
+                                                        //console.log ("3");
+
+        }
+
         // determine visibility of certain popover elements
-        $("cmdDefine").style.display = (theWord && window.navigator.onLine && (whichSide == 2 || (whichSide==1 && settingsGreekLayoutTransliterate!="on") ) ) ? "block" : "none";
-        $("cmdSearch").style.display = (theWord) ? "block" : "none";
-        $("cmdDefinition").style.display = (theWord && window.navigator.onLine && whichSide==2) ? "block" : "none";
-        $("cmdLexiConc").style.display = (theWord && window.navigator.onLine && whichSide==2) ? "block" : "none";
-        
+//        $("cmdDefine").style.display = (theWord && window.navigator.onLine && (whichSide == 2 || (whichSide==1 && settingsGreekLayoutTransliterate!="on") ) ) ? "block" : "none";
+        if (theWord)                        { items.push ("Search Bible..."); }
+//        $("cmdDefinition").style.display = (theWord && window.navigator.onLine && whichSide==2) ? "block" : "none";
+        if (theWord && window.navigator.onLine && whichSide==2)
+                                            { items.push ("BLB LexiConc (Online)..."); }
+                                                        //console.log ("4");
         if (numSelected == 0)
         {
-            // most things won't work. Sorry!
-            $("cmdSelect").style.display = "none";
-            $("cmdHighlight1").style.display = "none";
-            $("cmdHighlight2").style.display = "none";
-            $("cmdHighlight3").style.display = "none";
-            $("cmdRemoveHighlight").style.display = "none";
-            $("cmdAddBookmark").style.display = "none";
-            $("cmdRemoveBookmark").style.display = "none";
-            $("cmdAddNote").style.display = "none";    
-            $("cmdEditNote").style.display = "none";
-            $("cmdRemoveNote").style.display = "none";  
-            $("cmdCancel").innerHTML = "Cancel";      
+            items.push ("Cancel");
         }
         else
         {
-            // we have selected, allow copying and highlighting
-            $("cmdSelect").style.display = "block";
-            $("cmdHighlight1").style.display = "block";
-            $("cmdHighlight2").style.display = "block";
-            $("cmdHighlight3").style.display = "block";
-
-            $("cmdRemoveHighlight").style.display = (numHighlighted>0) ? "block" : "none";
-            $("cmdAddBookmark").style.display = (numBookmarked < numSelected) ? "block" : "none";
-            $("cmdRemoveBookmark").style.display = (numBookmarked>0) ? "block" : "none";
-            $("cmdAddNote").style.display = (numNoted < numSelected) ? "block" : "none";            
-            $("cmdEditNote").style.display = (numNoted == 1 ) ? "block" : "none";
-            $("cmdRemoveNote").style.display = (numNoted>0) ? "block" : "none";        
-
-            $("cmdCancel").innerHTML = "Clear Selection";      
+            items.push ("Cancel Selection");
         }
-        showPopOver ( "poSelectCommands", x, y);
-    }
+                                                        //console.log ("5");
+        event.stopPropagation();
+        event.preventDefault();
+        addClick(x,y);
+        window.plugins.actionSheet.create("What do you want to do?", 
+                           items,
+                           function(buttonValue, buttonIndex) 
+                           { 
+                               if (buttonValue == "Copy Selection")     { copySelection(); }
+                               if (buttonValue == "Highlight Yellow")   { addHighlight(1); }
+                               if (buttonValue == "Highlight Blue")     { addHighlight(3); }
+                               if (buttonValue == "Highlight Magenta")  { addHighlight(2); }
+                               if (buttonValue == "Remove Highlight")   { removeHighlight(); }
+                               if (buttonValue == "Add Bookmark")       { addBookmark(); }
+                               if (buttonValue == "Remove Bookmark")    { removeBookmark(); }
+                               if (buttonValue == "Add Note")           { addNote (); }
+                               if (buttonValue == "Edit Note")          { editNote(); }
+                               if (buttonValue == "Remove Note")        { removeNote(); }
+                               if (buttonValue == "Search Bible...")    { searchBible(); }
+                               if (buttonValue == "BLB LexiConc (Online)...") { lexiConc(); }
+                               if (buttonValue == "Cancel Selection")   { cancelSelection(); }
+                           }, 
+                           {destructiveButtonIndex: -1, cancelButtonIndex: -1},
+                           x,y, 1, 1
+                        );                              //console.log ("6");
+    }           
     
     function copySelection ()
     {
@@ -496,31 +517,6 @@
     <div style="clear: both"></div>
     <br/><br/><br/><br/><br/><br/>
 </div>
-    <div id="hidePopOver" onclick="hidePopOver ();"></div>
-    <div class="popover" id="poSelectCommands">
-      <div class="popover-content">
-        <div class="arrow"><span></span></div>
-        <div class="popover-body">
-            <ul class="listGroup" style="margin:0">
-                <li class="listItem" id="cmdSelect" onclick="copySelection();">Copy Selection</li>
-                <li class="listItem" id="cmdHighlight1" onclick="addHighlight(1);" style="background-color:#FFFF80">Highlight Selection</li>
-                <li class="listItem" id="cmdHighlight2" onclick="addHighlight(2);" style="background-color:#FF80FF">Highlight Selection</li>
-                <li class="listItem" id="cmdHighlight3" onclick="addHighlight(3);" style="background-color:#80FFFF">Highlight Selection</li>
-                <li class="listItem" id="cmdRemoveHighlight" onclick="removeHighlight();">Remove Highlight</li>
-                <li class="listItem" id="cmdAddBookmark" onclick="addBookmark();">Add Bookmark...</li>
-                <li class="listItem" id="cmdRemoveBookmark" onclick="removeBookmark();">Remove Bookmark(s)...</li>
-                <li class="listItem" id="cmdAddNote" onclick="addNote();">Create Note...</li>
-                <li class="listItem" id="cmdEditNote" onclick="editNote();">Edit Note...</li>
-                <li class="listItem" id="cmdRemoveNote" onclick="removeNote();">Remove Note(s)...</li>
-                <li class="listItem" id="cmdSearch" onclick="searchBible();">Search Bible...</li>
-                <li class="listItem" id="cmdDefine" onclick="define();">Search Perseus (Online)...</li>
-                <li class="listItem" id="cmdDefinition" onclick="define(true);">Definition (Online)...</li>
-                <li class="listItem" id="cmdLexiConc" onclick="lexiConc();">BLB LexiConc (Online)...</li>
-                <li class="listItem" id="cmdCancel" onclick="cancelSelection();">Cancel Selection</li>
-            </ul>
-        </div>
-      </div>
-    </div>
 
 <script>
             setTabBar ( '    <select id="lstBibleBooks" onchange="populateChapters(this.value); changePassage();"><option>...</option></select><select id="lstBibleBookChapters" onchange="changePassage();"><option>...</option></select>');
