@@ -46,6 +46,9 @@
 		6AE9628F14D09D0D0016DF97 /* ChildBrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AE9628414D09D0D0016DF97 /* ChildBrowserViewController.m */; };
 		6AE9629014D09D0D0016DF97 /* ChildBrowserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6AE9628514D09D0D0016DF97 /* ChildBrowserViewController.xib */; };
 		6AE9629514D09D0D0016DF97 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 6AE9628B14D09D0D0016DF97 /* README.txt */; };
+		6AF041C314DE475E00658AE7 /* ActionSheet.js in Sources */ = {isa = PBXBuildFile; fileRef = 6AF041C014DE475E00658AE7 /* ActionSheet.js */; };
+		6AF041C414DE475E00658AE7 /* ActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AF041C114DE475E00658AE7 /* ActionSheet.m */; };
+		6AF041C514DE475E00658AE7 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 6AF041C214DE475E00658AE7 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -96,6 +99,10 @@
 		6AE9628414D09D0D0016DF97 /* ChildBrowserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChildBrowserViewController.m; sourceTree = "<group>"; };
 		6AE9628514D09D0D0016DF97 /* ChildBrowserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChildBrowserViewController.xib; sourceTree = "<group>"; };
 		6AE9628B14D09D0D0016DF97 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		6AF041BF14DE475E00658AE7 /* ActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionSheet.h; sourceTree = "<group>"; };
+		6AF041C014DE475E00658AE7 /* ActionSheet.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ActionSheet.js; sourceTree = "<group>"; };
+		6AF041C114DE475E00658AE7 /* ActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionSheet.m; sourceTree = "<group>"; };
+		6AF041C214DE475E00658AE7 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -254,6 +261,7 @@
 		6A56E06914CA475100F3F8BB /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
+				6AF041BE14DE475E00658AE7 /* ActionSheet */,
 				6AE9627E14D09D0D0016DF97 /* ChildBrowser */,
 				6AC0324114CE6DB4001F06EF /* ClipboardPlugin */,
 				6A56E06A14CA475100F3F8BB /* README */,
@@ -285,6 +293,17 @@
 				6AE9628B14D09D0D0016DF97 /* README.txt */,
 			);
 			path = ChildBrowser;
+			sourceTree = "<group>";
+		};
+		6AF041BE14DE475E00658AE7 /* ActionSheet */ = {
+			isa = PBXGroup;
+			children = (
+				6AF041BF14DE475E00658AE7 /* ActionSheet.h */,
+				6AF041C014DE475E00658AE7 /* ActionSheet.js */,
+				6AF041C114DE475E00658AE7 /* ActionSheet.m */,
+				6AF041C214DE475E00658AE7 /* README.md */,
+			);
+			path = ActionSheet;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -360,6 +379,7 @@
 				6AE9629014D09D0D0016DF97 /* ChildBrowserViewController.xib in Resources */,
 				6AE9629514D09D0D0016DF97 /* README.txt in Resources */,
 				6AB8EF6A14D26A2800CD7189 /* GreekInterlinearBibleIcon-iPad72.png in Resources */,
+				6AF041C514DE475E00658AE7 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -393,6 +413,8 @@
 				6AE9628D14D09D0D0016DF97 /* ChildBrowser.js in Sources */,
 				6AE9628E14D09D0D0016DF97 /* ChildBrowserCommand.m in Sources */,
 				6AE9628F14D09D0D0016DF97 /* ChildBrowserViewController.m in Sources */,
+				6AF041C314DE475E00658AE7 /* ActionSheet.js in Sources */,
+				6AF041C414DE475E00658AE7 /* ActionSheet.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
