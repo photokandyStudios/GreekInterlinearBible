@@ -69,6 +69,8 @@
 		<string>PGCapture</string>
 		<key>com.phonegap.splashscreen</key>
 		<string>PGSplashScreen</string>
+		<key>ActionSheet</key>
+		<string>ActionSheet</string>
 	</dict>
 </dict>
 </plist>
