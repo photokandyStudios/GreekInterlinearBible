@@ -130,14 +130,14 @@
         ihtml = ihtml + "</div>";
         
         $("lstResults").innerHTML = ihtml;
-        resetContentScrollBar();
+        resetContentScrollBar((scrollTo ? 1125 : 500));
         setTimeout (function() {
         if (scrollTo)
         {
             sb[sbBody].scrollToElement ($(scrollTo),0);
             scrollTo = null;
         }
-        },500);
+        },1250);
         hideLoader();
     }
     
