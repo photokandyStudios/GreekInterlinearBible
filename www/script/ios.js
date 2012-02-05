@@ -29,6 +29,8 @@
  */
  
 var currentPageURL;                                                 // PUBLIC
+var currentContainer;
+var otherContainer;
 
 // Popovers //
 var lastpo;                                                         // PRIVATE: last popover, if any
@@ -54,7 +56,7 @@ var onSearch = null;                                                // PUBLIC: c
  *
  * "Fast Buttons" / Ghost Click Buster.
  * Based on http://code.google.com/intl/en/mobile/articles/fast_buttons.html
- * Required because sometimes iOS's webkit is stupid when it comes to onclick firing twice.
+ * 
  *
  */
 //
@@ -359,17 +361,7 @@ function resetSB ( o, dly )
     //console.log ( 'Resetting ' + o + ' in ' + (dly ? dly : 125) );
     setTimeout ( function () { _resetSB (o); }, (dly ? dly : 125) );
 }
-
-/**
- *
- * isScrolling will return TRUE if any scroller has indicated it is in a scrolling state, and
- * FALSE if no scroller is scrolling.
- *
- */
-function isScrolling()
-{
-    return sbScrolling[0] || sbScrolling[1];
-}
+ 
 
 /**
  *
@@ -399,9 +391,9 @@ function destroySB ( o )
  * resets the content (sbBody) scrollbar.
  *
  */
-function resetContentScrollBar ()
+function resetContentScrollBar (dly)
 {
-    resetSB ( sbBody );
+    resetSB ( sbBody,dly );
     return true;
 }
 
@@ -789,68 +781,65 @@ function loadContent(url, callback, animate, backTo) {
     var page_request = false;
     var returnValue = false;
     
-    var tid = setTimeout( function() { showLoader(); }, 100 );
-    setTimeout ( function() { hideLoader();}, 10000 );
+    // set up a timeout to show our loader if no content received in 100ms
+    var tid = setTimeout( function() { showLoader(); }, 100 );                      //console.log ("784");
+    
+    // also set up a timeout to hide the loader in 10s no matter what happens
+    setTimeout ( function() { hideLoader();}, 10000 );                              //console.log ("788");
     
     // Push backTo onto our returnTo stack.
     if (backTo)
     {
         returnTo.push ( backTo );
-    }
-    
+    }                                                                               
+                                                                                    //console.log ("795");
     if (!animate && !backTo)
     {
         returnTo = Array(); // clear our history
-    }
-
+    }                                       
+                                                                                    //console.log ("800");
     // if we have a back button, hide it.             
     $("btnBack").style.display="none";   
-    
+                                                                                    //console.log ("803");
     if (window.XMLHttpRequest) // if Mozilla, Safari etc
     {
-        page_request = new XMLHttpRequest()
+        page_request = new XMLHttpRequest();
     }
-    else if (window.ActiveXObject)
-    { // if IE
-        try
-            {
-                page_request = new ActiveXObject("Msxml2.XMLHTTP")
-            }
-        catch (e)
-        {
-            try
-                {
-                    page_request = new ActiveXObject("Microsoft.XMLHTTP")
-                }
-            catch (e)
-                {
-                }
-        }
-    }
-    else return false;
-    
+    else return false;  
+                                                                                    //console.log ("809");
     // set our return value (this will depend on if things work right or not)
     returnValue = false;
-
+                                                                                    //console.log ("812");
     // we always hide the popup menu if we're an iPad
     if (isIPad() && isPortrait())
     {
         $("menuPanel").style.display = "none";
         $("hideMenu").style.display = "none";
     }
-    
+                                                                                    //console.log ("819");
     hideTabBar();
-    
+                                                                                    //console.log ("821");
     // unset longpress, if set.
     onLongPress = null;
-    
-
-    
+                                                                                    //console.log ("824");
     // no more popover, either:
     lastpo = null;
+                                                                                    //console.log ("827");
+    // position otherContent in the appropriate place
+    otherContainer.style.left = "0";
+    if (animate)
+    {
+        otherContainer.style.position = "absolute";
+        $("outerContainer").style.webkitTransition = "left,-webkit-transform 0.5s ease-in-out";
 
-
-    
+        if (animate == "slideBack") { otherContainer.style.left = "-100%"; }
+        if (animate == "slideOut")  { otherContainer.style.left = "100%"; }
+    }
+    else
+    {
+        currentContainer.innerHTML = "";    // can't have overlaying content, can we.
+    }
+                                                                                    //console.log ("839");
     page_request.onreadystatechange = function()
     {
         if (page_request.readyState == 4)
@@ -859,42 +848,52 @@ function loadContent(url, callback, animate, backTo) {
             // at this point, we have a page; 200 means success. 
             if (window.location.href.indexOf("http")==-1 || page_request.status==200) {
 
-                // check, animate out?
-                if (animate)
-                {
-                    $("pnlBodyArea").style.webkitAnimation = "";
-                    setTimeout ( function () { 
-                    $("pnlBodyArea").style.webkitAnimation = animate + " 1.25s 1";
-                    }, 0);
-                    
-                    setTimeout ( function() {document.getElementById('pnlBodyArea').innerHTML = ""; }, 250 );
-                    
-                   /* setTimeout ( function () {
-                        $("pnlBodyArea").style.webkitAnimation = "";
-                        setTimeout ( function () { 
-                        $("pnlBodyArea").style.webkitAnimation = animate + "Finish 0.25s 1";
-                        }, 0);                    
-                    }, 300) */
-                }
+                
+                // clear our showloader timer
                 if (tid) clearTimeout(tid);
+                
                 console.log ('Loaded Content:' + url);
                 currentPageURL = url;
                 parseArgs(url);
         
                 // fill content
-                setTimeout ( function () {
+//                setTimeout ( function () {
                     // nuke our scrollbar
                     destroySB ( sbBody );
-                    document.getElementById('pnlBodyArea').innerHTML = "";  // just in case things don't fill in until later...
-    // nuke the search handler
-    onSearch = null;
-    hideSearch();                    
+
+                    // nuke the search handler
+                    onSearch = null;
+                    hideSearch();                    
+
                     // set the content
-                    document.getElementById('pnlBodyArea').innerHTML = page_request.responseText;
+                    otherContainer.innerHTML = page_request.responseText;
                     // process scripts
-                    processScriptTags('pnlBodyArea');
-                hideLoader();
+                    processScriptTags(otherContainer.getAttribute("id"));
+                    hideLoader();
                     
+                    var tempContainer;
+                    tempContainer = otherContainer;
+                    otherContainer = currentContainer;
+                    currentContainer = tempContainer;
+                    
+                    // check, animate out?
+                    if (animate)
+                    {
+                        $("outerContainer").style.webkitTransform = "translate3d(" + ( 100 * ( (animate=="slideOut" ? -1 : 1) )) + "%,0,0)";
+                        setTimeout ( function() 
+                                     {
+                                          $("outerContainer").style.webkitTransition = "";
+                                         console.log ("moving containers back.");
+                                          currentContainer.style.left = "0";
+                                          currentContainer.style.position = "relative";
+                                          otherContainer.style.left = "100%";
+                                          otherContainer.innerHTML = "";
+                                          $("outerContainer").style.webkitTransform = "translate3d(0,0,0)";
+
+                                     }, 625 );
+                        resetSB ( sbBody, 750 );
+                    }
+
                     // if we have items in the returnTo stack, show the back button
                     if (returnTo.length > 0)
                     {
@@ -905,8 +904,8 @@ function loadContent(url, callback, animate, backTo) {
                         $("btnBack").style.display="none";
                     }
                     
-                    resetSB ( sbBody, 375 );                    
-                }, (animate) ? 325 : 250 );
+                    if (!animate) { resetSB ( sbBody, 250 );                    }
+//                }, (animate) ? 325 : 250 );
                 returnValue = true;
             }
             
@@ -1121,6 +1120,9 @@ function loaded() {
     setMenuTitle ( myMenuName );
     setSiteTitle ( mySiteName );
     setPageTitle ( myStartName );
+    
+    currentContainer = $("container1");
+    otherContainer   = $("container2");
     
     setTimeout ( function () {
     
