@@ -7,6 +7,9 @@
     <input type="search" id="txtSearch"/> -->
     <div id="lstResults"></div>
 <script>
+
+
+
     var englishWord = argsParsed["search"];      // incoming search
     var greekWord = argsParsed["greek"];          // same
     var curPage = argsParsed["page"];
@@ -141,19 +144,40 @@
         hideLoader();
     }
     
-    if (englishWord || greekWord)
+    function searchStart()
     {
-        if (englishWord)
+    
+        if (englishWord || greekWord)
         {
-            console.log ("searching english");
-            searchBible ( englishWord, 2, true, curPage, false );
+            if (englishWord)
+            {
+                console.log ("searching english");
+                searchBible ( englishWord, 2, true, curPage, false );
+            }
+            else
+            {
+                console.log ("searching greek");
+                searchBible ( greekWord, 1, true, curPage, true);
+            }
         }
-        else
-        {
-            console.log ("searching greek");
-            searchBible ( greekWord, 1, true, curPage, true);
-        }
+    
     }
+
+    // load our selected bibles
+            selectedGreekText = localStorage.getItem("TextGreekText");
+            if (!selectedGreekText)
+            {
+                selectedGreekText = "byz";
+            }
+            selectedRightText = localStorage.getItem("TextRightText");
+            if (!selectedRightText)
+            {
+                selectedRightText = "ylt";
+            }
+    afterBothLoaded = searchStart;
+    leftLoaded = false; rightLoaded = false;
+    loadBible ( selectedGreekText );
+    loadBible ( selectedRightText );
 
 </script>
 </div>
