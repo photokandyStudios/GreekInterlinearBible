@@ -13,11 +13,11 @@
 
 body.landscape.ipad
 {
-    background-image: url(../images/GreekInterlinearBible-iPad-Landscape.jpg);
+    background-image: url(../images/landscapebg.png);
 }
 body.portrait.ipad
 {
-    background-image: url(../images/GreekInterlinearBible-iPad-Portrait.jpg);
+    background-image: url(../images/portraitbg.png);
 }
 
 body.landscape.ipad .panel, body.portrait.ipad #bodyPanel
