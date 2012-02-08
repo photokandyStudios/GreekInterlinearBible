@@ -4,17 +4,6 @@
     showSearch( doSearchBible );
     showLoader();
 
-    selectedGreekText = localStorage.getItem("TextGreekText");
-    if (!selectedGreekText)
-    {
-        selectedGreekText = "byz";
-    }
-
-    if (selectedGreekText == "byz") { bibleLeft = byz; }
-    if (selectedGreekText == "ste") { bibleLeft = ste; }
-    if (selectedGreekText == "scr") { bibleLeft = scr; }
-    if (selectedGreekText == "wch") { bibleLeft = wch; }
-                            
     var highlightColors = [ "", "255,255,128,0.5", "255,128,255,0.5", "128,255,255,0.5" ];
                                 
     var settingsGreekLayoutTransliterate = localStorage.getItem("LayoutTransliteration");
@@ -52,7 +41,7 @@
     var middleColumnWidth=settingsLayoutColumnWidths.substr(2,2) + "%";
     var rightColumnWidth= settingsLayoutColumnWidths.substr(4,2) + "%";
     
-    var passage = "Mat.1";
+    var passage = "40N.1";
     var curBook=39;
     if (!localStorage.passage)
     {
@@ -63,8 +52,10 @@
         passage = localStorage.passage;
     }
     var scrollTo = "";
+    var scrollToPos;
     var highlightText = argsParsed["highlight"];
     var incomingRef = argsParsed["ref"];
+    var incomingScroll = argsParsed["scroll"];
     if (incomingRef)
     {
         // we've an incoming passage. Handle with care!
@@ -72,6 +63,10 @@
         passage = incomingRef.substr(0, incomingRef.lastIndexOf("."));
         console.log ('Forced navigation to ' + passage);
         localStorage.passage = passage; // not sure?
+    }
+    if (incomingScroll)
+    {
+        scrollToPos = incomingScroll;
     }
     
 
@@ -128,7 +123,7 @@
         var bookChapter = $("lstBibleBookChapters").value;
         if (bookName == "")
         {
-            bookName = "Mat";
+            bookName = "40N";
         }
         if (bookChapter < 1)
         {
@@ -176,8 +171,22 @@
             rhtml = "<div class='english' style='font-size:%TEXTSIZE%; float: right; width: %RIGHTWIDTH%;'>%TEXT%</div>";
             
             // process left-hand (greek) side
-            leftVerse = (settingsGreekLayoutTransliterate=="on") ? transliterate(bibleLeft[ref]) : bibleLeft[ref];
+            leftVerse = bibleLeft[ref];
+            // and now, add <word> spans to it
+            leftVerse= leftVerse.replace(/([^\s\.\,\?\!\:\;\(\)\`\[\]\{\}]*)/g, "<word>$1</word>");
+
+            // handle any strong's numbers / inflections
+            leftVerse = leftVerse.replace ( /VAR([0-9])/g, "$1");
+            leftVerse = leftVerse.replace ( /(G[0-9]+)/g, "<span class='strongs'>$1</span>" );
+            leftVerse = leftVerse.replace ( /([A-Z\-]{2,}[A-Z\-0-9]+)/g, "<span class='parsed'>$1</span>" );
+            
+            if (settingsGreekLayoutTransliterate=="on") 
+            { 
+              leftVerse = transliterate(leftVerse); 
+            }
+            
             rightVerse = bibleRight[ref];
+            rightVerse= rightVerse.replace(/([^\s\.\,\?\!\-\:\;\(\)\`\‘\’\[\]\{\}]*)/g, "<word>$1</word>");
             
             if (highlightText)
             {
@@ -234,7 +243,7 @@
         // TODO: keyword highlights (from search)
         
         $("lstStream").innerHTML = ihtml;
-        resetContentScrollBar( (scrollTo ? 1125: 500) );
+        resetContentScrollBar( (scrollTo||scrollToPos ? 1125: 500) );
         
         // TODO: scroll to verse (from search/bookmark/notes, etc.)
         if (!noscroll)
@@ -247,9 +256,19 @@
             }
             else
             {
-                sb[sbBody].scrollTo(0,0);
+                if (scrollToPos)
+                {
+                    console.log ("Scrolling to " + scrollToPos);
+                    sb[sbBody].scrollTo(0,-scrollToPos,0);
+                    scrollToPos = null;
+                }
+                else
+                {
+                    console.log ("Scrolling to 0.");
+                    sb[sbBody].scrollTo(0,0,0);
+                }
             }
-            },(scrollTo ? 1250 : 500));
+            },(scrollTo||scrollToPos ? 1250 : 500));
         }
     }
     
@@ -284,6 +303,7 @@
         var numBookmarked = 0;
         var numNoted = 0;
         var numHighlighted = 0;
+        
         for (i in selectedVerse)
         {
             if ( selectedVerse [i] == "Y" )
@@ -316,6 +336,7 @@
         // determine visibility of certain popover elements
 //        $("cmdDefine").style.display = (theWord && window.navigator.onLine && (whichSide == 2 || (whichSide==1 && settingsGreekLayoutTransliterate!="on") ) ) ? "block" : "none";
         if (theWord)                        { items.push ("Search Bible..."); }
+        if (theWord)                      { items.push ("Search Strong's..."); }
 //        $("cmdDefinition").style.display = (theWord && window.navigator.onLine && whichSide==2) ? "block" : "none";
         if (theWord && window.navigator.onLine && whichSide==2)
                                             { items.push ("BLB LexiConc (Online)..."); }
@@ -347,6 +368,7 @@
                                if (buttonValue == "Edit Note")          { editNote(); }
                                if (buttonValue == "Remove Note")        { removeNote(); }
                                if (buttonValue == "Search Bible...")    { searchBible(); }
+                               if (buttonValue == "Search Strong's...")    { searchStrongs(); }
                                if (buttonValue == "BLB LexiConc (Online)...") { lexiConc(); }
                                if (buttonValue == "Cancel Selection")   { cancelSelection(); }
                            }, 
@@ -493,6 +515,18 @@
         hidePopOver();
         openWebPage(url);
     }
+
+    function searchStrongs()
+    {
+        // will search the bible for the selected word.
+        var url = "./strongs.html?ignore";
+            url = url + "&search=" + theWord;
+        hidePopOver();
+        if (url)
+        {
+            loadContent(url, updateMainMenu,'slideOut', './bible.html?ignore&scroll=' + (-sb[sbBody].y) );
+        }
+    }
     
     function searchBible()
     {
@@ -509,7 +543,7 @@
         hidePopOver();
         if (url)
         {
-            loadContent(url, updateMainMenu,'slideOut', './bible.html' );
+            loadContent(url, updateMainMenu,'slideOut', './bible.html?ignore&scroll=' + (-sb[sbBody].y) );
         }
     }
 
@@ -519,14 +553,33 @@
 </div>
 
 <script>
-            setTabBar ( '    <select id="lstBibleBooks" onchange="populateChapters(this.value); changePassage();"><option>...</option></select><select id="lstBibleBookChapters" onchange="changePassage();"><option>...</option></select>');
-            showTabBar();
+
+            function populateBible()
+            {
+                setTabBar ( '    <select id="lstBibleBooks" onchange="populateChapters(this.value); changePassage();"><option>...</option></select><select id="lstBibleBookChapters" onchange="changePassage();"><option>...</option></select>');
+                showTabBar();
+                hideLoader();
+                populateBibleBooks(); 
+                //TODO: We need to load the chapters for the incoming book.
+                populateChapters( curBook );
+                loadBiblePassage ( passage );
+            }
+
+            // load our selected bibles
+            selectedGreekText = localStorage.getItem("TextGreekText");
+            if (!selectedGreekText)
+            {
+                selectedGreekText = "byz";
+            }
+            selectedRightText = localStorage.getItem("TextRightText");
+            if (!selectedRightText)
+            {
+                selectedRightText = "ylt";
+            }
+            afterBothLoaded = populateBible;
+            leftLoaded = false; rightLoaded = false;
+            loadBible ( selectedGreekText );
+            loadBible ( selectedRightText );
 
 
-
-            hideLoader();
-            populateBibleBooks(); 
-            //TODO: We need to load the chapters for the incoming book.
-            populateChapters( curBook );
-            loadBiblePassage ( passage );
 </script>
