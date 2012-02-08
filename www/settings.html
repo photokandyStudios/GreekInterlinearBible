@@ -7,10 +7,21 @@
     <ul class="listGroup">
         <li class="listItem">Greek Text
             <select id="ddGreekText" class="dropdown" default="byz" localStorage="TextGreekText">
-                <option value="byz">Byzantine (2005)</option>
-                <option value="scr">Scrivener (1894)</option>
-                <option value="ste">Stephanos (1550)</option>
+                <option value="byz">Byzantine (2000)</option>
+                <option value="byzp">Byzantine (2000) Parsed</option>
+<!--                <option value="scr">Scrivener (1894)</option>
+                <option value="ste">Stephanos (1550)</option>-->
+                <option value="tr">Textus Receptus (1894)</option>
+                <option value="trp">Textus Receptus (1894) Parsed</option>
+                <option value="tis">Tischendorf 8th Edition</option>
                 <option value="wch">Westcott-Hort</option>
+                <option value="wchp">Westcott-Hort Parsed</option>
+            </select>
+        </li>
+        <li class="listItem">English Text
+            <select id="ddRightText" class="dropdown" default="ylt" localStorage="TextRightText">
+                <option value="kjv">King James Version/Authorized Version</option>
+                <option value="ylt">Young's Literal Translation</option>
             </select>
         </li>
         <li class="listItem">English Transliteration<div class="switch"><span class="thumb"></span><input type="checkbox" localStorage="LayoutTransliteration"/></div></li>
