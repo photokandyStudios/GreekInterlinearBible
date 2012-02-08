@@ -135,7 +135,7 @@ function clickBuster (event)
     if (ignoreClick(event.clientX, event.clientY) || isScrolling())
     {
         console.log ("... and ignored it.");
-        setTimeout ( function() { sbScrolling=Array(false, false); console.log ("Nuked scrolling."); }, 1000 );
+        setTimeout ( function() { sbScrolling=Array(false, false);  }, 1000 );
         event.stopPropagation();
         event.preventDefault();
     }
@@ -252,7 +252,7 @@ function handleScrolling ( me, e, scrolling )
     if (scrolling)
     {
         sbScrolling[me.whichScrollerAmI] = scrolling;
-        console.log ( 'Scrolling for ' + me.whichScrollerAmI + ' is ' + scrolling );
+//        console.log ( 'Scrolling for ' + me.whichScrollerAmI + ' is ' + scrolling );
     }
     else
     {
@@ -263,7 +263,7 @@ function handleScrolling ( me, e, scrolling )
         }
         scrollingTimeout = setTimeout ( function() { 
             sbScrolling[me.whichScrollerAmI] = false;
-            console.log ( 'Scrolling for ' + me.whichScrollerAmI + ' is false' );
+//            console.log ( 'Scrolling for ' + me.whichScrollerAmI + ' is false' );
         }, 1000 );
     }
     
@@ -780,6 +780,7 @@ var rootdomain="http://"+window.location.hostname
 function loadContent(url, callback, animate, backTo) {
     var page_request = false;
     var returnValue = false;
+    var y = 0;
     
     // set up a timeout to show our loader if no content received in 100ms
     var tid = setTimeout( function() { showLoader(); }, 100 );                      //console.log ("784");
@@ -830,6 +831,9 @@ function loadContent(url, callback, animate, backTo) {
     if (animate)
     {
         otherContainer.style.position = "absolute";
+        y = (sb[sbBody].y);
+        console.log (y);
+        otherContainer.style.top = "" + (-y) + "px";   // so we can scroll horizontally first
         $("outerContainer").style.webkitTransition = "left,-webkit-transform 0.5s ease-in-out";
 
         if (animate == "slideBack") { otherContainer.style.left = "-100%"; }
@@ -879,16 +883,18 @@ function loadContent(url, callback, animate, backTo) {
                     // check, animate out?
                     if (animate)
                     {
-                        $("outerContainer").style.webkitTransform = "translate3d(" + ( 100 * ( (animate=="slideOut" ? -1 : 1) )) + "%,0,0)";
+                        console.log (y);
+                        $("outerContainer").style.webkitTransform = "translate3d(" + ( 100 * ( (animate=="slideOut" ? -1 : 1) )) + "%,"+ y + "px,0)";
                         setTimeout ( function() 
                                      {
                                           $("outerContainer").style.webkitTransition = "";
                                          console.log ("moving containers back.");
                                           currentContainer.style.left = "0";
+                                          currentContainer.style.top = "0";
+                                          $("outerContainer").style.webkitTransform = "translate3d(0,0,0)";
                                           currentContainer.style.position = "relative";
                                           otherContainer.style.left = "100%";
                                           otherContainer.innerHTML = "";
-                                          $("outerContainer").style.webkitTransform = "translate3d(0,0,0)";
 
                                      }, 625 );
                         resetSB ( sbBody, 750 );
@@ -1270,7 +1276,7 @@ var processDropDowns = function()
  * getWordFromPoint returns the word under the given x,y coords.
  * @source http://stackoverflow.com/questions/3855322/how-to-get-word-under-cursor
  */
-function getHitWord(hit_elem,x,y) {
+function getHitWord(hit_elem,x,y,dothework) {
 var hit_word = '';
 //                                                        console.log ('862');
 //text contents of hit element
@@ -1281,12 +1287,12 @@ if (text_nodes.length > 0) {
   var original_content = hit_elem.innerHTML;
 //                                                        console.log ('871');
   //wrap every word in every node in a dom element
-  hit_elem.innerHTML = hit_elem.textContent.replace(/([^\s\.\,\/\?\!\-\:\;\(\)\`]*)/g, "<word>$1</word>");
+if (dothework) {  hit_elem.innerHTML = hit_elem.textContent.replace(/([^\s\.\,\?\!\-\:\;\(\)\`]*)/g, "<word>$1</word>"); }
 //                                                        console.log ('876');
   //get the exact word under cursor
   var hit_word_elem = document.elementFromPoint(x, y);
 //                                                        console.log ('879');
-  if (hit_word_elem.nodeName != 'WORD') {
+  if (hit_word_elem.nodeName != 'WORD' && hit_word_elem.parentNode.nodeName != 'WORD') {
     console.log("missed!");
   }
   else  {
@@ -1294,7 +1300,7 @@ if (text_nodes.length > 0) {
     console.log("got it: "+hit_word);
   }
 //                                                        console.log ('887');
-  hit_elem.innerHTML = original_content;
+if (dothework) {  hit_elem.innerHTML = original_content;}
 }
 //                                                        console.log ('890');
 return hit_word;
