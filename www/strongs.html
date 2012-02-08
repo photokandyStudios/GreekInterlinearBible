@@ -1,0 +1,169 @@
+<div class="content">
+    <script>
+    </script>
+
+    <div id="lstResults">To search, enter a word or Strongs # into the search box above.</div>
+<script>
+
+    var englishWord = argsParsed["search"];      // incoming search
+    var curPage = argsParsed["page"];
+    var scrollTo = argsParsed["scrollto"];
+    if (!curPage)
+    {
+        curPage = 1;
+    }
+    
+    if (!englishWord)
+    {
+        englishWord = "";
+    }
+    
+    if (!scrollTo)
+    {
+        scrollTo = "";
+    }
+    
+    console.log ("on strong's page. args:" + englishWord + ", " + curPage);
+
+    function searchDict( searchArray, searchTerm, allRequired, pageStart, pageEnd, translit )
+    {
+        var results = Array();
+        var terms = searchTerm.split(" ");
+        var c = 0;
+
+            // do need to see if the incoming term is actually the index, though.
+            if ( searchArray[searchTerm.toUpperCase().trim()] )
+            {
+                results.push ( searchTerm.toUpperCase().trim() ); // it is, add it to the list. This one will always be outside
+                                    // the paging limits. Might be good. Might not?
+            }
+
+
+        for (v in searchArray)
+        {
+            // searching strongs is different than a verse, but not terribly so.
+            //console.log ("Searching " + v);
+            // search the rest of the object for the searchTerm
+            var definition = searchArray[v];
+            var vhit = 0;
+            
+            for (var i=0;i<terms.length;i++)
+            {
+                for (sv in definition)
+                {
+                    var stringToSearch = definition[sv];
+                    if (stringToSearch.toLowerCase().trim().indexOf( terms[i].toLowerCase().trim()) > -1 )
+                    {
+                        vhit = vhit + 1;
+                    }
+                }
+            }
+            
+            if (vhit > 0 )
+            {
+                c = c + 1;
+                if (c>=pageStart && c<=pageEnd) { results.push ( v ); }
+            }
+        }
+        return results;
+    }
+    
+    function searchStrongs ( theWord, whichSide, allRequired, thePage, translit)
+    {
+        showLoader();
+        var page = (thePage) ? thePage : 1;
+        var pageStart = ( (page-1) * 100) + 1;
+        var pageEnd   = ( page * 100 );
+        var searchArray = (whichSide==1) ? bibleLeft : bibleRight;
+        
+        console.log ( "SearchStrongs: " + thePage + ", " + pageStart + ", " + pageEnd + ", " + theWord + ", " + whichSide );
+        
+        var results = searchDict( strongsGreekDictionary, theWord, allRequired, pageStart, pageEnd, translit );
+        
+        console.log ( "SearchStrongs: " + results.length );
+        
+        var ihtml = "<div class='listGroup'>";
+       
+        for (var i=0;i<results.length;i++)
+        {
+            var ref = results[i];
+            var topText = "Derivation: " + strongsGreekDictionary[ref].derivation +
+                          "<br>KJV usage: " + strongsGreekDictionary[ref].kjv_def +
+                          "<br>Root word: " + strongsGreekDictionary[ref].lemma +
+                          "<br>Definition: " + strongsGreekDictionary[ref].strongs_def;
+            
+            var terms = theWord.toLowerCase().trim().split(" ");
+            for (var k=0;k<terms.length;k++)
+            {
+                var p = new RegExp ( "(" + terms[k] + ")", "gi" );
+                topText=topText.replace( p, "<span style='background-color: #FF0;'>$1</span>" );
+            }
+            
+            var url = 'loadContent("./xref.html?ignore&ref=' + ref + '&highlight=' + theWord +'", updateMainMenu,"slideOut", "./strongs.html?ignore&' + 
+                      'search=' + englishWord + '&' +
+                      'page=' + curPage + '&' +
+                      'scrollto=item' + i +
+                      '");'
+            var item = "<a id='item%NUM%' class='listItem arrow' href='#' onclick='%LINK%'><span style='display: block; float:left; width:15%'>%REF%</span><span style='width:84%; display: block; float:right;'><span style='display: block'>%TOP%</span></span><span style='display: block; clear: both'></span></a>";
+            item = item.replace ( "%REF%", ref);
+            item = item.replace ( "%TOP%", topText);
+            item = item.replace ( "%LINK%", url);
+            item = item.replace ( "%NUM%", i );
+            //console.log (item);
+            ihtml = ihtml + item;
+        }
+        
+        ihtml = ihtml + "</div>";
+        
+        $("lstResults").innerHTML = ihtml;
+        resetContentScrollBar((scrollTo ? 1125 : 500));
+        setTimeout (function() {
+        if (scrollTo)
+        {
+            sb[sbBody].scrollToElement ($(scrollTo),0);
+            scrollTo = null;
+        }
+        },1250);
+        hideLoader();
+    }
+    
+    function searchStart()
+    {
+        showSearch( doSearchStrongs ); // search us instead
+        setPageTitle ("Strong's Lookup");
+    
+        if (englishWord)
+        {
+            if (englishWord)
+            {
+                console.log ("searching english");
+                searchStrongs ( englishWord, 2, true, curPage, false );
+            }
+        }
+    
+    }
+    
+    function doSearchStrongs()
+    {
+        englishWord = $("txtSearch").value;
+        searchStart();
+    }
+
+    // load our selected bibles
+            selectedGreekText = localStorage.getItem("TextGreekText");
+            if (!selectedGreekText)
+            {
+                selectedGreekText = "byz";
+            }
+            selectedRightText = localStorage.getItem("TextRightText");
+            if (!selectedRightText)
+            {
+                selectedRightText = "ylt";
+            }
+    afterBothLoaded = searchStart;
+    leftLoaded = false; rightLoaded = false;
+    loadBible ( selectedGreekText );
+    loadBible ( selectedRightText );
+
+</script>
+</div>
