@@ -1,4 +1,4 @@
-<html zmanifest="cache.manifest">
+<html>
     <head>
         <meta name="http-equiv" content="Content-type:text/html; charset=utf-8"/>        
         <title>
@@ -34,6 +34,7 @@
         <script type="application/javascript" src="./script/gplusStream.js"></script>
         <script type="application/javascript" src="./script/podcastList.js"></script>
 
+        <script src="./bibles/strongs-greek-dictionary.js" charset="utf-8" type="application/javascript"></script>
 
     </head>
     <body class="ipad landscape" id="pnlBody" ontouchmove="BlockMove(event);" >
@@ -96,7 +97,7 @@
                       "Philemon", "Hebrews", "James", "1 Peter", "2 Peter", "1 John", "2 John",
                       "3 John", "Jude", "Revelation" ];
     
-    var bibleBooks3LC = [ "Gen", "Exo", "Lev", "Num", "Deu", "Jos", "Jdg", "Rut",
+    var bibleBooksO3LC = [ "Gen", "Exo", "Lev", "Num", "Deu", "Jos", "Jdg", "Rut",
                           "1Sa", "2Sa", "1Ki", "2Ki", "1Ch", "2Ch",
                           "Ezr", "Neh", "Est", "Job", "Psa", "Pro", "Ecc",
                           "Sos", "Isa", "Jer", "Lam", "Eze", "Dan",
@@ -108,6 +109,19 @@
                           "1Th", "2Th", "1Ti", "2Ti", "Tit",
                           "Phl", "Heb", "Jas", "1Pe", "2Pe", "1Jo", "2Jo",
                           "3Jo", "Jud", "Rev" ];
+
+    var bibleBooks3LC = [ "01O", "02O", "03O", "04O", "05O", "06O", "07O", "08O",
+                          "09O", "10O", "11O", "12O", "13O", "14O",
+                          "15O", "16O", "17O", "18O", "19O", "20O", "21O",
+                          "22O", "23O", "24O", "25O", "26O", "27O",
+                          "28O", "29O", "30O", "31O", "32O", "33O", "34O", "35O",
+                          "36O", "37O", "38O", "39O",
+                          // New Testament
+                          "40N", "41N", "42N", "43N", "44N", "45N", "46N",
+                          "47N", "48N", "49N", "50N", "51N",
+                          "52N", "53N", "54N", "55N", "56N",
+                          "57N", "58N", "59N", "60N", "61N", "62N", "63N",
+                          "64N", "65N", "66N" ];
     
     var bibleBookChapters = [ 50, 40, 27, 36, 34, 24, 21, 4, 31, 24, 22, 25, 29, 36, 10, 13, 10, 42, 150,
                               31, 12 ,8 ,66 ,52, 5, 48, 12, 14, 3, 9, 1, 4, 7, 3, 3, 3, 2, 14, 4,
@@ -125,8 +139,16 @@
     var notedVerse = Array();
     var highlightedVerse = Array();
     
+    var afterBothLoaded;
+    
     var bibleLeft;
     var bibleRight;
+    var _bl = Array();
+    var _br = Array();
+    var bibleLeftCode;
+    var bibleRightCode;
+    var leftLoaded = false;
+    var rightLoaded = false;
 
     function transliterate ( s, a )
     {
@@ -173,6 +195,11 @@
     {
         selectedGreekText = "byz";
     }
+    var selectedRightText = localStorage.getItem("TextRightText");
+    if (!selectedRightText)
+    {
+        selectedRightText = "ylt";
+    }
     
     // too buggy for now :-(
     //new ScrollFix($("pnlBodyArea"));
@@ -180,44 +207,75 @@
 
     function biblesLoaded()
     {
-        if (bibleLeft && bibleRight)
+        console.log ("in biblesLoaded!");
+        if (leftLoaded && rightLoaded)
         {
+            console.log ("both sides ready.");
             hideLoader();
-            startApp( ); // tell our app to start
+            if (afterBothLoaded)
+            {
+                console.log ("calling afterBothLoaded.");
+             afterBothLoaded( ); 
+            }
+            afterBothLoaded = null;
 
         }
     }
 
-    function yltBibleCallback()
+    function bibleRightCallback()
     {
-        bibleRight = ylt;
+        console.log ("in bibleRightCallback!");
+        rightLoaded = true;
+        bibleRight = _br;
         biblesLoaded();
     }
 
-    function byzBibleCallback()
+    function bibleLeftCallback()
     {
-        if (selectedGreekText == "byz") { bibleLeft = byz; }
+        console.log ("in bibleLeftCallback!");
+        leftLoaded = true;
+        bibleLeft = _bl;
         biblesLoaded();
     }
     
-    function steBibleCallback()
+    function loadBible( bc )
     {
-        if (selectedGreekText == "ste") { bibleLeft = ste; }
-        biblesLoaded();
+        console.log ("attempted to load " + bc);
+        if (bc == "kjv" || bc == "ylt")
+        {
+            if (bibleRightCode == bc)
+            {
+                bibleRightCallback();
+                return;     // already loaded, no need to do it again.
+            }
+        }
+        else
+        {
+            if (bibleLeftCode == bc)
+            {
+                bibleLeftCallback();
+                return;     // already loaded, no need to do it again.
+            }
+        }
+        showLoader();
+        var newScript = document.createElement('script');
+        newScript.type = "application/javascript";
+        newScript.charset = "utf-8";
+        newScript.src = "./bibles/unbound/" + bc + ".js";
+        console.log (newScript);
+        $("bodyPanel").appendChild (newScript);
+        if (bc == "kjv" || bc == "ylt")
+        {
+            selectedRightText = bc;
+            bibleRightCode = bc;
+        }
+        else
+        {
+            selectedGreekText = bc;
+            bibleLeftCode = bc;
+        }
     }
-    
-    function scrBibleCallback()
-    {
-        if (selectedGreekText == "scr") { bibleLeft = scr; }
-        biblesLoaded();
-    }
-    
-    function wchBibleCallback()
-    {
-        if (selectedGreekText == "wch") { bibleLeft = wch; }
-        biblesLoaded();
-    }
-    
+
     function doSearchBible()
     {
         var theWord = $("txtSearch").value;
@@ -252,29 +310,28 @@
         
     }
     
-</script>
-<script type="text/javascript" charset="utf-8" src="./bibles/ylt.js"></script>
-<script type="text/javascript" charset="utf-8" src="./bibles/byz.js"></script>
-<script type="text/javascript" charset="utf-8" src="./bibles/ste.js"></script>
-<script type="text/javascript" charset="utf-8" src="./bibles/scr.js"></script>
-<script type="text/javascript" charset="utf-8" src="./bibles/wch.js"></script>
-        <script>
 //
 // check our cache, and if necessary reload the site.
 // from: http://www.html5rocks.com/en/mobile/mobifying.html
-window.applicationCache.addEventListener('updateready', function(e) {
+/*window.applicationCache.addEventListener('updateready', function(e) {
   if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
     window.applicationCache.swapCache();
       console.log ('Cache needs changed, Reloading...');
       window.location.reload();
   }
-}, false);
+}, false);*/
         
             // startup variables
             var mySiteName = "Greek Interlinear";
             var myMenuName = "Greek Interlinear";
             var myStartPage = "./home.html";
             var myStartName = "Home";
+            
+            // load our first bibles
+            afterBothLoaded = startApp; // starter
+            leftLoaded = false; rightLoaded = false;
+            loadBible ( selectedGreekText );
+            loadBible ( selectedRightText );
         
         </script>
     </body>
