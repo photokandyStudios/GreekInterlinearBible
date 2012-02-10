@@ -66,16 +66,17 @@ body
     background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#808080), to(#282828));
     border: none;
     border-bottom: 1px solid #202020;
-    border-top: 1px solid #909090;
+    border-top: 1px solid #202020;
     color: #E8E8E8;
-    -webkit-box-shadow: inset 0 22px 0px rgba(255,255,255,0.125);
+    z-webkit-box-shadow: inset 0 25px 0px rgba(255,255,255,0.125);
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 42px;
-    line-height: 42px;
+    height: 50px;
+    line-height: 50px;
     text-align: center;
+    font-size: 10px;
 }
 
 .bottomTabs select
@@ -92,6 +93,28 @@ body
     background-repeat: no-repeat;
     background-position: right center;
     padding-right: 24px;    
+}
+
+.bottomTabs .barItem
+{
+    display: inline-block;
+    padding-left: 20px;
+    padding-right: 20px;
+    position: relative;
+    color: #E8E8E8;
+    text-shadow: none;
+    text-decoration: none;
+    background-position: center -2px;
+    height: 50px;
+    background-repeat: no-repeat;
+    line-height: 83px;
+}
+
+.bottomTabs .barItem.sel
+{
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 25px 5px rgba(255,255,255,0.25);
+    background-color: #777;
 }
 
 .dropdown
@@ -121,63 +144,6 @@ body
              
     border: none;
 }
-/*
-@-webkit-keyframes slideOut
-{
-    0%
-    {
-        -webkit-transform:translate3d(0,0,0);
-    }
-    25%
-    {
-        -webkit-transform:translate3d(-100%,0,0);
-    }
-    50%
-    {
-        -webkit-transform:translate3d(-100%,0,0);
-    }
-    50.001%
-    {
-        -webkit-transform:translate3d(100%,0,0);
-    }
-    75%
-    {
-        -webkit-transform:translate3d(0,0,0);
-    }
-    100%
-    {
-        -webkit-transform:translate3d(0,0,0);
-    }
-}
-
-@-webkit-keyframes slideBack
-{
-    0%
-    {
-        -webkit-transform:translate3d(0,0,0);
-    }
-    25%
-    {
-        -webkit-transform:translate3d(100%,0,0);
-    }
-    50%
-    {
-        -webkit-transform:translate3d(100%,0,0);
-    }
-    50.001%
-    {
-        -webkit-transform:translate3d(-100%,0,0);
-    }
-    75%
-    {
-        -webkit-transform:translate3d(0,0,0);
-    }
-    100%
-    {
-        -webkit-transform:translate3d(0,0,0);
-    }
-}
-*/
 
 @-webkit-keyframes slideOut
 {
@@ -245,6 +211,10 @@ body
 .content p
 {
     text-shadow: 1px 1px 1px #FFF;
+}
+.content.white p
+{
+    text-shadow: none !important;
 }
 
 .content a, .content a:visited
@@ -349,7 +319,7 @@ body
     font-weight: bold;
     -webkit-user-select: none;
     list-style: none;
-    
+    clear: both;
 }
 
 .navSubItem.sel
@@ -369,6 +339,31 @@ body
     float: left;
     margin-right: 8px;
     margin-top: 3px;
+}
+
+.gridExpander
+{
+    -webkit-transition: max-height 0.5s ease;
+    max-height: 0px;
+    overflow: hidden;
+}
+
+.gridExpander.open
+{
+    max-height: 160px; /* 760 if counting Psalms. */
+}
+
+.gridItem
+{
+    display: block;
+    float: left;
+    background-color: white;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    -webkit-box-shadow: inset 1px 1px 4px rgba(0,0,0,0.5);
+    text-decoration: none;
 }
 
 .trackList
@@ -597,23 +592,26 @@ textarea
     display: none;
 }
 
-#loader div
-{
-    position: absolute;
-    top: 42.5%;
-    bottom: 42.5%;
-    left: 42.5%;
-    right: 42.5%;
-    background-color: rgba(0, 0, 0, 0.5);
-    text-align: center;
-    color: #FFFFFF;
-    font-size: 16px;
-    line-height: 500%;
-    border-radius: 10px 10px;
+#bodyPanel 
+{ 
+    display: none; 
 }
 
-#bodyPanel { display: none; }
-#menuPanel { display: none; }
+#menuPanel 
+{
+    left: -324px;
+    z-index: 4;
+    box-shadow: 0px 0px 8px #000;
+    -webkit-transition: left 0.5s ease;
+    width: 320px;
+    -webkit-transform: translate3d(0,0,0);
+}
+
+#btnMenu
+{
+    display: block;
+}
+
 #tabBar
 {
     display: none;
@@ -763,3 +761,58 @@ textarea
     right: 0;
     bottom: 0;
 }
+
+/*spinner css from http://37signals.com/svn/posts/2577-loading-spinner-animation-using-css-and-webkit 
+ */
+
+  div.spinner div {
+    width: 6%;
+    height: 26%;
+    background: #000;
+    position: absolute;
+    left: 44.5%;
+    top: 37%;
+    opacity: 0;
+    -webkit-border-radius: 50px;
+    -webkit-box-shadow: 0 0 3px rgba(0,0,0,0.2);
+  }
+
+    div.spinner div.bar1 {-webkit-transform:rotate(0deg) translate(0, -142%); -webkit-animation-delay: 0s;}    
+    div.spinner div.bar2 {-webkit-transform:rotate(30deg) translate(0, -142%); -webkit-animation-delay: -0.9167s;}
+    div.spinner div.bar3 {-webkit-transform:rotate(60deg) translate(0, -142%); -webkit-animation-delay: -0.833s;}
+    div.spinner div.bar4 {-webkit-transform:rotate(90deg) translate(0, -142%); -webkit-animation-delay: -0.75s;}
+    div.spinner div.bar5 {-webkit-transform:rotate(120deg) translate(0, -142%); -webkit-animation-delay: -0.667s;}
+    div.spinner div.bar6 {-webkit-transform:rotate(150deg) translate(0, -142%); -webkit-animation-delay: -0.5833s;}
+    div.spinner div.bar7 {-webkit-transform:rotate(180deg) translate(0, -142%); -webkit-animation-delay: -0.5s;}
+    div.spinner div.bar8 {-webkit-transform:rotate(210deg) translate(0, -142%); -webkit-animation-delay: -0.41667s;}
+    div.spinner div.bar9 {-webkit-transform:rotate(240deg) translate(0, -142%); -webkit-animation-delay: -0.333s;}
+    div.spinner div.bar10 {-webkit-transform:rotate(270deg) translate(0, -142%); -webkit-animation-delay: -0.25s;}
+    div.spinner div.bar11 {-webkit-transform:rotate(300deg) translate(0, -142%); -webkit-animation-delay: -0.1667s;}
+    div.spinner div.bar12 {-webkit-transform:rotate(330deg) translate(0, -142%); -webkit-animation-delay: -0.0833s;}
+  
+@-webkit-keyframes fade {
+  from {opacity: 1;}
+  to {opacity: 0.25;}
+}
+
+div.spinner
+{
+  width:5%;
+  height:5%;
+}
+div.spinner div {
+  -webkit-animation: fade 1s linear infinite;
+}
+
+#loader div
+{
+    position: absolute;
+    top:47.5%;
+    left:47.5%;
+    right:47.5%;
+    bottom:47.5%;
+    text-align: center;
+    color: #FFFFFF;
+    font-size: 16px;
+}
+

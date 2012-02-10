@@ -1,62 +1,439 @@
-<!--<img src="./images/church326.jpg" width=100% />-->
-<!--<h2>Navigation</h2>-->
 <div class="navSubItemGroup" id="grpMainMenu" >
+ <script>
+  var theLastO;
+  function navToPassage ( passage )
+  {
+      loadContent('./bible.html?ignore&ref=' + passage, updateMainMenuandTabBar );
+  }
+  function toggleGrid ( o )
+  {
+       o.nextSibling.nextSibling.classList.toggle("open");
+       /*if (theLastO)
+       {
+        if (theLastO.nextSibling.nextSibling.className.indexOf("open")>-1)
+        {
+         theLastO.nextSibling.nextSibling.classList.toggle("open");
+        }
+       }
+       theLastO = o;*/
+       resetSB ( sbMenu, 550 );
+  }
+ </script>
+<!--
     <a id="mnuMainHome"
        title="Home"
-       href="javascript:loadContent('./home.html', updateMainMenu );"
+       href="javascript:loadContent('./home.html', updateMainMenuandTabBar );"
        class="navSubItem sel">
         <img src="./images/tabs/Home.png"> Home
     </a>
 
     <a id="mnuMainHome"
        title="Interlinear Bible"
-       href="javascript:loadContent('./bible.html', updateMainMenu );"
+       href="javascript:loadContent('./bible.html', updateMainMenuandTabBar );"
        class="navSubItem ">
         <img src="./images/tabs/Bookmark.png"> Read Bible
     </a>
+-->    
 <!--
     <a id="mnuMainHome"
-       title="Search"
-       href="javascript:loadContent('./search.html', updateMainMenu );"
-       class="navSubItem">
-        <img src="./images/tabs/Search.png"> Search
-    </a>
--->
-    <a id="mnuMainHome"
        title="Bookmarks"
-       href="javascript:loadContent('./bookmarks.html', updateMainMenu );"
+       href="javascript:loadContent('./bookmarks.html', updateMainMenuandTabBar );"
        class="navSubItem ">
         <img src="./images/tabs/Star.png"> Bookmarks
     </a>
 
     <a id="mnuMainHome"
        title="Notes"
-       href="javascript:loadContent('./notes.html', updateMainMenu );"
+       href="javascript:loadContent('./notes.html', updateMainMenuandTabBar );"
        class="navSubItem ">
         <img src="./images/tabs/Pen-Slated.png"> Notes
     </a>
 
     <a id="mnuMainHome"
        title="Strong's Lookup"
-       href="javascript:loadContent('./strongs.html', updateMainMenu );"
+       href="javascript:loadContent('./strongs.html', updateMainMenuandTabBar );"
        class="navSubItem ">
         <img src="./images/tabs/Magic-Wand.png"> Strong's Lookup
-    </a>
+    </a>-->
 
+    <div>
+        <a title="Matthew 1" onclick="toggleGrid(this);" class="navSubItem">Matthew</a>
+        <div class="gridExpander">
+         <a href="javascript:navToPassage('40N.1.0');" class="gridItem">&gt;</a>
+         <a href="javascript:navToPassage('40N.1.0');" class="gridItem">1</a>
+         <a href="javascript:navToPassage('40N.2.0');" class="gridItem">2</a>
+         <a href="javascript:navToPassage('40N.3.0');" class="gridItem">3</a>
+         <a href="javascript:navToPassage('40N.4.0');" class="gridItem">4</a>
+         <a href="javascript:navToPassage('40N.5.0');" class="gridItem">5</a>
+         <a href="javascript:navToPassage('40N.6.0');" class="gridItem">6</a>
+         <a href="javascript:navToPassage('40N.7.0');" class="gridItem">7</a>
+         <a href="javascript:navToPassage('40N.8.0');" class="gridItem">8</a>
+         <a href="javascript:navToPassage('40N.9.0');" class="gridItem">9</a>
+         <a href="javascript:navToPassage('40N.10.0');" class="gridItem">10</a>
+         <a href="javascript:navToPassage('40N.11.0');" class="gridItem">11</a>
+         <a href="javascript:navToPassage('40N.12.0');" class="gridItem">12</a>
+         <a href="javascript:navToPassage('40N.13.0');" class="gridItem">13</a>
+         <a href="javascript:navToPassage('40N.14.0');" class="gridItem">14</a>
+         <a href="javascript:navToPassage('40N.15.0');" class="gridItem">15</a>
+         <a href="javascript:navToPassage('40N.16.0');" class="gridItem">16</a>
+         <a href="javascript:navToPassage('40N.17.0');" class="gridItem">17</a>
+         <a href="javascript:navToPassage('40N.18.0');" class="gridItem">18</a>
+         <a href="javascript:navToPassage('40N.19.0');" class="gridItem">19</a>
+         <a href="javascript:navToPassage('40N.20.0');" class="gridItem">20</a>
+         <a href="javascript:navToPassage('40N.21.0');" class="gridItem">21</a>
+         <a href="javascript:navToPassage('40N.22.0');" class="gridItem">22</a>
+         <a href="javascript:navToPassage('40N.23.0');" class="gridItem">23</a>
+         <a href="javascript:navToPassage('40N.24.0');" class="gridItem">24</a>
+         <a href="javascript:navToPassage('40N.25.0');" class="gridItem">25</a>
+         <a href="javascript:navToPassage('40N.26.0');" class="gridItem">26</a>
+         <a href="javascript:navToPassage('40N.27.0');" class="gridItem">27</a>
+         <a href="javascript:navToPassage('40N.28.0');" class="gridItem">28</a>
+        </div>
+        <a title="Mark 1" onclick="toggleGrid(this);" class="navSubItem">Mark</a>
+        <div class="gridExpander">
+         <a href="javascript:navToPassage('41N.1.0');" class="gridItem">&gt;</a>
+         <a href="javascript:navToPassage('41N.1.0');" class="gridItem">1</a>
+         <a href="javascript:navToPassage('41N.2.0');" class="gridItem">2</a>
+         <a href="javascript:navToPassage('41N.3.0');" class="gridItem">3</a>
+         <a href="javascript:navToPassage('41N.4.0');" class="gridItem">4</a>
+         <a href="javascript:navToPassage('41N.5.0');" class="gridItem">5</a>
+         <a href="javascript:navToPassage('41N.6.0');" class="gridItem">6</a>
+         <a href="javascript:navToPassage('41N.7.0');" class="gridItem">7</a>
+         <a href="javascript:navToPassage('41N.8.0');" class="gridItem">8</a>
+         <a href="javascript:navToPassage('41N.9.0');" class="gridItem">9</a>
+         <a href="javascript:navToPassage('41N.10.0');" class="gridItem">10</a>
+         <a href="javascript:navToPassage('41N.11.0');" class="gridItem">11</a>
+         <a href="javascript:navToPassage('41N.12.0');" class="gridItem">12</a>
+         <a href="javascript:navToPassage('41N.13.0');" class="gridItem">13</a>
+         <a href="javascript:navToPassage('41N.14.0');" class="gridItem">14</a>
+         <a href="javascript:navToPassage('41N.15.0');" class="gridItem">15</a>
+         <a href="javascript:navToPassage('41N.16.0');" class="gridItem">16</a>
+        </div>
 
-    <a id="mnuMainHome"
-       title="About"
-       href="javascript:loadContent('./about.html', updateMainMenu );"
-       class="navSubItem ">
-        <img src="./images/tabs/Circle-Info.png"> About
-    </a>
-    
+        <a title="Luke 1" onclick="toggleGrid(this);" class="navSubItem">Luke</a>
+        <div class="gridExpander">
+         <a href="javascript:navToPassage('42N.1.0');" class="gridItem">&gt;</a>
+         <a href="javascript:navToPassage('42N.1.0');" class="gridItem">1</a>
+         <a href="javascript:navToPassage('42N.2.0');" class="gridItem">2</a>
+         <a href="javascript:navToPassage('42N.3.0');" class="gridItem">3</a>
+         <a href="javascript:navToPassage('42N.4.0');" class="gridItem">4</a>
+         <a href="javascript:navToPassage('42N.5.0');" class="gridItem">5</a>
+         <a href="javascript:navToPassage('42N.6.0');" class="gridItem">6</a>
+         <a href="javascript:navToPassage('42N.7.0');" class="gridItem">7</a>
+         <a href="javascript:navToPassage('42N.8.0');" class="gridItem">8</a>
+         <a href="javascript:navToPassage('42N.9.0');" class="gridItem">9</a>
+         <a href="javascript:navToPassage('42N.10.0');" class="gridItem">10</a>
+         <a href="javascript:navToPassage('42N.11.0');" class="gridItem">11</a>
+         <a href="javascript:navToPassage('42N.12.0');" class="gridItem">12</a>
+         <a href="javascript:navToPassage('42N.13.0');" class="gridItem">13</a>
+         <a href="javascript:navToPassage('42N.14.0');" class="gridItem">14</a>
+         <a href="javascript:navToPassage('42N.15.0');" class="gridItem">15</a>
+         <a href="javascript:navToPassage('42N.16.0');" class="gridItem">16</a>
+         <a href="javascript:navToPassage('42N.17.0');" class="gridItem">17</a>
+         <a href="javascript:navToPassage('42N.18.0');" class="gridItem">18</a>
+         <a href="javascript:navToPassage('42N.19.0');" class="gridItem">19</a>
+         <a href="javascript:navToPassage('42N.20.0');" class="gridItem">20</a>
+         <a href="javascript:navToPassage('42N.21.0');" class="gridItem">21</a>
+         <a href="javascript:navToPassage('42N.22.0');" class="gridItem">22</a>
+         <a href="javascript:navToPassage('42N.23.0');" class="gridItem">23</a>
+         <a href="javascript:navToPassage('42N.24.0');" class="gridItem">24</a>
+        </div>
 
-    <a id="mnuMainHome"
-       title="Settings"
-       href="javascript:loadContent('./settings.html', updateMainMenu );"
-       class="navSubItem ">
-        <img src="./images/tabs/Gear-Large.png"> Settings
-    </a>
+        <a title="John 1" onclick="toggleGrid(this);" class="navSubItem">John</a>
+        <div class="gridExpander">
+         <a href="javascript:navToPassage('43N.1.0');" class="gridItem">&gt;</a>
+         <a href="javascript:navToPassage('43N.1.0');" class="gridItem">1</a>
+         <a href="javascript:navToPassage('43N.2.0');" class="gridItem">2</a>
+         <a href="javascript:navToPassage('43N.3.0');" class="gridItem">3</a>
+         <a href="javascript:navToPassage('43N.4.0');" class="gridItem">4</a>
+         <a href="javascript:navToPassage('43N.5.0');" class="gridItem">5</a>
+         <a href="javascript:navToPassage('43N.6.0');" class="gridItem">6</a>
+         <a href="javascript:navToPassage('43N.7.0');" class="gridItem">7</a>
+         <a href="javascript:navToPassage('43N.8.0');" class="gridItem">8</a>
+         <a href="javascript:navToPassage('43N.9.0');" class="gridItem">9</a>
+         <a href="javascript:navToPassage('43N.10.0');" class="gridItem">10</a>
+         <a href="javascript:navToPassage('43N.11.0');" class="gridItem">11</a>
+         <a href="javascript:navToPassage('43N.12.0');" class="gridItem">12</a>
+         <a href="javascript:navToPassage('43N.13.0');" class="gridItem">13</a>
+         <a href="javascript:navToPassage('43N.14.0');" class="gridItem">14</a>
+         <a href="javascript:navToPassage('43N.15.0');" class="gridItem">15</a>
+         <a href="javascript:navToPassage('43N.16.0');" class="gridItem">16</a>
+         <a href="javascript:navToPassage('43N.17.0');" class="gridItem">17</a>
+         <a href="javascript:navToPassage('43N.18.0');" class="gridItem">18</a>
+         <a href="javascript:navToPassage('43N.19.0');" class="gridItem">19</a>
+         <a href="javascript:navToPassage('43N.20.0');" class="gridItem">20</a>
+         <a href="javascript:navToPassage('43N.21.0');" class="gridItem">21</a>
+        </div>
+
+        <a title="Acts 1" onclick="toggleGrid(this);" class="navSubItem">Acts</a>
+        <div class="gridExpander">
+         <a href="javascript:navToPassage('44N.1.0');" class="gridItem">&gt;</a>
+         <a href="javascript:navToPassage('44N.1.0');" class="gridItem">1</a>
+         <a href="javascript:navToPassage('44N.2.0');" class="gridItem">2</a>
+         <a href="javascript:navToPassage('44N.3.0');" class="gridItem">3</a>
+         <a href="javascript:navToPassage('44N.4.0');" class="gridItem">4</a>
+         <a href="javascript:navToPassage('44N.5.0');" class="gridItem">5</a>
+         <a href="javascript:navToPassage('44N.6.0');" class="gridItem">6</a>
+         <a href="javascript:navToPassage('44N.7.0');" class="gridItem">7</a>
+         <a href="javascript:navToPassage('44N.8.0');" class="gridItem">8</a>
+         <a href="javascript:navToPassage('44N.9.0');" class="gridItem">9</a>
+         <a href="javascript:navToPassage('44N.10.0');" class="gridItem">10</a>
+         <a href="javascript:navToPassage('44N.11.0');" class="gridItem">11</a>
+         <a href="javascript:navToPassage('44N.12.0');" class="gridItem">12</a>
+         <a href="javascript:navToPassage('44N.13.0');" class="gridItem">13</a>
+         <a href="javascript:navToPassage('44N.14.0');" class="gridItem">14</a>
+         <a href="javascript:navToPassage('44N.15.0');" class="gridItem">15</a>
+         <a href="javascript:navToPassage('44N.16.0');" class="gridItem">16</a>
+         <a href="javascript:navToPassage('44N.17.0');" class="gridItem">17</a>
+         <a href="javascript:navToPassage('44N.18.0');" class="gridItem">18</a>
+         <a href="javascript:navToPassage('44N.19.0');" class="gridItem">19</a>
+         <a href="javascript:navToPassage('44N.20.0');" class="gridItem">20</a>
+         <a href="javascript:navToPassage('44N.21.0');" class="gridItem">21</a>
+         <a href="javascript:navToPassage('44N.22.0');" class="gridItem">22</a>
+         <a href="javascript:navToPassage('44N.23.0');" class="gridItem">23</a>
+         <a href="javascript:navToPassage('44N.24.0');" class="gridItem">24</a>
+         <a href="javascript:navToPassage('44N.25.0');" class="gridItem">25</a>
+         <a href="javascript:navToPassage('44N.26.0');" class="gridItem">26</a>
+         <a href="javascript:navToPassage('44N.27.0');" class="gridItem">27</a>
+         <a href="javascript:navToPassage('44N.28.0');" class="gridItem">28</a>
+        </div>
+
+        <a title="Romans 1" onclick="toggleGrid(this);" class="navSubItem">Romans</a>
+        <div class="gridExpander">
+         <a href="javascript:navToPassage('45N.1.0');" class="gridItem">&gt;</a>
+         <a href="javascript:navToPassage('45N.1.0');" class="gridItem">1</a>
+         <a href="javascript:navToPassage('45N.2.0');" class="gridItem">2</a>
+         <a href="javascript:navToPassage('45N.3.0');" class="gridItem">3</a>
+         <a href="javascript:navToPassage('45N.4.0');" class="gridItem">4</a>
+         <a href="javascript:navToPassage('45N.5.0');" class="gridItem">5</a>
+         <a href="javascript:navToPassage('45N.6.0');" class="gridItem">6</a>
+         <a href="javascript:navToPassage('45N.7.0');" class="gridItem">7</a>
+         <a href="javascript:navToPassage('45N.8.0');" class="gridItem">8</a>
+         <a href="javascript:navToPassage('45N.9.0');" class="gridItem">9</a>
+         <a href="javascript:navToPassage('45N.10.0');" class="gridItem">10</a>
+         <a href="javascript:navToPassage('45N.11.0');" class="gridItem">11</a>
+         <a href="javascript:navToPassage('45N.12.0');" class="gridItem">12</a>
+         <a href="javascript:navToPassage('45N.13.0');" class="gridItem">13</a>
+         <a href="javascript:navToPassage('45N.14.0');" class="gridItem">14</a>
+         <a href="javascript:navToPassage('45N.15.0');" class="gridItem">15</a>
+         <a href="javascript:navToPassage('45N.16.0');" class="gridItem">16</a>
+        </div>
+
+        <a title="1 Corinthians 1" onclick="toggleGrid(this);" class="navSubItem">1 Corinthians</a>
+        <div class="gridExpander">
+         <a href="javascript:navToPassage('46N.1.0');" class="gridItem">&gt;</a>
+         <a href="javascript:navToPassage('46N.1.0');" class="gridItem">1</a>
+         <a href="javascript:navToPassage('46N.2.0');" class="gridItem">2</a>
+         <a href="javascript:navToPassage('46N.3.0');" class="gridItem">3</a>
+         <a href="javascript:navToPassage('46N.4.0');" class="gridItem">4</a>
+         <a href="javascript:navToPassage('46N.5.0');" class="gridItem">5</a>
+         <a href="javascript:navToPassage('46N.6.0');" class="gridItem">6</a>
+         <a href="javascript:navToPassage('46N.7.0');" class="gridItem">7</a>
+         <a href="javascript:navToPassage('46N.8.0');" class="gridItem">8</a>
+         <a href="javascript:navToPassage('46N.9.0');" class="gridItem">9</a>
+         <a href="javascript:navToPassage('46N.10.0');" class="gridItem">10</a>
+         <a href="javascript:navToPassage('46N.11.0');" class="gridItem">11</a>
+         <a href="javascript:navToPassage('46N.12.0');" class="gridItem">12</a>
+         <a href="javascript:navToPassage('46N.13.0');" class="gridItem">13</a>
+         <a href="javascript:navToPassage('46N.14.0');" class="gridItem">14</a>
+         <a href="javascript:navToPassage('46N.15.0');" class="gridItem">15</a>
+         <a href="javascript:navToPassage('46N.16.0');" class="gridItem">16</a>
+        </div>
+
+        <a title="2 Corinthians 1" onclick="toggleGrid(this);" class="navSubItem">2 Corinthians</a>
+        <div class="gridExpander">
+         <a href="javascript:navToPassage('47N.1.0');" class="gridItem">&gt;</a>
+         <a href="javascript:navToPassage('47N.1.0');" class="gridItem">1</a>
+         <a href="javascript:navToPassage('47N.2.0');" class="gridItem">2</a>
+         <a href="javascript:navToPassage('47N.3.0');" class="gridItem">3</a>
+         <a href="javascript:navToPassage('47N.4.0');" class="gridItem">4</a>
+         <a href="javascript:navToPassage('47N.5.0');" class="gridItem">5</a>
+         <a href="javascript:navToPassage('47N.6.0');" class="gridItem">6</a>
+         <a href="javascript:navToPassage('47N.7.0');" class="gridItem">7</a>
+         <a href="javascript:navToPassage('47N.8.0');" class="gridItem">8</a>
+         <a href="javascript:navToPassage('47N.9.0');" class="gridItem">9</a>
+         <a href="javascript:navToPassage('47N.10.0');" class="gridItem">10</a>
+         <a href="javascript:navToPassage('47N.11.0');" class="gridItem">11</a>
+         <a href="javascript:navToPassage('47N.12.0');" class="gridItem">12</a>
+<!--         <a href="javascript:navToPassage('47N.13.0');" class="gridItem">13</a>-->
+        </div>
+
+        <a title="Galations 1" onclick="toggleGrid(this);" class="navSubItem">Galatians</a>
+        <div class="gridExpander">
+         <a href="javascript:navToPassage('48N.1.0');" class="gridItem">&gt;</a>
+         <a href="javascript:navToPassage('48N.1.0');" class="gridItem">1</a>
+         <a href="javascript:navToPassage('48N.2.0');" class="gridItem">2</a>
+         <a href="javascript:navToPassage('48N.3.0');" class="gridItem">3</a>
+         <a href="javascript:navToPassage('48N.4.0');" class="gridItem">4</a>
+         <a href="javascript:navToPassage('48N.5.0');" class="gridItem">5</a>
+         <a href="javascript:navToPassage('48N.6.0');" class="gridItem">6</a>
+        </div>
+
+        <a title="Ephesians 1" onclick="toggleGrid(this);" class="navSubItem">Ephesians</a>
+        <div class="gridExpander">
+         <a href="javascript:navToPassage('49N.1.0');" class="gridItem">&gt;</a>
+         <a href="javascript:navToPassage('49N.1.0');" class="gridItem">1</a>
+         <a href="javascript:navToPassage('49N.2.0');" class="gridItem">2</a>
+         <a href="javascript:navToPassage('49N.3.0');" class="gridItem">3</a>
+         <a href="javascript:navToPassage('49N.4.0');" class="gridItem">4</a>
+         <a href="javascript:navToPassage('49N.5.0');" class="gridItem">5</a>
+         <a href="javascript:navToPassage('49N.6.0');" class="gridItem">6</a>
+        </div>
+
+        <a title="Philippians 1" onclick="toggleGrid(this);" class="navSubItem">Philippians</a>
+        <div class="gridExpander">
+         <a href="javascript:navToPassage('50N.1.0');" class="gridItem">&gt;</a>
+         <a href="javascript:navToPassage('50N.1.0');" class="gridItem">1</a>
+         <a href="javascript:navToPassage('50N.2.0');" class="gridItem">2</a>
+         <a href="javascript:navToPassage('50N.3.0');" class="gridItem">3</a>
+         <a href="javascript:navToPassage('50N.4.0');" class="gridItem">4</a>
+        </div>
+
+        <a title="Colossians 1" onclick="toggleGrid(this);" class="navSubItem">Colossians</a>
+        <div class="gridExpander">
+         <a href="javascript:navToPassage('51N.1.0');" class="gridItem">&gt;</a>
+         <a href="javascript:navToPassage('51N.1.0');" class="gridItem">1</a>
+         <a href="javascript:navToPassage('51N.2.0');" class="gridItem">2</a>
+         <a href="javascript:navToPassage('51N.3.0');" class="gridItem">3</a>
+         <a href="javascript:navToPassage('51N.4.0');" class="gridItem">4</a>
+        </div>
+
+        <a title="1 Thessalonians 1" onclick="toggleGrid(this);" class="navSubItem">1 Thessalonians</a>
+        <div class="gridExpander">
+         <a href="javascript:navToPassage('52N.1.0');" class="gridItem">&gt;</a>
+         <a href="javascript:navToPassage('52N.1.0');" class="gridItem">1</a>
+         <a href="javascript:navToPassage('52N.2.0');" class="gridItem">2</a>
+         <a href="javascript:navToPassage('52N.3.0');" class="gridItem">3</a>
+         <a href="javascript:navToPassage('52N.4.0');" class="gridItem">4</a>
+         <a href="javascript:navToPassage('52N.5.0');" class="gridItem">5</a>
+        </div>
+
+        <a title="2 Thessalonians 1" onclick="toggleGrid(this);" class="navSubItem">2 Thessalonians</a>
+        <div class="gridExpander">
+         <a href="javascript:navToPassage('53N.1.0');" class="gridItem">&gt;</a>
+         <a href="javascript:navToPassage('53N.1.0');" class="gridItem">1</a>
+         <a href="javascript:navToPassage('53N.2.0');" class="gridItem">2</a>
+         <a href="javascript:navToPassage('53N.3.0');" class="gridItem">3</a>
+        </div>
+
+        <a title="1 Timothy 1" onclick="toggleGrid(this);" class="navSubItem">1 Timothy</a>
+        <div class="gridExpander">
+         <a href="javascript:navToPassage('54N.1.0');" class="gridItem">&gt;</a>
+         <a href="javascript:navToPassage('54N.1.0');" class="gridItem">1</a>
+         <a href="javascript:navToPassage('54N.2.0');" class="gridItem">2</a>
+         <a href="javascript:navToPassage('54N.3.0');" class="gridItem">3</a>
+         <a href="javascript:navToPassage('54N.4.0');" class="gridItem">4</a>
+         <a href="javascript:navToPassage('54N.5.0');" class="gridItem">5</a>
+         <a href="javascript:navToPassage('54N.6.0');" class="gridItem">6</a>
+        </div>
+
+        <a title="2 Timothy 1" onclick="toggleGrid(this);" class="navSubItem">2 Timothy</a>
+        <div class="gridExpander">
+         <a href="javascript:navToPassage('55N.1.0');" class="gridItem">&gt;</a>
+         <a href="javascript:navToPassage('55N.1.0');" class="gridItem">1</a>
+         <a href="javascript:navToPassage('55N.2.0');" class="gridItem">2</a>
+         <a href="javascript:navToPassage('55N.3.0');" class="gridItem">3</a>
+         <a href="javascript:navToPassage('55N.4.0');" class="gridItem">4</a>
+        </div>
+
+        <a title="Titus 1" onclick="toggleGrid(this);" class="navSubItem">Titus</a>
+        <div class="gridExpander">
+         <a href="javascript:navToPassage('56N.1.0');" class="gridItem">&gt;</a>
+         <a href="javascript:navToPassage('56N.1.0');" class="gridItem">1</a>
+         <a href="javascript:navToPassage('56N.2.0');" class="gridItem">2</a>
+         <a href="javascript:navToPassage('56N.3.0');" class="gridItem">3</a>
+        </div>
+
+        <a title="Philemon 1" href="javascript:navToPassage('57N.1.0');" class="navSubItem">Philemon</a>
+
+        <a title="Hebrews 1" onclick="toggleGrid(this);" class="navSubItem">Hebrews</a>
+        <div class="gridExpander">
+         <a href="javascript:navToPassage('58N.1.0');" class="gridItem">&gt;</a>
+         <a href="javascript:navToPassage('58N.1.0');" class="gridItem">1</a>
+         <a href="javascript:navToPassage('58N.2.0');" class="gridItem">2</a>
+         <a href="javascript:navToPassage('58N.3.0');" class="gridItem">3</a>
+         <a href="javascript:navToPassage('58N.4.0');" class="gridItem">4</a>
+         <a href="javascript:navToPassage('58N.5.0');" class="gridItem">5</a>
+         <a href="javascript:navToPassage('58N.6.0');" class="gridItem">6</a>
+         <a href="javascript:navToPassage('58N.7.0');" class="gridItem">7</a>
+         <a href="javascript:navToPassage('58N.8.0');" class="gridItem">8</a>
+         <a href="javascript:navToPassage('58N.9.0');" class="gridItem">9</a>
+         <a href="javascript:navToPassage('58N.10.0');" class="gridItem">10</a>
+         <a href="javascript:navToPassage('58N.11.0');" class="gridItem">11</a>
+         <a href="javascript:navToPassage('58N.12.0');" class="gridItem">12</a>
+         <a href="javascript:navToPassage('58N.13.0');" class="gridItem">13</a>
+        </div>
+
+        <a title="James 1" onclick="toggleGrid(this);" class="navSubItem">James</a>
+        <div class="gridExpander">
+         <a href="javascript:navToPassage('59N.1.0');" class="gridItem">&gt;</a>
+         <a href="javascript:navToPassage('59N.1.0');" class="gridItem">1</a>
+         <a href="javascript:navToPassage('59N.2.0');" class="gridItem">2</a>
+         <a href="javascript:navToPassage('59N.3.0');" class="gridItem">3</a>
+         <a href="javascript:navToPassage('59N.4.0');" class="gridItem">4</a>
+         <a href="javascript:navToPassage('59N.5.0');" class="gridItem">5</a>
+        </div>
+
+        <a title="1 Peter 1" onclick="toggleGrid(this);" class="navSubItem">1 Peter</a>
+        <div class="gridExpander">
+         <a href="javascript:navToPassage('60N.1.0');" class="gridItem">&gt;</a>
+         <a href="javascript:navToPassage('60N.1.0');" class="gridItem">1</a>
+         <a href="javascript:navToPassage('60N.2.0');" class="gridItem">2</a>
+         <a href="javascript:navToPassage('60N.3.0');" class="gridItem">3</a>
+         <a href="javascript:navToPassage('60N.4.0');" class="gridItem">4</a>
+         <a href="javascript:navToPassage('60N.5.0');" class="gridItem">5</a>
+        </div>
+
+        <a title="2 Peter 1" onclick="toggleGrid(this);" class="navSubItem">2 Peter</a>
+        <div class="gridExpander">
+         <a href="javascript:navToPassage('61N.1.0');" class="gridItem">&gt;</a>
+         <a href="javascript:navToPassage('61N.1.0');" class="gridItem">1</a>
+         <a href="javascript:navToPassage('61N.2.0');" class="gridItem">2</a>
+         <a href="javascript:navToPassage('61N.3.0');" class="gridItem">3</a>
+        </div>
+
+        <a title="1 John 1" onclick="toggleGrid(this);" class="navSubItem">1 John</a>
+        <div class="gridExpander">
+         <a href="javascript:navToPassage('62N.1.0');" class="gridItem">&gt;</a>
+         <a href="javascript:navToPassage('62N.1.0');" class="gridItem">1</a>
+         <a href="javascript:navToPassage('62N.2.0');" class="gridItem">2</a>
+         <a href="javascript:navToPassage('62N.3.0');" class="gridItem">3</a>
+         <a href="javascript:navToPassage('62N.4.0');" class="gridItem">4</a>
+         <a href="javascript:navToPassage('62N.5.0');" class="gridItem">5</a>
+        </div>
+
+        <a title="2 John 1" href="javascript:navToPassage('63N.1.0');" class="navSubItem">2 John</a>
+
+        <a title="3 John 1" href="javascript:navToPassage('64N.1.0');" class="navSubItem">3 John</a>
+
+        <a title="Jude 1" href="javascript:navToPassage('65N.1.0');" class="navSubItem">Jude</a>
+
+        <a title="Revelation 1" onclick="toggleGrid(this);" class="navSubItem">Revelation</a>
+        <div class="gridExpander">
+         <a href="javascript:navToPassage('66N.1.0');" class="gridItem">&gt;</a>
+         <a href="javascript:navToPassage('66N.1.0');" class="gridItem">1</a>
+         <a href="javascript:navToPassage('66N.2.0');" class="gridItem">2</a>
+         <a href="javascript:navToPassage('66N.3.0');" class="gridItem">3</a>
+         <a href="javascript:navToPassage('66N.4.0');" class="gridItem">4</a>
+         <a href="javascript:navToPassage('66N.5.0');" class="gridItem">5</a>
+         <a href="javascript:navToPassage('66N.6.0');" class="gridItem">6</a>
+         <a href="javascript:navToPassage('66N.7.0');" class="gridItem">7</a>
+         <a href="javascript:navToPassage('66N.8.0');" class="gridItem">8</a>
+         <a href="javascript:navToPassage('66N.9.0');" class="gridItem">9</a>
+         <a href="javascript:navToPassage('66N.10.0');" class="gridItem">10</a>
+         <a href="javascript:navToPassage('66N.11.0');" class="gridItem">11</a>
+         <a href="javascript:navToPassage('66N.12.0');" class="gridItem">12</a>
+         <a href="javascript:navToPassage('66N.13.0');" class="gridItem">13</a>
+         <a href="javascript:navToPassage('66N.14.0');" class="gridItem">14</a>
+         <a href="javascript:navToPassage('66N.15.0');" class="gridItem">15</a>
+         <a href="javascript:navToPassage('66N.16.0');" class="gridItem">16</a>
+         <a href="javascript:navToPassage('66N.17.0');" class="gridItem">17</a>
+         <a href="javascript:navToPassage('66N.18.0');" class="gridItem">18</a>
+         <a href="javascript:navToPassage('66N.19.0');" class="gridItem">19</a>
+         <a href="javascript:navToPassage('66N.20.0');" class="gridItem">20</a>
+         <a href="javascript:navToPassage('66N.21.0');" class="gridItem">21</a>
+         <a href="javascript:navToPassage('66N.22.0');" class="gridItem">22</a>
+
+    </div>
 
 </div>

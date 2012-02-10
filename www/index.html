@@ -15,9 +15,9 @@
         <link type="text/css" rel="stylesheet" href="./style/iphone.css">
         <link type="text/css" rel="stylesheet" href="./style/iphone-landscape.css">
         <link type="text/css" rel="stylesheet" href="./style/iphone-portrait.css">
-
+<!--
         <link type="text/css" rel="stylesheet" href="./style/book.css">
-
+-->
         <link type="text/css" rel="stylesheet" href="./style/bible.css">
 
 <!-- phoneGap plugins -->
@@ -54,7 +54,7 @@
                 <div id="navTitleArea">
                 <span id="navSiteTitle">Site Title</span><span id="navSiteBullet"> &bull; </span><span id="navBodyTitle">Home</span>
                 </div>
-                <a id="btnBack" href="javascript:loadContent (returnTo.pop(), updateMainMenu, 'slideBack')" class="button back black"><span></span>Back</a>
+                <a id="btnBack" href="javascript:loadContent (returnTo.pop(), updateMainMenuandTabBar, 'slideBack')" class="button back black"><span></span>Back</a>
                 <a id="btnMenu" href="javascript:toggleMenu ()" class="button black">Menu</a>
                 <div id="theSearch"><input onchange="doSearch();" id="txtSearch" type="search" size=20 /></div>
             </div>
@@ -69,14 +69,25 @@
                  <div style="clear: both;"></div>
              </div>
             </div>
-            <div id="tabBar" class="bottomTabs">
-            </div>
-            <div id="hideMenu" onclick="toggleMenu ();"></div>
         </div>
+        <div id="tabBar" class="bottomTabs">
+                    <!-- this to be replaced by content at startup -->
+        </div>
+        <div id="hideMenu" onclick="toggleMenu ();"></div>
         <div id="loader">
-            <div>
-                Please Wait...<br>
-                <img src="./images/ajax-loader.gif" alt="Loading"/>
+            <div class="spinner">
+              <div class="bar1"></div>
+              <div class="bar2"></div>
+              <div class="bar3"></div>
+              <div class="bar4"></div>
+              <div class="bar5"></div>
+              <div class="bar6"></div>
+              <div class="bar7"></div>
+              <div class="bar8"></div>
+              <div class="bar9"></div>
+              <div class="bar10"></div>
+              <div class="bar11"></div>
+              <div class="bar12"></div>
             </div>
         </div>
 <script>
@@ -126,7 +137,7 @@
     var bibleBookChapters = [ 50, 40, 27, 36, 34, 24, 21, 4, 31, 24, 22, 25, 29, 36, 10, 13, 10, 42, 150,
                               31, 12 ,8 ,66 ,52, 5, 48, 12, 14, 3, 9, 1, 4, 7, 3, 3, 3, 2, 14, 4,
                               // New Testament
-                              28, 16, 24, 21, 28, 16, 16, 13, 6, 6, 4, 4, 5, 3, 6, 4, 3, 1, 13, 5, 5, 3, 5, 1, 1, 1, 22];
+                              28, 16, 24, 21, 28, 16, 16, 12, 6, 6, 4, 4, 5, 3, 6, 4, 3, 1, 13, 5, 5, 3, 5, 1, 1, 1, 22];
 
     var transliteration = [ "a", "b", "g", "d", "e", "z", "e", "th", "i", "c", "l", "m",
                             "n", "x", "o", "p", "r", "s", "s", "t", "u", "ph", "ch", "ps", "o"];
@@ -305,9 +316,14 @@
         }
         if (url)
         {
-            loadContent(url, updateMainMenu,null, currentPageURL );
+            loadContent(url, updateMainMenuandTabBar,null, currentPageURL );
         }
         
+    }
+    
+    function getGoing()
+    {
+        startApp();
     }
     
 //
@@ -323,12 +339,13 @@
         
             // startup variables
             var mySiteName = "Greek Interlinear";
-            var myMenuName = "Greek Interlinear";
+            var myMenuName = "Go to...";
             var myStartPage = "./home.html";
             var myStartName = "Home";
+            var myTabBar = "./tabs.html";
             
             // load our first bibles
-            afterBothLoaded = startApp; // starter
+            afterBothLoaded = getGoing; // starter
             leftLoaded = false; rightLoaded = false;
             loadBible ( selectedGreekText );
             loadBible ( selectedRightText );

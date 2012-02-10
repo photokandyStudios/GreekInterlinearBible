@@ -31,6 +31,9 @@
 var currentPageURL;                                                 // PUBLIC
 var currentContainer;
 var otherContainer;
+var usingTabBar = false;
+
+var menuVisible = false;                                            // PUBLIC: If true, the menu is visible.
 
 // Popovers //
 var lastpo;                                                         // PRIVATE: last popover, if any
@@ -51,6 +54,9 @@ var argsParsed = {};                                                // PUBLIC:  
 // Event Handlers //
 var onLongPress = null;                                             // PUBLIC: can be used to point to long press handler
 var onSearch = null;                                                // PUBLIC: called when the search box text changes
+var onSwipe = defaultSwipe;                                         // PUBLIC: called when a swipe occurs
+var onPageNext = null;                                              // PUBLIC: called when a page swipe occurs
+var onPagePrev = null;                                              // PUBLIC: called when a page swipe occurs
 
 /**
  *
@@ -556,6 +562,7 @@ function updateOrientation()
     
     $("pnlBody").setAttribute("class", curDevice + " " + curOrientation );
     
+    /*
     // if we are an ipad and now in lanscape, make sure the left menu is showing!
     if (isIPad() && isLandscape())
     {
@@ -565,6 +572,7 @@ function updateOrientation()
     {
         $("menuPanel").style.display = "none";
     }
+    */
 
     // and reset our scrollers.
         setTimeout(function () {
@@ -582,22 +590,65 @@ function updateOrientation()
  */
 function toggleMenu()
 {
-    var curState = $("menuPanel").style.display;
-    
-    if (curState != "block")
+    menuVisible = !menuVisible;     // invert our menu state.
+    if (menuVisible)
     {
-        $("hideMenu").style.display = "block";
-        $("menuPanel").style.display = "block";
-        setTimeout(function () {
-            resetSB ( sbMenu );
-        }, 375);
+        showMenu()
     }
     else
     {
-        $("hideMenu").style.display = "none";
-        $("menuPanel").style.display = "none";
+        hideMenu();
     }
     return true;
+}
+
+function hideMenu ()
+{
+    menuVisible = false;
+    $("menuPanel").style.left = "-324px";
+}
+
+function showMenu ()
+{
+    menuVisible = true;
+    $("menuPanel").style.left = "0px";
+    setTimeout(function () {
+        resetSB ( sbMenu );
+    }, 375);
+}
+
+function defaultSwipe ( e )
+{
+//TODO: handle iPhone here
+// if the menu is visible, the swipe should probably /always/ go to the menu
+ if (e.x < 360 || menuVisible )
+ {
+    if (e.direction == "left")
+    {
+        hideMenu();
+    }
+    if (e.direction == "right")
+    {
+        showMenu();
+    }
+  }
+  else
+  {
+    if (e.direction == "left")
+    {
+        if (onPageNext)
+        {
+            onPageNext();
+        }
+    }
+    else
+    {
+        if (onPagePrev)
+        {
+            onPagePrev();
+        }
+    }
+  }
 }
 
 /**
@@ -629,7 +680,7 @@ function hideLoader()
 function showTabBar()
 {
     $("tabBar").style.display = "block";
-    $("pnlBodyArea").style.bottom = "43px";
+    $("pnlBodyArea").style.bottom = "51px";
 }
 
 /**
@@ -811,17 +862,23 @@ function loadContent(url, callback, animate, backTo) {
     // set our return value (this will depend on if things work right or not)
     returnValue = false;
                                                                                     //console.log ("812");
+/*
     // we always hide the popup menu if we're an iPad
     if (isIPad() && isPortrait())
     {
         $("menuPanel").style.display = "none";
         $("hideMenu").style.display = "none";
     }
+ */
+    hideMenu();
                                                                                     //console.log ("819");
-    hideTabBar();
+    if (!usingTabBar) {  hideTabBar(); }
                                                                                     //console.log ("821");
     // unset longpress, if set.
     onLongPress = null;
+    onSwipe = defaultSwipe;
+    onPageNext = null;
+    onPagePrev = null;
                                                                                     //console.log ("824");
     // no more popover, either:
     lastpo = null;
@@ -980,7 +1037,41 @@ function updateMainMenu( url, title )
             
         }
     }
+    
+    //if (usingTabBar)
+    //{
+    //    updateTabBar ( url, title );
+    //}
     return true;
+}
+
+function updateMainMenuandTabBar ( url, title)
+{
+    try
+    {
+        updateMainMenu ( url, title );
+    }
+    catch (e)
+    {
+        ;
+    }
+    finally
+    {
+        ;
+    }
+    
+    try
+    {
+        updateTabBar ( url, title );
+    }
+    catch (e)
+    {
+        ;
+    }
+    finally
+    {
+        ;
+    }
 }
 
 /**
@@ -1001,32 +1092,10 @@ function loadMenu(url, callback) {
     var tid = setTimeout( function() { showLoader(); }, 100 );
     setTimeout ( function() { hideLoader();}, 10000 );    
     
-    if (window.XMLHttpRequest) // if Mozilla, Safari etc
-    {
-        page_request = new XMLHttpRequest()
-    }
-    else if (window.ActiveXObject)
-    { // if IE
-        try
-            {
-                page_request = new ActiveXObject("Msxml2.XMLHTTP")
-            }
-        catch (e)
-        {
-            try
-                {
-                    page_request = new ActiveXObject("Microsoft.XMLHTTP")
-                }
-            catch (e)
-                {
-                }
-        }
-    }
-    else return false;
+    page_request = new XMLHttpRequest()
     
     // set our return value (this will depend on if things work right or not)
     returnValue = false;
-
     
     page_request.onreadystatechange = function()
     {
@@ -1049,6 +1118,124 @@ function loadMenu(url, callback) {
                     processScriptTags('menuMain');
                                         
                     resetSB ( sbMenu, 375 );                    
+                }, 250 );
+                returnValue = true;
+            }
+            
+            // if we have a callback, execute it with the url, otherwise return returnValue
+            if (callback)
+            {
+                return callback( url );
+            }
+            else
+            {
+                return returnValue;
+            }
+        }
+        return true;
+    }
+    
+    page_request.open('GET', url, true); //get page asynchronously
+    page_request.send(null);
+    
+    return true;
+}
+
+/**
+ * updateTabBar ( url, title )
+ * 
+ * The main menu is #grpTabBar and should be updated to indicate the currently
+ * selected page (if possible). This does so by comparing the incoming url with
+ * the url in the HREF of each anchor within the group. If it matches, the item
+ * is marked as SELected; otherwise the item is unselected.
+ *
+ * If no url match is found, all anchors will be unselected. This is okay as it
+ * simply indicates that there was no main menu item that matched the incoming
+ * url.
+ *
+ * If title is passed, #navBodyTitle will be updated to reflect the title of
+ * the page; otherwise the title will be gleaned from the title attribute of
+ * the selected menu item.
+ *
+ * This function is generally called as a callback from loadContent().
+ *
+ * @param url   the incoming url
+ * @param title the title of the body area.
+ *
+ */
+function updateTabBar( url, title )
+{
+    var mnu = $("grpTabBar");
+    
+    // unselect any active items, while selecting the correct item based on url
+    for (var o in mnu.childNodes )
+    {
+        var obj = mnu.childNodes[o];
+        if (obj.attributes)
+        {
+            var objHref = obj.getAttribute("href");
+            if (objHref.indexOf ( url ) >= 0)
+            {   // selected!
+                obj.setAttribute ("class", "barItem sel");
+                // update the page title, if possible
+                $ ("navBodyTitle").innerHTML = title ? title : obj.getAttribute("title");
+            }
+            else
+            {   // not selected!
+                obj.setAttribute ("class", "barItem");    
+            }
+            
+        }
+    }
+    //if (usingTabBar)
+    //{
+    //    updateMainMenu ( url, title );
+    //}
+    return true;
+}
+
+
+
+/**
+ * loadTabBar ( url, callback )
+ * 
+ * Loads url into #tabBar using AJAX. If the url is loaded successfully,
+ * we will call "callback" (usually updateTabs()), passing the url, so that
+ * other parts of the interface can be updated.
+ *
+ * @param url       the address of the tabbar
+ * @param callback  the callback function, if desired.
+ */
+
+function loadTabBar(url, callback) {
+    var page_request = false;
+    var returnValue = false;
+    
+    page_request = new XMLHttpRequest()
+    
+    // set our return value (this will depend on if things work right or not)
+    returnValue = false;
+    
+    page_request.onreadystatechange = function()
+    {
+        if (page_request.readyState == 4)
+        {
+        
+            // at this point, we have a page; 200 means success. 
+            if (window.location.href.indexOf("http")==-1 || page_request.status==200) {
+
+                // fill content
+                setTimeout ( function () {
+                    // nuke our scrollbar
+                    destroySB ( sbMenu );
+                    // set the content
+                    document.getElementById('tabBar').innerHTML = page_request.responseText;
+                    // process scripts
+                    processScriptTags('tabBar');
+                    if (usingTabBar)
+                    {
+                        showTabBar();
+                    }
                 }, 250 );
                 returnValue = true;
             }
@@ -1135,6 +1322,13 @@ function loaded() {
     // load our menu
     loadMenu ( './menu.html' );
     
+    // if we have a tab bar defined, load it too.
+    if (myTabBar)
+    {
+        loadTabBar ( myTabBar );
+        usingTabBar = true;
+    }
+    
     // and load our first page
     loadContent ( myStartPage, updateMainMenu);
      
@@ -1162,6 +1356,13 @@ function startApp ()
 {
     // add a listener call "loaded" when the DOM is ready.
     window.addEventListener('load', loaded, false);
+    
+    addSwipeListener(document.body, function(e) { 
+                                                  if (onSwipe) 
+                                                  { 
+                                                    onSwipe(e); 
+                                                  }
+                                                } );
     
     // add an orientation handler so that when the user
     // rotates their device, we'll rotate with them.
@@ -1457,6 +1658,82 @@ function loadLocalStorage( callback )
 function loadLocalStorageAndSync()
 {
     loadLocalStorage(function() {    setTimeout (saveLocalStorage, syncLocalStorageInterval);});
+}
+
+//
+/**
+ * based on: http://rabblerule.blogspot.com/2009/08/detecting-swipe-in-webkit.html
+ * You can identify a swipe gesture as follows:
+ * 1. Begin gesture if you receive a touchstart event containing one target touch.
+ * 2. Abort gesture if, at any time, you receive an event with >1 touches.
+ * 3. Continue gesture if you receive a touchmove event mostly in the x-direction.
+ * 4. Abort gesture if you receive a touchmove event mostly the y-direction.
+ * 5. End gesture if you receive a touchend event.
+ * 
+ * @author Dave Dunkin
+ * @copyright public domain
+ */
+function addSwipeListener(el, listener)
+{
+ var startX;
+ var dx;
+ var direction;
+ 
+ function cancelTouch()
+ {
+  el.removeEventListener('touchmove', onTouchMove);
+  el.removeEventListener('touchend', onTouchEnd);
+  startX = null;
+  startY = null;
+  direction = null;
+ }
+ 
+ function onTouchMove(e)
+ {
+  if (e.touches.length > 1)
+  {
+   cancelTouch();
+  }
+  else
+  {
+   dx = e.touches[0].pageX - startX;
+   var dy = e.touches[0].pageY - startY;
+   if (direction == null)
+   {
+    direction = dx;
+    e.preventDefault();
+   }
+   else if ((direction < 0 && dx > 0) || (direction > 0 && dx < 0) || Math.abs(dy) > 25)
+   {
+    cancelTouch();
+   }
+  }
+ }
+
+ function onTouchEnd(e)
+ {
+  var sX = startX;
+  var sY = startY;
+  cancelTouch();
+  if (Math.abs(dx) > 50)
+  {
+   listener({ target: el, direction: dx > 0 ? 'right' : 'left', x:sX, y:sY });
+  }
+  dx = null;
+ }
+ 
+ function onTouchStart(e)
+ {
+  if (e.touches.length == 1)
+  {
+   startX = e.touches[0].pageX;
+   startY = e.touches[0].pageY;
+   el.addEventListener('touchmove', onTouchMove, false);
+   el.addEventListener('touchend', onTouchEnd, false);
+  }
+ }
+ 
+ el.addEventListener('touchstart', onTouchStart, false);
 }
 
 

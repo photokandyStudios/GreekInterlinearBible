@@ -69,7 +69,7 @@
         scrollToPos = incomingScroll;
     }
     
-
+/*
     function populateBibleBooks ()
     {
         var bookName = passage.substr(0,3);
@@ -137,21 +137,53 @@
         localStorage.passage = passage;
         loadBiblePassage ( passage );
     }
-
+*/
 </script>
     <div id="lstStream">
-        Loading...
+      <div style="position: absolute; left: 47.5%; right: 47.5%; top: 50px; height: 50px;">
+            <div class="spinner">
+              <div class="bar1"></div>
+              <div class="bar2"></div>
+              <div class="bar3"></div>
+              <div class="bar4"></div>
+              <div class="bar5"></div>
+              <div class="bar6"></div>
+              <div class="bar7"></div>
+              <div class="bar8"></div>
+              <div class="bar9"></div>
+              <div class="bar10"></div>
+              <div class="bar11"></div>
+              <div class="bar12"></div>
+            </div>
+        </div>
     </div>
     
 <script type="text/javascript">
+    function getBookName ( passage )
+    {
+        return bibleBooks[ bibleBooks3LC.indexOf(passage.substr(0,3)) ];
+    }
+    function getBookIndex ( passage )
+    {
+        return bibleBooks3LC.indexOf(passage.substr(0,3));
+    }
+    function getChapterCount ( passage)
+    {
+        return bibleBookChapters[ bibleBooks3LC.indexOf(passage.substr(0,3)) ];
+    }
+    function getChapter ( passage)
+    {
+        return parseInt( passage.substr(4,10) );
+    }
 
     function loadBiblePassage ( passage, noscroll )
     {
-        setPageTitle (bibleBooks[$("lstBibleBooks").value] + " " + $("lstBibleBookChapters").value)
+        localStorage.passage = passage;
+        setPageTitle (getBookName(passage) + " " + getChapter(passage))
         var ihtml = "<div style='font-family:" + settingsLayoutFontFamily + "; "
                               + "line-height:" + settingsLayoutLineSpacing + "%; "
-                  + "'><div style='font-size:175%; text-align: center; margin:1em; border-bottom:1px dotted #333333;'>" 
-                  + bibleBooks[$("lstBibleBooks").value] + " " + $("lstBibleBookChapters").value + "</div>";
+                  + "'><div style='font-size:175%; text-align: center; margin-top:1em; margin-bottom:1em; border-bottom:1px dotted #333333;'>" 
+                  + getBookName(passage) + " " + getChapter(passage) + "</div>";
         var lhtml = "";
         var rhtml = "";
         var nhtml = "";
@@ -172,13 +204,15 @@
             
             // process left-hand (greek) side
             leftVerse = bibleLeft[ref];
+            if (!leftVerse) { leftVerse = "" };
             // and now, add <word> spans to it
             leftVerse= leftVerse.replace(/([^\s\.\,\?\!\:\;\(\)\`\[\]\{\}]*)/g, "<word>$1</word>");
 
             // handle any strong's numbers / inflections
             leftVerse = leftVerse.replace ( /VAR([0-9])/g, "$1");
             leftVerse = leftVerse.replace ( /(G[0-9]+)/g, "<span class='strongs'>$1</span>" );
-            leftVerse = leftVerse.replace ( /([A-Z\-]{2,}[A-Z\-0-9]+)/g, "<span class='parsed'>$1</span>" );
+//            leftVerse = leftVerse.replace ( /([A-Z\-]{2,}[A-Z\-0-9]+)/g, "<span class='parsed'>$1</span>" );
+            leftVerse = leftVerse.replace ( /([A-Z\-]{2,}[A-Z\-0-9]+)/g, "" );
             
             if (settingsGreekLayoutTransliterate=="on") 
             { 
@@ -186,6 +220,7 @@
             }
             
             rightVerse = bibleRight[ref];
+            if (!rightVerse) { rightVerse = "" };
             rightVerse= rightVerse.replace(/([^\s\.\,\?\!\-\:\;\(\)\`\‘\’\[\]\{\}]*)/g, "<word>$1</word>");
             
             if (highlightText)
@@ -285,6 +320,48 @@
 
     var theWord;
     var whichSide;
+    
+    onPageNext = function()
+    {
+        // go to next chapter. This is gonna be... fun?
+        var curBook = getBookIndex (passage);
+        var curChapter = getChapter (passage);
+        var maxChapters = getChapterCount (passage);
+        
+        curChapter = curChapter + 1;    // attempt to increment.
+        if ( curChapter > maxChapters )
+        {
+            curChapter = 1;
+            curBook = curBook + 1;
+            if (curBook > 65)
+            {
+                return; // can't go past the end of the Bible
+            }
+        }
+        passage = bibleBooks3LC[ curBook ] + "." + curChapter;
+        loadBiblePassage ( passage );
+    }
+    
+    onPagePrev = function ()
+    {
+        // go to previous chapter. This is gonna be... fun?
+        var curBook = getBookIndex (passage);
+        var curChapter = getChapter (passage);
+        var maxChapters = getChapterCount (passage);
+        
+        curChapter = curChapter - 1;    // attempt to increment.
+        if ( curChapter < 1 )
+        {
+            curBook = curBook - 1;
+            if (curBook < 0)
+            {
+                return; // can't go past the end of the Bible
+            }
+            curChapter = bibleBookChapters[curBook];
+        }
+        passage = bibleBooks3LC[ curBook ] + "." + curChapter;
+        loadBiblePassage ( passage );
+    }
     
     onLongPress = function ( event )
     {
@@ -524,7 +601,7 @@
         hidePopOver();
         if (url)
         {
-            loadContent(url, updateMainMenu,'slideOut', './bible.html?ignore&scroll=' + (-sb[sbBody].y) );
+            loadContent(url, updateMainMenuandTabBar,'slideOut', './bible.html?ignore&scroll=' + (-sb[sbBody].y) );
         }
     }
     
@@ -543,7 +620,7 @@
         hidePopOver();
         if (url)
         {
-            loadContent(url, updateMainMenu,'slideOut', './bible.html?ignore&scroll=' + (-sb[sbBody].y) );
+            loadContent(url, updateMainMenuandTabBar,'slideOut', './bible.html?ignore&scroll=' + (-sb[sbBody].y) );
         }
     }
 
@@ -556,12 +633,10 @@
 
             function populateBible()
             {
-                setTabBar ( '    <select id="lstBibleBooks" onchange="populateChapters(this.value); changePassage();"><option>...</option></select><select id="lstBibleBookChapters" onchange="changePassage();"><option>...</option></select>');
-                showTabBar();
                 hideLoader();
-                populateBibleBooks(); 
+                //populateBibleBooks(); 
                 //TODO: We need to load the chapters for the incoming book.
-                populateChapters( curBook );
+                //populateChapters( curBook );
                 loadBiblePassage ( passage );
             }
 

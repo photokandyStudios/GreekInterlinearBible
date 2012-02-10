@@ -3,24 +3,7 @@ body.portrait.ipad
     width:768px;
 }
 
-body.portrait.ipad  #menuPanel
-{
-    width: 320px;
-    display: none; /* becomes hidden menu */
-    z-index:1000;
-    position: absolute;
-    top: 60px;
-    left: 12px;
-    background-color: #151D31;
-    padding: 6px;
-    border:1px solid #151D31;
-    height: 335px;
-    border-radius: 6px 6px;
-    background-image: none;
-    -webkit-box-shadow: inset 0px 28px 0px rgba(255,255,255,.125);
-    overflow:visible;
-}
-
+/*
 body.portrait.ipad #hideMenu
 {
     display: none;
@@ -30,118 +13,12 @@ body.portrait.ipad #hideMenu
     right: 0;
     bottom: 0;
 }
-
-body.portrait.ipad  #menuPanel .container
-{
-    left:6px;
-    right: 6px;
-    top: 50px;
-    bottom: 6px;
-    border-radius: 4px 4px;
-    border: 1px solid #151D31;
-    overflow: hidden;
-}
-
-/* the menu arrow css adapted from http://jsfiddle.net/XYubE/
- */
-body.portrait.ipad #menuPanel .arrow {
-position:absolute;
-left:23px;
-top:-21px;
-width:48px;
-height:22px;
-overflow:hidden;
-}
-
-body.portrait.ipad #menuPanel .arrow span {
-display:block;
-width:28px;
-height:28px;
--webkit-transform: rotate(45deg) skew(-0deg, -0deg);
-margin-top:6px;
-margin-left:6px;
-background:#151D31;
-    -webkit-box-shadow: inset 0px 28px 0px rgba(255,255,255,.125);
-border-left:1px solid #000;
-border-top:1px solid #000;
-zbox-shadow: inset 1px 1px 1px 0px rgba(255, 255, 255, 0.37);
-}
-
-
-
-body.portrait.ipad  #menuPanel .navBar
-{
-    color: #FFF;
-    text-shadow: 0px -1px 1px #000;
-    background-color: transparent;
-    background-image: none;
-    -webkit-box-shadow: none;
-    border: none;
-
-}
-
-body.portrait.ipad  #menuPanel .navSubItemGroup
-{
-    background-color: #FFF;
-    border-radius: 4px 4px;
-    border:1px solid #CCCFD3;
-    -webkit-box-shadow: inset 0px 1px 0px #CCCFD3, 0px 1px 0px #FFFFFF;
-    margin-bottom: 1em;    
-}
-
-body.portrait.ipad  #menuPanel .navSubItem
-{
-    border: none;
-    border-bottom:1px solid #CCCFD3;
-    border-collapse:collapse;
-    padding:12px;
-    font-weight: bold;
-    color: #000;
-    text-shadow: none;
-    font-size:16px;
-    display: block;
-    text-decoration: none;
-    position: relative;
-    line-height: 16px;
-    height: auto;
-}
-
-body.portrait.ipad  #menuPanel .navSubItem:last-child
-{
-    border-bottom: none;
-}
-
-body.portrait.ipad  #menuPanel .navSubItem.sel
-{
-    border-radius: 4px 4px;
-    color: #FFF;
-    text-shadow: none;
-}
-
-.ipad body.portrait.ipad  #menuPanel .navSubItem img
-{
-    width:32px;
-    height:32px;
-    float: left;
-    margin-left: -4px;
-    margin-right: 8px;
-    margin-top: -7px;
-}
-
-body.portrait.ipad  #menuPanel img:first-child, body.portrait #menuPanel h2
-{
-    display: none;
-}
+*/
 
 body.portrait.ipad  #bodyPanel
 {
     left:0px;
     right: 0;
-}
-
-body.portrait.ipad  #btnMenu
-{
-    display: block;
 }
 
 body.portrait.ipad #tabBar
