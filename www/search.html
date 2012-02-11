@@ -121,7 +121,7 @@
                       'scrollto=item' + i +
                       '");'
             var item = "<a id='item%NUM%' class='listItem arrow' href='#' onclick='%LINK%'><span style='display: block; float:left; width:15%'>%REF%</span><span style='width:84%; display: block; float:right;'><span style='display: block'>%TOP%</span><span style='display: block'>%BOTTOM%</span></span><span style='display: block; clear: both'></span></a>";
-            item = item.replace ( "%REF%", ref);
+            item = item.replace ( "%REF%", cvtToProperReference(ref));
             item = item.replace ( "%TOP%", topText);
             item = item.replace ( "%BOTTOM%", bottomText);
             item = item.replace ( "%LINK%", url);
