@@ -87,7 +87,7 @@ function addClick ( x, y, nopop )
     clickPointY.push (y);
     if (!nopop)
     {
-        setTimeout (popClick, 5000)
+        setTimeout (popClick, 2500)
     }
 }
 
