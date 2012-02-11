@@ -104,17 +104,35 @@ body
     color: #E8E8E8;
     text-shadow: none;
     text-decoration: none;
-    background-position: center -2px;
     height: 50px;
     background-repeat: no-repeat;
-    line-height: 83px;
+    
 }
+
+.bottomTabs .barItem span
+{
+    display: block;
+    background-image:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#CCC), to(#888));
+    -webkit-mask-position: center -2px;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: 40px 40px;
+    width: 40px;
+    height: 40px;
+    margin: 0 auto;
+    margin-bottom: -25px;
+}
+
 
 .bottomTabs .barItem.sel
 {
     border-radius: 10px;
     -webkit-box-shadow: inset 0 25px 5px rgba(255,255,255,0.25);
     background-color: #777;
+}
+
+.bottomTabs .barItem.sel span
+{
+    background-image:-webkit-gradient(linear, 0% 0%, 0% 75%, from(#C0D8FF), to(#FFF));
 }
 
 .dropdown
@@ -362,7 +380,7 @@ body
     height: 40px;
     text-align: center;
     line-height: 40px;
-    -webkit-box-shadow: inset 1px 1px 4px rgba(0,0,0,0.5);
+    z-webkit-box-shadow: inset 1px 1px 4px rgba(0,0,0,0.5);
     text-decoration: none;
 }
 
@@ -533,14 +551,38 @@ textarea
     right: 16px;
     top: 6px;
     width: 160px;
-    border: 1px solid #000;
-    background-image: url(../images/icons/06-magnify.png);
-    background-repeat: no-repeat;
-    background-position: 4px center;
-    background-color: white;
+    border: 1px solid #888;
     border-radius: 16px;
     padding-left: 32px;
+    padding-right: 32px;
     -webkit-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.5);
+    background-color: white;
+}
+#theSearch span.searchIcon
+{
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 32px;
+    background-image: url(../images/masks/Search@2x.png);
+    background-size: 32px 32px;
+    background-repeat: no-repeat;
+    background-position: -2px 0px
+    opacity: 0.5;
+}
+#theSearch span.clearSearch
+{
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    width: 24px;
+    background-image: url(../images/masks/Deleteb@2x.png);
+    background-size: 32px 32px;
+    background-repeat: no-repeat;
+    background-position: -8px -1px;
+    opacity: 0.5;
 }
 #theSearch input
 {
@@ -607,9 +649,15 @@ textarea
     -webkit-transform: translate3d(0,0,0);
 }
 
-#btnMenu
+#btnMenu { display: block;     width: 16px;
+}
+#btnMenu span
 {
     display: block;
+    background-image: url(../images/color/list2b.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size:24px 24px;
 }
 
 #tabBar
