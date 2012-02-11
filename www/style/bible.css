@@ -5,19 +5,13 @@
 .strongs
 {
     color: #248;
-    vertical-align: top;
-    position: relative;
-    top: 6px;
     font-size: 75%;
     font-style: italic;
 }
 .parsed
 {
     color: #606060;
-    vertical-align: bottom;
     font-size: 75%;
     font-style: italic;
-    position: relative;
-    top: 6px;
     padding-right: 10px;
 }
