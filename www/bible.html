@@ -159,23 +159,6 @@
     </div>
     
 <script type="text/javascript">
-    function getBookName ( passage )
-    {
-        return bibleBooks[ bibleBooks3LC.indexOf(passage.substr(0,3)) ];
-    }
-    function getBookIndex ( passage )
-    {
-        return bibleBooks3LC.indexOf(passage.substr(0,3));
-    }
-    function getChapterCount ( passage)
-    {
-        return bibleBookChapters[ bibleBooks3LC.indexOf(passage.substr(0,3)) ];
-    }
-    function getChapter ( passage)
-    {
-        return parseInt( passage.substr(4,10) );
-    }
-
     function loadBiblePassage ( passage, noscroll )
     {
         localStorage.passage = passage;
@@ -245,11 +228,11 @@
             // determine if bookmarked?
             if (localStorage.getItem ("bm_" + ref ))
             {
-                middleText = middleText + "</br><img src='./images/tabs/Star.png'/>";
+                middleText = middleText + "</br><img src='./images/color/Star@2x.png' width=40 height=40/>";
             }
             if (localStorage.getItem ("note_" + ref ))
             {
-                middleText = middleText + "</br><img src='./images/tabs/Tag.png'/>";
+                middleText = middleText + "</br><img src='./images/color/Tag@2x.png' width=40 height=40/>";
             }
             
             nhtml = nhtml.replace ( "%TEXT%", middleText);
