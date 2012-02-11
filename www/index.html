@@ -55,8 +55,8 @@
                 <span id="navSiteTitle">Site Title</span><span id="navSiteBullet"> &bull; </span><span id="navBodyTitle">Home</span>
                 </div>
                 <a id="btnBack" href="javascript:loadContent (returnTo.pop(), updateMainMenuandTabBar, 'slideBack')" class="button back black"><span></span>Back</a>
-                <a id="btnMenu" href="javascript:toggleMenu ()" class="button black">Menu</a>
-                <div id="theSearch"><input onchange="doSearch();" id="txtSearch" type="search" size=20 /></div>
+                <a id="btnMenu" href="javascript:toggleMenu ()" class="button black"><span>&nbsp;</span></a>
+                <form onsubmit="doSearch(); return false;"><div id="theSearch"><span class="searchIcon"></span><input id="txtSearch"asdfasdf type="search" size=20 /><span onclick="$('txtSearch').value='';" id="btnClearSearch" class="clearSearch"></span></div></form>
             </div>
             <div class="container scroll scrollable"  id="pnlBodyArea" >
              <div id="outerContainer">
@@ -320,6 +320,38 @@
         }
         
     }
+
+    function getBookName ( passage )
+    {
+        return bibleBooks[ bibleBooks3LC.indexOf(passage.substr(0,3)) ];
+    }
+    function getBookIndex ( passage )
+    {
+        return bibleBooks3LC.indexOf(passage.substr(0,3));
+    }
+    function getChapterCount ( passage)
+    {
+        return bibleBookChapters[ bibleBooks3LC.indexOf(passage.substr(0,3)) ];
+    }
+    function getChapter ( passage)
+    {
+        return parseInt( passage.substr(4,10) );
+    }
+    function cvtToProperReference ( passage )
+    {
+        if (passage.indexOf(".") != passage.lastIndexOf("."))
+        {
+            // two dots in this passage
+            return getBookName (passage) + " " + passage.substr(4, passage.lastIndexOf(".")-4) + ":" + 
+                   passage.substr(passage.lastIndexOf(".")+1,10);
+        }
+        else
+        {
+            return getBookName (passage) + " " + getChapter (passage);
+        }
+    }
+
+
     
     function getGoing()
     {
