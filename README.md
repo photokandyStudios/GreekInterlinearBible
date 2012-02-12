@@ -18,7 +18,7 @@ The following code is licensed under a CC-BY-SA or MIT license:
     
     /www/script/gplusStream.js ***
     /www/script/ios.js
-    /www/script/iscroll.js
+    /www/script/iscroll.js (modified to support longpress)
     /www/script/podcastList.js ***
     /www/script/twitterStream.js ***
     /www/script/utility.js
