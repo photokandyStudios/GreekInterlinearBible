@@ -87,7 +87,7 @@ function addClick ( x, y, nopop )
     clickPointY.push (y);
     if (!nopop)
     {
-        setTimeout (popClick, 2500)
+        setTimeout (popClick, 5000)
     }
 }
 
@@ -329,11 +329,13 @@ function _resetSB ( o )
         {
             if (!refreshed)
             {
-                if (sbAreas[o]!="pnlBodyArea") { sb[o] = new iScroll ( sbAreas[o], { onScrollMove: function(me) {handleScrolling(this,null, true);},
+                if (sbAreas[o]!="pnlBodyArea") { sb[o] = new iScroll ( sbAreas[o], { hScrollbar: false, vScrollbar: false, 
+                                                                                     onScrollMove: function(me) {handleScrolling(this,null, true);},
                                                                                      onScrollEnd:  function(me) {handleScrolling(this,null, false);}, 
                                                                                      zonTouchEnd:  function(me) {handleScrolling(this,null, false);} 
                                                                                     } ); } else
-                                               { sb[o] = new iScroll ( sbAreas[o], { onScrollMove: function(me) {handleScrolling(this,null, true);},
+                                               { sb[o] = new iScroll ( sbAreas[o], { hScrollbar: false, vScrollbar: false, 
+                                                                                     onScrollMove: function(me) {handleScrolling(this,null, true);},
                                                                                      onScrollEnd:  function(me) {handleScrolling(this,null, false);},
                                                                                      zonTouchEnd:  function(me) {handleScrolling(this,null, false);}, 
                                                                                      longpress: function (e) { longpress(e); } } ); }
@@ -342,11 +344,13 @@ function _resetSB ( o )
     }
     else
     {
-                if (sbAreas[o]!="pnlBodyArea") { sb[o] = new iScroll ( sbAreas[o], { onScrollMove: function(me) {handleScrolling(this,null, true);},
+                if (sbAreas[o]!="pnlBodyArea") { sb[o] = new iScroll ( sbAreas[o], { hScrollbar: false, vScrollbar: false, 
+                                                                                     onScrollMove: function(me) {handleScrolling(this,null, true);},
                                                                                      onScrollEnd:  function(me) {handleScrolling(this,null, false);}, 
                                                                                      zonTouchEnd:  function(me) {handleScrolling(this,null, false);} 
                                                                                     } ); } else
-                                               { sb[o] = new iScroll ( sbAreas[o], { onScrollMove: function(me, e) {handleScrolling(this,null, true);},
+                                               { sb[o] = new iScroll ( sbAreas[o], { hScrollbar: false, vScrollbar: false, 
+                                                                                     onScrollMove: function(me, e) {handleScrolling(this,null, true);},
                                                                                      onScrollEnd:  function(me) {handleScrolling(this,null, false);},
                                                                                      zonTouchEnd:  function(me) {handleScrolling(this,null, false);}, 
                                                                                      longpress: function (e) { longpress(e); } } ); }
@@ -625,11 +629,25 @@ function defaultSwipe ( e )
  {
     if (e.direction == "left")
     {
-        hideMenu();
+        if (menuVisible)
+        {
+            hideMenu();
+        }
+        else
+        {
+            if (onPageNext) { onPageNext(); }
+        }
     }
     if (e.direction == "right")
     {
-        showMenu();
+        if (!menuVisible)
+        {
+            showMenu();
+        }
+        else
+        {
+            if (onPagePrev) { onPagePrev(); }
+        }
     }
   }
   else
@@ -1479,6 +1497,11 @@ var processDropDowns = function()
  */
 function getHitWord(hit_elem,x,y,dothework) {
 var hit_word = '';
+var dtw = false;
+if (dothework)
+{
+    dtw = true;
+}
 //                                                        console.log ('862');
 //text contents of hit element
 var text_nodes = hit_elem.childNodes;
@@ -1488,8 +1511,12 @@ if (text_nodes.length > 0) {
   var original_content = hit_elem.innerHTML;
 //                                                        console.log ('871');
   //wrap every word in every node in a dom element
-if (dothework) {  hit_elem.innerHTML = hit_elem.textContent.replace(/([^\s\.\,\?\!\-\:\;\(\)\`]*)/g, "<word>$1</word>"); }
-//                                                        console.log ('876');
+   //                                                     console.log ( dtw );
+if (dtw==true) 
+{  
+  hit_elem.innerHTML = hit_elem.textContent.replace(/([^\s\.\,\?\!\-\:\;\(\)\`]*)/g, "<word>$1</word>"); 
+}
+ //                                                       console.log ( hit_elem.innerHTML );
   //get the exact word under cursor
   var hit_word_elem = document.elementFromPoint(x, y);
 //                                                        console.log ('879');
@@ -1501,7 +1528,7 @@ if (dothework) {  hit_elem.innerHTML = hit_elem.textContent.replace(/([^\s\.\,\?
     console.log("got it: "+hit_word);
   }
 //                                                        console.log ('887');
-if (dothework) {  hit_elem.innerHTML = original_content;}
+if (dtw==true) {  hit_elem.innerHTML = original_content;}
 }
 //                                                        console.log ('890');
 return hit_word;
@@ -1513,10 +1540,10 @@ return hit_word;
  * @param x     x-coordinate
  * @param y     y-coordinate
  */
-function getWordFromPoint (x, y)
+function getWordFromPoint (x, y, dothework)
 {
     console.log ("Trying to get word at " + x + ", " + y);
-      return getHitWord(document.elementFromPoint(x, y),x,y);
+      return getHitWord(document.elementFromPoint(x, y),x,y,dothework);
 }
 
 //
@@ -1703,7 +1730,7 @@ function addSwipeListener(el, listener)
     direction = dx;
     e.preventDefault();
    }
-   else if ((direction < 0 && dx > 0) || (direction > 0 && dx < 0) || Math.abs(dy) > 25)
+   else if ((direction < 0 && dx > 0) || (direction > 0 && dx < 0) || Math.abs(dy) > 50) //25
    {
     cancelTouch();
    }
@@ -1715,7 +1742,7 @@ function addSwipeListener(el, listener)
   var sX = startX;
   var sY = startY;
   cancelTouch();
-  if (Math.abs(dx) > 50)
+  if (Math.abs(dx) > 35) //50
   {
    listener({ target: el, direction: dx > 0 ? 'right' : 'left', x:sX, y:sY });
   }
