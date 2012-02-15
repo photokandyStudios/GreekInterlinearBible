@@ -1,0 +1,187 @@
+<div class="content white">
+    <script>
+        showSearch( doSearchBible );
+        setPageTitle ("Canvas");
+    </script>
+    <style>
+#a
+{
+    position:absolute;
+    top:0; left:0; right:0; bottom:0;
+    width:100%; height:100%;
+    
+}
+#b
+{
+    margin: 0 auto;
+    border:1px solid red;
+    text-align: center;
+}
+#c
+{
+    max-width: 75%;
+    max-height: 100%;
+    margin: 0 auto;
+    position: relative;
+        border:1px solid red;
+}
+#btnBack
+{
+    position: absolute;
+    top:325px;
+    left:1px;
+    width:100px;
+    height:50px;
+}
+#btnNext
+{
+    position: absolute;
+    top:325px;
+    right: 1px;
+    width:100px;
+    height:50px;
+}
+
+​    </style>
+    <div id="a">
+        <div id="b">
+            <canvas width=1500 height=1250 id="c"></canvas>
+        </div>
+        <button id="btnBack" onClick="pageBack();">Back</button>
+        <button id="btnNext" onClick="pageNext();">Next</button>
+    </div>​
+    <script>
+var ctx = document.getElementById("c").getContext("2d");
+
+ctx.font = "36px Georgia";
+ctx.fillStyle = "#000";
+
+var canvasWidth = 1500;
+var canvasHeight = 1250;
+var canvasMargin = 30;
+
+var columnAvgWidth = (canvasWidth - (canvasMargin * 6))/3;
+
+var column1Left = canvasMargin;
+var column1Width = columnAvgWidth * 1.75;
+var column2Left = column1Left + column1Width + (canvasMargin * 2);
+var column2Width = columnAvgWidth * 0.25;
+var column3Left = column2Left + column2Width + (canvasMargin * 2);
+var column3Width = columnAvgWidth * 1;
+var lineHeight = 48;
+
+/**
+     * http://stackoverflow.com/questions/2936112/text-wrap-in-a-canvas-element
+     * Divide an entire phrase in an array of phrases, all with the max pixel length given.
+     * The words are initially separated by the space char.
+     * @param phrase
+     * @param length
+     * @return
+     */
+function getLines(ctx,phrase,maxPxLength) {
+    var wa=phrase.split(" "),
+        phraseArray=[],
+        lastPhrase="",
+        l=maxPxLength,
+        measure=0;
+    for (var i=0;i<wa.length;i++) {
+        var w=wa[i];
+        measure=ctx.measureText(lastPhrase+w).width;
+        if (measure<l) {
+            lastPhrase+=(" "+w);
+        }else {
+            phraseArray.push(lastPhrase);
+            lastPhrase=w;
+        }
+        if (i===wa.length-1) {
+            phraseArray.push(lastPhrase);
+            break;
+        }
+    }
+    return phraseArray;
+}
+
+function clearCtx ( ctx )
+{
+    ctx.save();
+    ctx.clearRect (0, 0, canvasWidth, canvasHeight);
+    ctx.restore();
+}
+
+function drawText ( pA, ctx, x, y, lineHeight, pageTop, pageHeight )
+{
+    ctx.save();
+    for (i=pageTop; i<pA.length && i<pageTop+pageHeight; i++)
+    {
+        y+=lineHeight;
+        ctx.fillText(pA[i].trim(), x, y);
+    }
+    ctx.restore();
+}
+
+
+var passage = "40N.1";
+var c1 = Array();
+var c2 = Array();
+var c3 = Array();
+
+var pageTop = 0;
+var pageHeight = Math.floor((canvasHeight-(canvasMargin*2))/lineHeight);
+
+function loadText()
+{
+    for (var i=1;bibleLeft[passage+"."+i] || bibleRight[passage+"."+i];i++)
+    {
+        var ref = passage+"."+i;
+        c1 = c1.concat ( getLines(ctx, bibleLeft[ref], column1Width ) );
+        c2 = c2.concat ( getLines(ctx, ":"+i+":", column2Width) );
+        c3 = c3.concat ( getLines(ctx, bibleRight[ref], column3Width ) );
+        c1.push("");
+        c2.push("");
+        c3.push("");
+    
+        
+        var dd=0;
+        var ev=true;
+        while ( ev && dd<100)
+        {
+            if (c1.length < c2.length || c1.length < c3.length ) { c1.push(""); }
+            if (c2.length < c3.length || c2.length < c1.length ) { c2.push(""); }
+            if (c3.length < c1.length || c3.length < c2.length ) { c3.push(""); }
+            
+            ev=false;
+            if (c1.length != c2.length || c1.length != c3.length ) { ev=true;}
+            if (c2.length != c1.length || c2.length != c3.length ) { ev=true;}
+            if (c3.length != c1.length || c3.length != c2.length ) { ev=true;}
+    
+            dd++;
+        }
+    }    
+}
+
+function updateText()
+{
+    clearCtx(ctx);
+    drawText ( c1, ctx, column1Left, canvasMargin, lineHeight, pageTop, pageHeight);
+    drawText ( c2, ctx, column2Left, canvasMargin, lineHeight, pageTop, pageHeight);
+    drawText ( c3, ctx, column3Left, canvasMargin, lineHeight, pageTop, pageHeight);
+}
+
+loadText();
+updateText();
+
+function pageBack()
+{
+    pageTop = pageTop - pageHeight;
+    if (pageTop < 0) { pageTop = 0; }
+    updateText();
+}
+
+function pageNext()
+{ 
+    pageTop = pageTop + pageHeight;
+    if (pageTop > (c1.length-pageHeight)) { pageTop = (c1.length-pageHeight); }
+    updateText();
+}
+    </script>
+</div>
