@@ -8,8 +8,8 @@ body
     color: #333;
     background-color: #000;
     -webkit-tap-highlight-color:transparent;
-    -webkit-transform:translate3d(0,0,0);
-    -webkit-backface-visibility:hidden; 
+    y-webkit-transform:translate3d(0,0,0);
+    y-webkit-backface-visibility:hidden; 
 }
 
 .panel
@@ -21,11 +21,11 @@ body
     right: 0;
     overflow: hidden;
     border: none;
-    -webkit-user-select: none;
-    background-color: #717880;
-    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#E1E4E9), to(#DDDFE3));
-    -webkit-transform:translate3d(0,0,0);
-    -webkit-backface-visibility:hidden; 
+    y-webkit-user-select: none;
+    background-color: #E1E4E9;
+    ybackground-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#E1E4E9), to(#DDDFE3));
+    y-webkit-transform:translate3d(0,0,0);
+    y-webkit-backface-visibility:hidden; 
 }
 .navBar
 {
@@ -190,9 +190,9 @@ body
 .content
 {
     color: #5E6A85;
-    position: relative;
-    min-height: 110%;
-    -webkit-transform:translate3d(0,0,0);
+    zposition: relative;
+    min-height: 1024px;
+    y-webkit-transform:translate3d(0,0,0);
 }
 
 .content.white
@@ -608,12 +608,12 @@ textarea
     width: 100%;
     height: auto;
     float: left;
-        -webkit-transform:translate3d(0,0,0);
+        y-webkit-transform:translate3d(0,0,0);
 }
 #container2
 {
     left: 100%;
-        -webkit-transform:translate3d(0,0,0);
+        y-webkit-transform:translate3d(0,0,0);
 }
 #outerContainer
 {   position: absolute;
