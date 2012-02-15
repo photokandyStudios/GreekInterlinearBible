@@ -69,75 +69,6 @@
         scrollToPos = incomingScroll;
     }
     
-/*
-    function populateBibleBooks ()
-    {
-        var bookName = passage.substr(0,3);
-        var ihtml = "";
-        for (var i=39; i<bibleBooks.length; i++)
-        {
-            item = "<option %SELECTED% value='%INDEX%'>%BOOK%</option>";
-            item = item.replace ( "%BOOK%", bibleBooks[i] ) ;
-            item = item.replace ( "%INDEX%", i ) ;
-            if (bibleBooks3LC[i] == bookName)
-            {
-                item = item.replace ( "%SELECTED%", "SELECTED" );
-                curBook = i;
-            }
-            else
-            {
-                item = item.replace ( "%SELECTED%", "" );
-            }
-            ihtml = ihtml + item;
-        }
-            
-        $('lstBibleBooks').innerHTML = ihtml;
-    }
-        
-    function populateChapters ( book )
-    {
-        var bookChapter = passage.substr(4,10);
-        var ihtml = "";
-        for (var i=0; i<bibleBookChapters[book]; i++)
-        {
-            item = "<option %SELECTED% value='%INDEX%'>%NUM%</option>";
-            item = item.replace ( "%INDEX%", i+1 ) ;
-            item = item.replace ( "%NUM%", i+1 ) ;
-            if ((i+1) == bookChapter)
-            {
-                item = item.replace ( "%SELECTED%", "SELECTED" );
-            }
-            else
-            {
-                item = item.replace ( "%SELECTED%", "" );
-            }
-            ihtml = ihtml + item;
-        }
-            
-        $('lstBibleBookChapters').innerHTML = ihtml;
-    }
-    
-    function changePassage()
-    {
-        var bookName = bibleBooks3LC[$("lstBibleBooks").value];
-        var bookChapter = $("lstBibleBookChapters").value;
-        if (bookName == "")
-        {
-            bookName = "40N";
-        }
-        if (bookChapter < 1)
-        {
-            bookChapter = 1;
-        }
-        if (bookChapter > bibleBookChapters[$("lstBibleBooks").value])
-        {
-            bookChapter = bibleBookChapters[$("lstBibleBooks").value];
-        }
-        passage = bookName + "." + bookChapter;
-        localStorage.passage = passage;
-        loadBiblePassage ( passage );
-    }
-*/
 </script>
     <div id="lstStream">
       <div style="position: absolute; left: 47.5%; right: 47.5%; top: 50px; height: 50px;">
@@ -167,6 +98,10 @@
                               + "line-height:" + settingsLayoutLineSpacing + "%; "
                   + "'><div style='font-size:175%; text-align: center; margin-top:1em; margin-bottom:1em; border-bottom:1px dotted #333333;'>" 
                   + getBookName(passage) + " " + getChapter(passage) + "</div>";
+/*        var ihtml = "<table border=0 width=100%; cellpadding=0 cellspacing=0 style='font-family:" + settingsLayoutFontFamily + "; "
+                              + "line-height:" + settingsLayoutLineSpacing + "%; "
+                  + "'><tr><td colspan=3 style='font-size:175%; text-align: center; padding-top:1em; padding-bottom:1em; '>" 
+                  + getBookName(passage) + " " + getChapter(passage) + "</td></tr>";*/
         var lhtml = "";
         var rhtml = "";
         var nhtml = "";
@@ -184,12 +119,16 @@
             lhtml = "<div class='greek' style='font-size:%TEXTSIZE%; float: left; width: %LEFTWIDTH%;'>%TEXT%</div>";
             nhtml = "<div style='text-align: center; font-size:150%; color:#556677; float: left; width: %NUMWIDTH%;'>%TEXT%</div>";
             rhtml = "<div class='english' style='font-size:%TEXTSIZE%; float: right; width: %RIGHTWIDTH%;'>%TEXT%</div>";
-            
+/*
+            lhtml = "<td class='greek' valign=top style='font-size:%TEXTSIZE%; width: %LEFTWIDTH%;'>%TEXT%</td>";
+            nhtml = "<td valign=top style='text-align: center; font-size:150%; color:#556677; width: %NUMWIDTH%;'>%TEXT%</td>";
+            rhtml = "<td valign=top class='english' style='font-size:%TEXTSIZE%; width: %RIGHTWIDTH%;'>%TEXT%</td>";
+  */          
             // process left-hand (greek) side
             leftVerse = bibleLeft[ref];
             if (!leftVerse) { leftVerse = "" };
             // and now, add <word> spans to it
-            leftVerse= leftVerse.replace(/([^\s\.\,\?\!\:\;\(\)\`\[\]\{\}]*)/g, "<word>$1</word>");
+            //leftVerse= leftVerse.replace(/([^\s\.\,\?\!\:\;\(\)\`\[\]\{\}]*)/g, "<word>$1</word>");
 
             // handle any strong's numbers / inflections
             leftVerse = leftVerse.replace ( /VAR([0-9])/g, "$1");
@@ -204,7 +143,7 @@
             
             rightVerse = bibleRight[ref];
             if (!rightVerse) { rightVerse = "" };
-            rightVerse= rightVerse.replace(/([^\s\.\,\?\!\-\:\;\(\)\`\‘\’\[\]\{\}]*)/g, "<word>$1</word>");
+            //rightVerse= rightVerse.replace(/([^\s\.\,\?\!\-\:\;\(\)\`\‘\’\[\]\{\}]*)/g, "<word>$1</word>");
             
             if (highlightText)
             {
@@ -252,13 +191,18 @@
                 highlight = highlight + ")' ";
             }
             
-            ihtml = ihtml + "<div " + ((selectedVerse[ref]=="Y") ? "class='verseSelected' " : "") + " " + highlight + " "
+            ihtml = ihtml + "<div class='verse' " + ((selectedVerse[ref]=="Y") ? "class='verseSelected' " : "") + " " + highlight + " "
                           + "onclick='toggleSelection(this);' id='" + ref + "' style='clear: both'>" + lhtml + nhtml + rhtml + "<div style='clear:both; height:"
                           + settingsLayoutVerseSpacing + ";'></div></div>";
-        }
+  /*
+            ihtml = ihtml + "<tr " + ((selectedVerse[ref]=="Y") ? "class='verseSelected' " : "") + " " + highlight + " "
+                          + "onclick='toggleSelection(this);' id='" + ref + "'>" + lhtml + nhtml + rhtml + "</tr><tr style='overflow: hidden; height:"
+                          + settingsLayoutVerseSpacing + ";'><td colspan=3>&nbsp;</td></tr>"; */
+          }
         
         ihtml = ihtml + "</div>";
-        // TODO: keyword highlights (from search)
+  /*
+        ihtml = ihtml + "</table>";*/
         
         $("lstStream").innerHTML = ihtml;
         resetContentScrollBar( (scrollTo||scrollToPos ? 1125: 500) );
@@ -355,9 +299,20 @@
         whichSide = 0;
         if (overElement)
         {
-            whichSide = (overElement.className=="greek") ? 1 : 2;
+            if (overElement.className == "greek" || overElement.parentNode.className =="greek" )
+            {
+                whichSide = 1;
+            }
+            if (overElement.className == "english" || overElement.parentNode.className =="english" )
+            {
+                whichSide = 2;
+            }
         }
-        theWord = getWordFromPoint (x,y);
+        if (whichSide <1 || whichSide >2)
+        {  
+            return;
+        }
+        theWord = getWordFromPoint (x,y, true);
         
         var numSelected = 0;
         var numBookmarked = 0;
