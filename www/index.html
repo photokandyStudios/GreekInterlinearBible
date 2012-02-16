@@ -358,7 +358,10 @@
     
     function getGoing()
     {
-        startApp();
+        setTimeout (function()
+                    { 
+                       loadLocalStorageAndSync ( startApp ); // start the app after we load the settings!
+                    }, 500); // kick off a load in 500ms
     }
     
 //

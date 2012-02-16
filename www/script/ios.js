@@ -27,6 +27,8 @@
  * Global Variables (consider them internal. Some are useful. Some aren't intended to be used.)
  *
  */
+
+var consoleLogging = true;                                          // PUBLIC
  
 var currentPageURL;                                                 // PUBLIC
 var currentContainer;
@@ -137,10 +139,10 @@ function ignoreClick (x, y, nopop)
  */
 function clickBuster (event)
 {
-    console.log ("Clicked " + event.clientX + ", " + event.clientY );
+    if (consoleLogging) { console.log ("Clicked " + event.clientX + ", " + event.clientY ); }
     if (ignoreClick(event.clientX, event.clientY) || isScrolling())
     {
-        console.log ("... and ignored it.");
+        if (consoleLogging) { console.log ("... and ignored it."); }
         setTimeout ( function() { sbScrolling=Array(false, false);  }, 1000 );
         event.stopPropagation();
         event.preventDefault();
@@ -258,7 +260,6 @@ function handleScrolling ( me, e, scrolling )
     if (scrolling)
     {
         sbScrolling[me.whichScrollerAmI] = scrolling;
-//        console.log ( 'Scrolling for ' + me.whichScrollerAmI + ' is ' + scrolling );
     }
     else
     {
@@ -269,7 +270,6 @@ function handleScrolling ( me, e, scrolling )
         }
         scrollingTimeout = setTimeout ( function() { 
             sbScrolling[me.whichScrollerAmI] = false;
-//            console.log ( 'Scrolling for ' + me.whichScrollerAmI + ' is false' );
         }, 1000 );
     }
     
@@ -277,7 +277,6 @@ function handleScrolling ( me, e, scrolling )
     {
         if (scrolling)
         {
-            //console.log ( "Scrolling, touch at " + window.event.touches[0].clientX + ", " + window.event.touches[0].clientY );
             //addClick(window.event.touches[0].clientX, window.event.touches[0].clientY);
         }
     }
@@ -292,7 +291,7 @@ function handleScrolling ( me, e, scrolling )
     // next, do we have an event? if so, add it as a click
     if (e)
     {
-        console.log ( e );
+        if (consoleLogging) { console.log ( e ); }
         addClick(e.touches[0].clientX, e.touches[0].clientY);
     }
     
@@ -311,7 +310,6 @@ function handleScrolling ( me, e, scrolling )
 function _resetSB ( o )
 {
     var refreshed = false;
-    //console.log ( 'Really Resetting ' + o  );
     
     if (sb[o])
     {
@@ -368,7 +366,6 @@ function _resetSB ( o )
  */
 function resetSB ( o, dly )
 {
-    //console.log ( 'Resetting ' + o + ' in ' + (dly ? dly : 125) );
     setTimeout ( function () { _resetSB (o); }, (dly ? dly : 125) );
 }
  
@@ -907,7 +904,6 @@ function loadContent(url, callback, animate, backTo) {
     {
         otherContainer.style.position = "absolute";
         y = (sb[sbBody].y);
-        console.log (y);
         otherContainer.style.top = "" + (-y) + "px";   // so we can scroll horizontally first
         $("outerContainer").style.webkitTransition = "left,-webkit-transform 0.5s ease-in-out";
 
@@ -931,7 +927,7 @@ function loadContent(url, callback, animate, backTo) {
                 // clear our showloader timer
                 if (tid) clearTimeout(tid);
                 
-                console.log ('Loaded Content:' + url);
+                    if (consoleLogging) { console.log ('Loaded Content:' + url); }
                 currentPageURL = url;
                 parseArgs(url);
         
@@ -958,12 +954,10 @@ function loadContent(url, callback, animate, backTo) {
                     // check, animate out?
                     if (animate)
                     {
-                        console.log (y);
                         $("outerContainer").style.webkitTransform = "translate3d(" + ( 100 * ( (animate=="slideOut" ? -1 : 1) )) + "%,"+ y + "px,0)";
                         setTimeout ( function() 
                                      {
                                           $("outerContainer").style.webkitTransition = "";
-                                         console.log ("moving containers back.");
                                           currentContainer.style.left = "0";
                                           currentContainer.style.top = "0";
                                           $("outerContainer").style.webkitTransform = "translate3d(0,0,0)";
@@ -1358,7 +1352,6 @@ function loaded() {
     
     }, 300 );
     
-    setTimeout (loadLocalStorageAndSync, 500); // kick off a load in 500ms
 
 
 }
@@ -1373,7 +1366,8 @@ function loaded() {
 function startApp ()
 {
     // add a listener call "loaded" when the DOM is ready.
-    window.addEventListener('load', loaded, false);
+    //window.addEventListener('load', loaded, false);
+    loaded();
     
     addSwipeListener(document.body, function(e) { 
                                                   if (onSwipe) 
@@ -1521,11 +1515,11 @@ if (dtw==true)
   var hit_word_elem = document.elementFromPoint(x, y);
 //                                                        console.log ('879');
   if (hit_word_elem.nodeName != 'WORD' && hit_word_elem.parentNode.nodeName != 'WORD') {
-    console.log("missed!");
+        if (consoleLogging) { console.log("missed!");}
   }
   else  {
     hit_word = hit_word_elem.textContent;
-    console.log("got it: "+hit_word);
+        if (consoleLogging) { console.log("got it: "+hit_word); }
   }
 //                                                        console.log ('887');
 if (dtw==true) {  hit_elem.innerHTML = original_content;}
@@ -1542,7 +1536,7 @@ return hit_word;
  */
 function getWordFromPoint (x, y, dothework)
 {
-    console.log ("Trying to get word at " + x + ", " + y);
+        if (consoleLogging) { console.log ("Trying to get word at " + x + ", " + y); }
       return getHitWord(document.elementFromPoint(x, y),x,y,dothework);
 }
 
@@ -1569,46 +1563,114 @@ function openWebPage ( url )
 // again at periodic times. The main app will continue to use localStorage as if nothing
 // is wrong, but these functions will load and save the data to persistent storage.
 //
-// Author: Kerri Shotts, photoKandy Studios LLC. License: MIT. v0.2
+// Author: Kerri Shotts, photoKandy Studios LLC. License: MIT.
 //
+// v2
+//
+// Added: documentation and functions to deal with non-periodic sync
 
+/**************************************************************************
+ *
+ * persistent storage for localStorage (phonegap / iOS)
+ *
+ * These functions simply copy the data in localStorage to a persistent
+ * location in the documents folder named localStorage.dat. The format is
+ * pretty simple: each item is separated by [EOK], whilst the key/value is
+ * separated by [EQ]. Therefore, this is easy to break (have a key/value
+ * with one of these values...), but it works for my present needs.
+ *
+ * The persistentStorage object stores the read/write functions and can be
+ * used by calling the saveLocalStorage and loadLocalStorage functions.
+ *
+ * By default, the routine saves data to localStorage.dat at the rate of
+ * 30 seconds. If this is not desired, syncLocalStorageInterval should be
+ * reset to 0 prior to the next call to saveLocalStorage(), at which point
+ * the continuous saving will be stopped. At that point, it is up to you
+ * to call saveLocalStorage() manually.
+ *
+ */
+ 
+/**
+ *
+ * syncLocalStorageInterval defines the length of time before another
+ * save operation can be started. 30000 = 30s. 
+ * If you wish to disable the periodic save, set this to 0.
+ *
+ */
 var syncLocalStorageInterval = 30000;
 
+/**
+ *
+ * The persistentStorage function contains the functions necessary
+ * to read from and save to the localStorage.dat file in the documents
+ * directory.
+ *
+ */
 var persistentStorage = function()
 {
+    // Get self so we don't have to be funny when a timeout calls us...
     var self = this;
+    
+    /**
+     * Called when the filesystem is successfully returned. Will attempt to get "localStorage.dat"
+     * access (and create it if necesssary).
+     */
     self.gotFStoWrite = function (fileSystem)
     {
         fileSystem.root.getFile("localStorage.dat", {create: true, exclusive: false}, self.gotFileEntrytoWrite, self.fail);
     }
+    
+    /**
+     *
+     * Called when the filesystem is successfully returned. It will attempt to open "localStorage.dat" for
+     * read-only access.
+     */
     self.gotFStoRead = function (fileSystem)
     {
         fileSystem.root.getFile("localStorage.dat", null, self.gotFileEntrytoRead, self.fail);
     }
     
+    /**
+     *
+     * Called when localStorage.dat is obtained for writing. It will create a fileWriter
+     * which will actually write the contents of localStorage.
+     */
     self.gotFileEntrytoWrite = function (fileEntry)
     {
         fileEntry.createWriter (self.gotFileWriter, self.fail);
     }
 
+    /**
+     *
+     * Called when localStorage.dat is obtained for reading. It will create a fileReader
+     * which will read the contents of the file into localStorage.
+     */
     self.gotFileEntrytoRead = function (fileEntry)
     {
         fileEntry.file (self.gotFileReader, self.fail);
     }
     
+    /**
+     *
+     * Called when the file localStorage.dat is successfully opened for reading.
+     * Parses the file by splitting it into key/value pairs, and then splitting
+     * those pairs into the key and the value. It then saves them to localStorage
+     * using localStorage.setItem(). 
+     *
+     * NOTE: localStorage is /not/ cleared when this file is loaded.
+     */
     self.gotFileReader = function (file)
     {
         var reader = new FileReader();
         reader.onloadend = function (evt) { 
-            console.log ("Syncing localStorage from persistent store.");
+            if (consoleLogging) { console.log ("Syncing localStorage from persistent store."); }
             var ls = evt.target.result.split("[EOK]");
-            //localStorage.clear(); // do I need to do this?
             for (var i=0;i<ls.length;i++)
             {
                 var kv = ls[i].split("[EQ]");
                 localStorage.setItem ( kv[0], kv[1] );
             }
-            console.log ("Sync complete.");
+            if (consoleLogging) { console.log ("Sync complete."); }
             if (self.readCallback)
             {
                 self.readCallback();
@@ -1617,9 +1679,14 @@ var persistentStorage = function()
         reader.readAsText (file);
     }
 
+    /**
+     *
+     * Called when localStorage.dat is open for writing and created if necessary.
+     * Writes out each value in localStorage as a key/value pair.
+     */
     self.gotFileWriter = function (writer)
     {
-        console.log ("Syncing localStorage to persistent store.");
+        if (consoleLogging) { console.log ("Syncing localStorage to persistent store."); }
         
         var s = "";
         
@@ -1627,20 +1694,24 @@ var persistentStorage = function()
         {
             var key = localStorage.key(i);
             var value = localStorage[key];
-            //TODO: There's got to be a better way!
             s = s + key + "[EQ]" + value + "[EOK]";
-            
         }
         writer.write ( s );
         
-        console.log ("Sync Complete.");
+        if (consoleLogging) { console.log ("Sync Complete."); }
         
         if (self.writeCallback)
         {
             self.writeCallback();
         }
     }
-    
+
+    /**
+     *
+     * If an error should occur during a read or write operation,
+     * we will display the error. If a readCallback() is defined,
+     * call it.
+     */
     self.fail = function (error)
     {
         console.log ("Error: " + error.code);
@@ -1650,6 +1721,11 @@ var persistentStorage = function()
             }
     }
 
+    /**
+     *
+     * Kicks off a save operation. If callback is specified,
+     * it is called when the save operation is complete.
+     */
     self.write = function ( callback )
     {
         if (callback)
@@ -1659,6 +1735,12 @@ var persistentStorage = function()
         window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, self.gotFStoWrite, self.fail);
     }
     
+    /**
+     *
+     * Kicks off a read operation. if callback is defined,
+     * it is called when the operation is complete OR a read error
+     * occurs.
+     */
     self.read = function( callback )
     {
         if (callback)
@@ -1669,22 +1751,66 @@ var persistentStorage = function()
     }
 }
 
-function saveLocalStorage()
+/**
+ *
+ * Saves localStorage to the persistent store in localStorage.dat in the documents folder.
+ *
+ * If callback is defined, it is executed when the save operation is complete. If 
+ * syncLocalStorageInterval is greater than zero, a timeout is created in order to
+ * call saveLocalStorage again, essentially creating a repeating save.
+ */
+function saveLocalStorage( callback )
 {
+    var self = this;
     var o = new persistentStorage();
-    o.write(function() {     setTimeout (saveLocalStorage, syncLocalStorageInterval);     });
+    self.callback = callback;
+    o.write(function() 
+            {
+                if (syncLocalStorageInterval>0)
+                {
+                    setTimeout (saveLocalStorage, syncLocalStorageInterval);     
+                }
+                if (self.callback) { self.callback(); self.callback = null; }
+            });
     
 }
 
+/**
+ *
+ * Loads the localStorage data from the Documents/localStorage.dat file. 
+ *
+ * If callback is defined, it is called after the load is complete or an
+ * error occurs.
+ */
 function loadLocalStorage( callback )
 {
     var o = new persistentStorage();
     o.read( callback );
 }
 
-function loadLocalStorageAndSync()
+/**
+ *
+ * This one kicks everything off. It calls loadLocalStorage to load the
+ * localStorage data from the persistent store, and then, if syncLocalStorageInterval
+ * is greater than zero, sets up the next save operation.
+ *
+ * If callback is defined, it is called after the read is complete or an
+ * error occurs. Useful for defining when the application should start (as it should
+ * load the store completely before beginning.)
+ */
+function loadLocalStorageAndSync( callback )
 {
-    loadLocalStorage(function() {    setTimeout (saveLocalStorage, syncLocalStorageInterval);});
+    var self = this;
+    self.callback = callback;
+
+    loadLocalStorage(function() 
+                     {  
+                        if (syncLocalStorageInterval>0)
+                        {
+                            setTimeout (saveLocalStorage, syncLocalStorageInterval);
+                        }
+                        if (self.callback) { self.callback(); self.callback = null; }
+                     });
 }
 
 //
