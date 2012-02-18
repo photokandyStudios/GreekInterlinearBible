@@ -1,13 +1,20 @@
 <div class="content">
-    <script>
-    </script>
-
+    <div style="position: absolute; top:0; left:0; right: 0; height:25px;border-bottom:1px solid #888; margin-top: 1em; margin-bottom:1em; line-height:25px;" >
+        <div style="float: left; width:70%; padding-left:10px;"  id="searchingFor"></div>
+        <div style="float: right; width:20%; text-align: right; padding-right:10px;" id="currentPage"></div>
+        <div style="clear: both;"></div>
+    </div>
+    <br /><br /><br />
     <div id="lstResults">To search, enter a word or Strongs # into the search box above.</div>
+    <div id="showingResults"></div>
+
 <script>
 
     var englishWord = argsParsed["search"];      // incoming search
     var curPage = argsParsed["page"];
     var scrollTo = argsParsed["scrollto"];
+    var maxPages = 1;
+    var maxResults = 0;
     if (!curPage)
     {
         curPage = 1;
@@ -65,6 +72,8 @@
                 if (c>=pageStart && c<=pageEnd) { results.push ( v ); }
             }
         }
+        maxPages = Math.ceil( c / (pageEnd - pageStart + 1) );
+        maxResults = c;
         return results;
     }
     
@@ -78,9 +87,20 @@
         
         console.log ( "SearchStrongs: " + thePage + ", " + pageStart + ", " + pageEnd + ", " + theWord + ", " + whichSide );
         
+        $("searchingFor").innerHTML = "Strong's Search Results for " + theWord;
+
         var results = searchDict( strongsGreekDictionary, theWord, allRequired, pageStart, pageEnd, translit );
         
+        if (results.length == 0)
+        {
+            $("SearchingFor").innerHTML = "No results found in Strong's for " + theWord;
+        }
+
         console.log ( "SearchStrongs: " + results.length );
+
+        $("currentPage").innerHTML = "Page " + curPage + "/" + maxPages;
+        if (pageEnd > maxResults) { pageEnd = maxResults; }
+        $("showingResults").innerHTML = "Showing " + pageStart + " - " + pageEnd + " of " + maxResults + " results.";
         
         var ihtml = "<div class='listGroup'>";
        
@@ -99,7 +119,7 @@
                 topText=topText.replace( p, "<span style='background-color: #FF0;'>$1</span>" );
             }
             
-            var url = 'loadContent("./xref.html?ignore&ref=' + ref + '&highlight=' + theWord +'", updateMainMenuandTabBar,"slideOut", "./strongs.html?ignore&' + 
+            var url = 'loadContent("./search.html?ignore&greek=' + ref + '&forcep=y", updateMainMenuandTabBar,"slideOut", "./strongs.html?ignore&' + 
                       'search=' + englishWord + '&' +
                       'page=' + curPage + '&' +
                       'scrollto=item' + i +
@@ -109,21 +129,29 @@
             item = item.replace ( "%TOP%", topText);
             item = item.replace ( "%LINK%", url);
             item = item.replace ( "%NUM%", i );
-            //console.log (item);
             ihtml = ihtml + item;
         }
         
         ihtml = ihtml + "</div>";
         
         $("lstResults").innerHTML = ihtml;
-        resetContentScrollBar((scrollTo ? 1125 : 500));
+        
+        if (pageLoaded)
+        {
+            onPageLoaded();
+        }
+    }
+    
+    onPageLoaded = function()
+    {
+        resetContentScrollBar(0);
         setTimeout (function() {
         if (scrollTo)
         {
-            sb[sbBody].scrollToElement ($(scrollTo),0);
+            scrollBodyToElement ($(scrollTo),0);
             scrollTo = null;
         }
-        },1250);
+        },125);
         hideLoader();
     }
     
@@ -148,13 +176,42 @@
         englishWord = $("txtSearch").value;
         searchStart();
     }
+    
+    onPageNext = function()
+    {
+        if ( curPage < maxPages )
+        {
+            curPage += 1;
+            searchStart();
+        }
+    }
+
+    onPagePrev = function()
+    {
+        if ( curPage >1 )
+        {
+            curPage = curPage - 1;
+            searchStart();
+        }
+    }
 
     // load our selected bibles
             selectedGreekText = localStorage.getItem("TextGreekText");
             if (!selectedGreekText)
             {
-                selectedGreekText = "byz";
+                selectedGreekText = "byzp"; // default to byzantine parsed
             }
+            // if we don't have a parsed version, make it one.
+            if (selectedGreekText.indexOf ("p") < 0)
+            {
+                selectedGreekText = selectedGreekText + "p";
+                if (selectedGreekText == "tisp")
+                {
+                    // Tischendorf doesn't have parsings. Use byzp instead.
+                    selectedGreekText = "byzp";
+                }
+            }
+            
             selectedRightText = localStorage.getItem("TextRightText");
             if (!selectedRightText)
             {
