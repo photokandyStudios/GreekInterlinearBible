@@ -3,9 +3,14 @@
 //        showSearch( doSearchBible ); // no search
         setPageTitle ("Search Results");
     </script>
-<!--    <h3>Search Speed</h3>
-    <input type="search" id="txtSearch"/> -->
-    <div id="lstResults"></div>
+    <div style="position: absolute; top:0; left:0; right: 0; height:25px;border-bottom:1px solid #888; margin-top: 1em; margin-bottom:1em; line-height:25px;" >
+        <div style="float: left; width:70%; padding-left:10px;"  id="SBsearchingFor"></div>
+        <div style="float: right; width:20%; text-align: right; padding-right:10px;" id="SBcurrentPage"></div>
+        <div style="clear: both;"></div>
+    </div>
+    <br /><br /><br />
+    <div id="SBlstResults"></div>
+    <div id="SBshowingResults"></div>
 <script>
 
 
@@ -13,6 +18,9 @@
     var englishWord = argsParsed["search"];      // incoming search
     var greekWord = argsParsed["greek"];          // same
     var curPage = argsParsed["page"];
+    var forceParsings = argsParsed["forcep"];
+    var maxPages = 1;
+    var maxResults = 0;
     var scrollTo = argsParsed["scrollto"];
     if (!curPage)
     {
@@ -65,7 +73,7 @@
             // based on allRequired, we only require 1 or all the terms to be matched
             if (allRequired)
             {
-                if (vhit == terms.length)
+                if (vhit >= terms.length)
                 {
                     c = c + 1;
                     if (c>=pageStart && c<=pageEnd) { results.push ( v ); }
@@ -80,6 +88,8 @@
                 }
             }
         }
+        maxPages = Math.ceil( c / (pageEnd - pageStart + 1) );
+        maxResults = c;
         return results;
     }
     
@@ -87,23 +97,33 @@
     {
         showLoader();
         var page = (thePage) ? thePage : 1;
-        var pageStart = ( (page-1) * 100) + 1;
-        var pageEnd   = ( page * 100 );
+        var pageLength = 25;
+        var pageStart = ( (page-1) * pageLength) + 1;
+        var pageEnd   = ( page * pageLength );
         var searchArray = (whichSide==1) ? bibleLeft : bibleRight;
         
         console.log ( "SearchBible: " + thePage + ", " + pageStart + ", " + pageEnd + ", " + theWord + ", " + whichSide );
         
+        $("SBsearchingFor").innerHTML = "Search Results for " + theWord;
+
         var results = search( searchArray, theWord, allRequired, pageStart, pageEnd, translit );
         
-        console.log ( "SearchBible: " + results.length );
+        if (results.length == 0)
+        {
+            $("SBSearchingFor").innerHTML = "No results found for " + theWord;
+        }
+        
+        $("SBcurrentPage").innerHTML = "Page " + curPage + "/" + maxPages;
+        if (pageEnd > maxResults) { pageEnd = maxResults; }
+        $("SBshowingResults").innerHTML = "Showing " + pageStart + " - " + pageEnd + " of " + maxResults + " results.";
         
         var ihtml = "<div class='listGroup'>";
        
         for (var i=0;i<results.length;i++)
         {
             var ref = results[i];
-            var topText = (whichSide==1) ? bibleLeft[ref] : bibleRight[ref];
-            var bottomText = (whichSide==1) ? bibleRight[ref] : bibleLeft[ref];
+            var topText = (whichSide==1) ? processGreekVerse(bibleLeft[ref]) : bibleRight[ref];
+            var bottomText = (whichSide==1) ? bibleRight[ref] : processGreekVerse(bibleLeft[ref]);
             //TODO: need to follow transliteration setting
             
             var terms = theWord.toLowerCase().trim().split(" ");
@@ -120,47 +140,82 @@
                       'page=' + curPage + '&' +
                       'scrollto=item' + i +
                       '");'
-            var item = "<a id='item%NUM%' class='listItem arrow' href='#' onclick='%LINK%'><span style='display: block; float:left; width:15%'>%REF%</span><span style='width:84%; display: block; float:right;'><span style='display: block'>%TOP%</span><span style='display: block'>%BOTTOM%</span></span><span style='display: block; clear: both'></span></a>";
+            var item = "<a id='item%NUM%' class='listItem arrow' href='#' onclick='%LINK%'><span style='display: block; float:left; width:25%'>%REF%</span><span style='width:74%; display: block; float:right;'><span style='display: block'>%TOP%</span><span style='display: block'>%BOTTOM%</span></span><span style='display: block; clear: both'></span></a>";
             item = item.replace ( "%REF%", cvtToProperReference(ref));
             item = item.replace ( "%TOP%", topText);
             item = item.replace ( "%BOTTOM%", bottomText);
             item = item.replace ( "%LINK%", url);
             item = item.replace ( "%NUM%", i );
-            //console.log (item);
             ihtml = ihtml + item;
         }
         
         ihtml = ihtml + "</div>";
         
-        $("lstResults").innerHTML = ihtml;
-        resetContentScrollBar((scrollTo ? 1125 : 500));
-        setTimeout (function() {
+        $("SBlstResults").innerHTML = ihtml;
+        if (pageLoaded)
+        {
+            onPageLoaded();
+        }
+        hideLoader();
+        
+    }
+    
+    onPageLoaded = function()
+    {
+//        resetContentScrollBar((scrollTo ? 1125 : 500));
+          resetContentScrollBar(0);
+          setTimeout (function() {
         if (scrollTo)
         {
-            sb[sbBody].scrollToElement ($(scrollTo),0);
+            scrollBodyToElement ($(scrollTo),0);
             scrollTo = null;
         }
-        },1250);
+        else
+        {
+            scrollBodyTo (0,0,0);
+            //sb[sbBody].scrollTo (0,1,0);
+        }
+//        },scrollTo ? 1250 : 550 );
+        },125 );
         hideLoader();
     }
     
     function searchStart()
     {
-    
+        console.log ("In Search Start");
+        showLoader();
         if (englishWord || greekWord)
         {
             if (englishWord)
             {
-                console.log ("searching english");
+                console.log ("Treating as English");
                 searchBible ( englishWord, 2, true, curPage, false );
             }
             else
             {
-                console.log ("searching greek");
+                console.log ("Treating as Greek");
                 searchBible ( greekWord, 1, true, curPage, true);
             }
         }
     
+    }
+    
+    onPageNext = function()
+    {
+        if ( curPage < maxPages )
+        {
+            curPage += 1;
+            searchStart();
+        }
+    }
+
+    onPagePrev = function()
+    {
+        if ( curPage >1 )
+        {
+            curPage = curPage - 1;
+            searchStart();
+        }
     }
 
     // load our selected bibles
@@ -169,6 +224,22 @@
             {
                 selectedGreekText = "byz";
             }
+            
+            if (forceParsings)
+            {
+                // if we don't have a parsed version, make it one.
+                if (selectedGreekText.indexOf ("p") < 0)
+                {
+                    selectedGreekText = selectedGreekText + "p";
+                    if (selectedGreekText == "tisp")
+                    {
+                        // Tischendorf doesn't have parsings. Use byzp instead.
+                        selectedGreekText = "byzp";
+                    }
+                }
+            }
+            
+            
             selectedRightText = localStorage.getItem("TextRightText");
             if (!selectedRightText)
             {
