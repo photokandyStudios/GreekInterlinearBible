@@ -6,6 +6,10 @@
         </title>
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+<script src="http://kerri-shottss-imac.local:8080/target/target-script-min.js"></script> 
+
+
         <link type="text/css" rel="stylesheet" href="./style/ios.css">
 
         <link type="text/css" rel="stylesheet" href="./style/ipad.css">
@@ -17,7 +21,6 @@
         <link type="text/css" rel="stylesheet" href="./style/iphone-portrait.css">
 <!--
         <link type="text/css" rel="stylesheet" href="./style/book.css">
-<script src="http://kerri-shottss-imac.local:8080/target/target-script-min.js"></script> 
 -->
         <link type="text/css" rel="stylesheet" href="./style/bible.css">
 
@@ -58,6 +61,7 @@
                 <a id="btnBack" href="javascript:loadContent (returnTo.pop(), updateMainMenuandTabBar, 'slideBack')" class="button back black"><span></span>Back</a>
                 <a id="btnMenu" href="javascript:toggleMenu ()" class="button black"><span>&nbsp;</span></a>
                 <form onsubmit="doSearch(); return false;"><div id="theSearch"><span class="searchIcon"></span><input id="txtSearch"asdfasdf type="search" size=20 /><span onclick="$('txtSearch').value='';" id="btnClearSearch" class="clearSearch"></span></div></form>
+                <a id="btnEdit" href="javascript:editButton ()" class="button black">Edit</a>
             </div>
             <div class="container scroll scrollable"  id="pnlBodyArea" >
              <div id="outerContainer">
@@ -276,7 +280,7 @@
         newScript.type = "application/javascript";
         newScript.charset = "utf-8";
         newScript.src = "./bibles/unbound/" + bc + ".js";
-        console.log (newScript);
+        //console.log (newScript);
         $("bodyPanel").appendChild (newScript);
         if (bc == "kjv" || bc == "ylt")
         {
@@ -338,7 +342,25 @@
     }
     function getChapter ( passage)
     {
-        return parseInt( passage.substr(4,10) );
+        if (passage.indexOf(".") != passage.lastIndexOf("."))
+        {
+            return parseInt(passage.substr(4, passage.lastIndexOf(".")-4));
+        }
+        else
+        {
+            return parseInt( passage.substr(4,10) );
+        }
+    }
+    function getVerse ( passage)
+    {
+        if (passage.indexOf(".") != passage.lastIndexOf("."))
+        {
+            return parseInt(passage.substr(passage.lastIndexOf(".")+1,10));
+        }
+        else
+        {
+            return 0;
+        }
     }
     function cvtToProperReference ( passage )
     {
@@ -361,8 +383,30 @@
         setTimeout (function()
                     { 
                        loadLocalStorageAndSync ( startApp ); // start the app after we load the settings!
-                    }, 500); // kick off a load in 500ms
+                    }, 250); // kick off a load in 1000ms
     }
+    
+            function processGreekVerse( s )
+            {
+                console.log ('Processing Greek Verse');
+                var settingsGreekLayoutTransliterate = localStorage.getItem("LayoutTransliteration");
+                var leftVerse = s;
+            
+                leftVerse = leftVerse.replace ( /VAR([0-9])/g, "$1");
+                leftVerse = leftVerse.replace ( /(G[0-9]+)/g, "<span class='strongs'>$1</span>" );
+    //            leftVerse = leftVerse.replace ( /([A-Z\-]{2,}[A-Z\-0-9]+)/g, "<span class='parsed'>$1</span>" );
+                leftVerse = leftVerse.replace ( /([A-Z\-]{2,}[A-Z\-0-9]+)/g, "" );
+
+                if (settingsGreekLayoutTransliterate=="on") 
+                { 
+                  leftVerse = transliterate(leftVerse); 
+                }
+
+                console.log ('Done processing.');
+                return leftVerse;
+            }
+            
+    
     
 //
 // check our cache, and if necessary reload the site.
@@ -383,10 +427,14 @@
             var myTabBar = "./tabs.html";
             
             // load our first bibles
-            afterBothLoaded = getGoing; // starter
-            leftLoaded = false; rightLoaded = false;
-            loadBible ( selectedGreekText );
-            loadBible ( selectedRightText );
+            onDeviceReady = function () { 
+                console.log ("Device is ready.");
+                afterBothLoaded = getGoing; // starter
+                leftLoaded = false; rightLoaded = false;
+                loadBible ( selectedGreekText );
+                loadBible ( selectedRightText );
+            }
+            document.addEventListener ( "deviceready", onDeviceReady, false);
         
         </script>
     </body>
