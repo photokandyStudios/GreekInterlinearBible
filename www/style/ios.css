@@ -621,7 +621,7 @@ textarea
     left: 0;
     width: 100%;
     height: auto;
-        -webkit-transform:translate3d(0,0,0);
+        y-webkit-transform:translate3d(0,0,0);
 }
 		
 #loader
@@ -658,6 +658,44 @@ textarea
     background-repeat: no-repeat;
     background-position: center center;
     background-size:24px 24px;
+}
+
+#btnEdit 
+{ 
+    display: none;
+    position: absolute;
+    right: 16px;
+    top: 0px;
+}
+
+.delete
+{
+    display: block;
+    width: 0px;
+    position: absolute;
+    right: 1px;
+    top: 10px;
+    bottom: 10px;
+    opacity: 0;
+    background-color: #FFF;
+    -webkit-transition: width 0.5s ease, opacity 0.5s ease;
+    background-image: url(../images/color/Cross@2x.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 32px 32px;
+}
+
+.deleterItem
+{
+    width: 100%;
+    -webkit-transition: width 0.5s ease;
+    display: block;
+}
+
+.deleteClear
+{
+    clear: both;
+    display: block;
 }
 
 #tabBar
