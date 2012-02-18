@@ -3,10 +3,11 @@
     setPageTitle ("Interlinear");
     showSearch( doSearchBible );
     showLoader();
+    
+    var currentReference;
 
     var highlightColors = [ "", "255,255,128,0.5", "255,128,255,0.5", "128,255,255,0.5" ];
                                 
-    var settingsGreekLayoutTransliterate = localStorage.getItem("LayoutTransliteration");
     var settingsLayoutTextSize = localStorage.getItem("LayoutTextSize");
     if (!settingsLayoutTextSize)
     {
@@ -98,10 +99,6 @@
                               + "line-height:" + settingsLayoutLineSpacing + "%; "
                   + "'><div style='font-size:175%; text-align: center; margin-top:1em; margin-bottom:1em; border-bottom:1px dotted #333333;'>" 
                   + getBookName(passage) + " " + getChapter(passage) + "</div>";
-/*        var ihtml = "<table border=0 width=100%; cellpadding=0 cellspacing=0 style='font-family:" + settingsLayoutFontFamily + "; "
-                              + "line-height:" + settingsLayoutLineSpacing + "%; "
-                  + "'><tr><td colspan=3 style='font-size:175%; text-align: center; padding-top:1em; padding-bottom:1em; '>" 
-                  + getBookName(passage) + " " + getChapter(passage) + "</td></tr>";*/
         var lhtml = "";
         var rhtml = "";
         var nhtml = "";
@@ -117,33 +114,18 @@
             ref = passage+"."+i;
             // define templates
             lhtml = "<div class='greek' style='font-size:%TEXTSIZE%; float: left; width: %LEFTWIDTH%;'>%TEXT%</div>";
-            nhtml = "<div style='text-align: center; font-size:150%; color:#556677; float: left; width: %NUMWIDTH%;'>%TEXT%</div>";
+            nhtml = "<div class='middle' style='text-align: center; font-size:150%; color:#556677; float: left; width: %NUMWIDTH%;'>%TEXT%</div>";
             rhtml = "<div class='english' style='font-size:%TEXTSIZE%; float: right; width: %RIGHTWIDTH%;'>%TEXT%</div>";
-/*
-            lhtml = "<td class='greek' valign=top style='font-size:%TEXTSIZE%; width: %LEFTWIDTH%;'>%TEXT%</td>";
-            nhtml = "<td valign=top style='text-align: center; font-size:150%; color:#556677; width: %NUMWIDTH%;'>%TEXT%</td>";
-            rhtml = "<td valign=top class='english' style='font-size:%TEXTSIZE%; width: %RIGHTWIDTH%;'>%TEXT%</td>";
-  */          
             // process left-hand (greek) side
             leftVerse = bibleLeft[ref];
-            if (!leftVerse) { leftVerse = "" };
-            // and now, add <word> spans to it
-            //leftVerse= leftVerse.replace(/([^\s\.\,\?\!\:\;\(\)\`\[\]\{\}]*)/g, "<word>$1</word>");
+            if (!leftVerse) { leftVerse = "[...]" };
 
             // handle any strong's numbers / inflections
-            leftVerse = leftVerse.replace ( /VAR([0-9])/g, "$1");
-            leftVerse = leftVerse.replace ( /(G[0-9]+)/g, "<span class='strongs'>$1</span>" );
-//            leftVerse = leftVerse.replace ( /([A-Z\-]{2,}[A-Z\-0-9]+)/g, "<span class='parsed'>$1</span>" );
-            leftVerse = leftVerse.replace ( /([A-Z\-]{2,}[A-Z\-0-9]+)/g, "" );
-            
-            if (settingsGreekLayoutTransliterate=="on") 
-            { 
-              leftVerse = transliterate(leftVerse); 
-            }
+            leftVerse = processGreekVerse ( leftVerse );
+
             
             rightVerse = bibleRight[ref];
-            if (!rightVerse) { rightVerse = "" };
-            //rightVerse= rightVerse.replace(/([^\s\.\,\?\!\-\:\;\(\)\`\‘\’\[\]\{\}]*)/g, "<word>$1</word>");
+            if (!rightVerse) { rightVerse = "[...]" };
             
             if (highlightText)
             {
@@ -177,10 +159,6 @@
             nhtml = nhtml.replace ( "%TEXT%", middleText);
             nhtml = nhtml.replace ( "%NUMWIDTH%", middleColumnWidth);
 
-            //TODO: highlight class
-            //TODO: note indicator
-            //TODO: bookmark indicator
-            
             // check for a highlight...
             highlight = "";
             if (localStorage.getItem ( "hl_" + ref ))
@@ -194,55 +172,53 @@
             ihtml = ihtml + "<div class='verse' " + ((selectedVerse[ref]=="Y") ? "class='verseSelected' " : "") + " " + highlight + " "
                           + "onclick='toggleSelection(this);' id='" + ref + "' style='clear: both'>" + lhtml + nhtml + rhtml + "<div style='clear:both; height:"
                           + settingsLayoutVerseSpacing + ";'></div></div>";
-  /*
-            ihtml = ihtml + "<tr " + ((selectedVerse[ref]=="Y") ? "class='verseSelected' " : "") + " " + highlight + " "
-                          + "onclick='toggleSelection(this);' id='" + ref + "'>" + lhtml + nhtml + rhtml + "</tr><tr style='overflow: hidden; height:"
-                          + settingsLayoutVerseSpacing + ";'><td colspan=3>&nbsp;</td></tr>"; */
           }
         
         ihtml = ihtml + "</div>";
-  /*
-        ihtml = ihtml + "</table>";*/
         
         $("lstStream").innerHTML = ihtml;
-        resetContentScrollBar( (scrollTo||scrollToPos ? 1125: 500) );
         
         // TODO: scroll to verse (from search/bookmark/notes, etc.)
+        if (pageLoaded)
+        {
+            onPageLoaded( noscroll );
+        }
+    }
+
+    onPageLoaded = function( noscroll )
+    {
+        resetContentScrollBar( 0 );
         if (!noscroll)
         {
             setTimeout ( function() {
             if (scrollTo)
             {
-                sb[sbBody].scrollToElement ($(scrollTo),0);
+                scrollBodyToElement ($(scrollTo),0);
                 scrollTo = null;
             }
             else
             {
                 if (scrollToPos)
                 {
-                    console.log ("Scrolling to " + scrollToPos);
-                    sb[sbBody].scrollTo(0,-scrollToPos,0);
+                    scrollBodyTo(0,-scrollToPos,0);
                     scrollToPos = null;
                 }
                 else
                 {
-                    console.log ("Scrolling to 0.");
-                    sb[sbBody].scrollTo(0,0,0);
+                    scrollBodyTo(0,0,0);
                 }
             }
-            },(scrollTo||scrollToPos ? 1250 : 500));
+            repaint();
+            },125);
         }
+        
     }
-    
    
     function toggleSelection ( o )
     {
-        //if ( !ignoreClick ( window.event.clientX, window.event.clientY ) )
-        //{
-            var ref = o.getAttribute("id");
-            selectedVerse [ ref ] = (selectedVerse [ ref ] == "Y" ? "" : "Y" ); // TODO: null?
-            $(ref).classList.toggle ( "verseSelected" );
-        //}
+        var ref = o.getAttribute("id");
+        selectedVerse [ ref ] = (selectedVerse [ ref ] == "Y" ? "" : "Y" ); // TODO: null?
+        $(ref).classList.toggle ( "verseSelected" );
     }
 
     var theWord;
@@ -282,7 +258,7 @@
             curBook = curBook - 1;
             if (curBook < 0)
             {
-                return; // can't go past the end of the Bible
+                return; // can't go past the beginning of the Bible
             }
             curChapter = bibleBookChapters[curBook];
         }
@@ -299,6 +275,17 @@
         whichSide = 0;
         if (overElement)
         {
+            if (overElement.className == "verse" || overElement.parentNode.className =="verse" ||
+                overElement.parentNode.parentNode.className == "verse" ||
+                overElement.parentNode.parentNode.parentNode.className == "verse" )
+            {
+                whichSide = 3;
+                currentReference = overElement.getAttribute ("id");
+                if (!currentReference) { currentReference = overElement.parentNode.getAttribute("id"); }
+                if (!currentReference) { currentReference = overElement.parentNode.parentNode.getAttribute("id"); }
+                if (!currentReference) { currentReference = overElement.parentNode.parentNode.parentNode.getAttribute("id"); }
+            }
+
             if (overElement.className == "greek" || overElement.parentNode.className =="greek" )
             {
                 whichSide = 1;
@@ -307,11 +294,17 @@
             {
                 whichSide = 2;
             }
+            if (overElement.className == "middle" || overElement.parentNode.className =="middle" )
+            {
+                whichSide = 3;
+            }
+            
         }
-        if (whichSide <1 || whichSide >2)
+        if (whichSide <1 || whichSide >3)
         {  
             return;
         }
+        if (whichSide == 3) { whichSide = 0; }
         theWord = getWordFromPoint (x,y, true);
         
         var numSelected = 0;
@@ -350,9 +343,13 @@
 
         // determine visibility of certain popover elements
 //        $("cmdDefine").style.display = (theWord && window.navigator.onLine && (whichSide == 2 || (whichSide==1 && settingsGreekLayoutTransliterate!="on") ) ) ? "block" : "none";
-        if (theWord)                        { items.push ("Search Bible..."); }
-        if (theWord)                      { items.push ("Search Strong's..."); }
+        if (theWord && (whichSide==1 || whichSide==2))                        { items.push ("Search Bible..."); }
+        if (theWord && (whichSide==1 || whichSide==2))                      { items.push ("Search Strong's..."); }
 //        $("cmdDefinition").style.display = (theWord && window.navigator.onLine && whichSide==2) ? "block" : "none";
+        if (currentReference && window.navigator.onLine)
+        {
+            items.push ("Explain (Online)...");
+        }
         if (theWord && window.navigator.onLine && whichSide==2)
                                             { items.push ("BLB LexiConc (Online)..."); }
                                                         //console.log ("4");
@@ -384,6 +381,7 @@
                                if (buttonValue == "Remove Note")        { removeNote(); }
                                if (buttonValue == "Search Bible...")    { searchBible(); }
                                if (buttonValue == "Search Strong's...")    { searchStrongs(); }
+                               if (buttonValue == "Explain (Online)...")   { explainPassage(); }
                                if (buttonValue == "BLB LexiConc (Online)...") { lexiConc(); }
                                if (buttonValue == "Cancel Selection")   { cancelSelection(); }
                            }, 
@@ -490,6 +488,26 @@
         }
         selectedVerse = Array();
         hidePopOver();
+    }
+    
+    function explainPassage ()
+    {
+        var transformReference = "";
+        
+        transformReference = getBookName ( currentReference );
+        transformReference = transformReference + "/";
+        transformReference = transformReference + getChapter ( currentReference );
+        transformReference = transformReference + "-";
+        transformReference = transformReference + getVerse ( currentReference );
+        transformReference = transformReference.replace (" ", "_");
+        
+        var url = "http://bible.cc/" + transformReference.toLowerCase() + ".htm";
+        hidePopOver();
+        if (url)
+        {
+            openWebPage ( url );
+        }
+        
     }
     
     function define( s )
