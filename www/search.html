@@ -122,8 +122,15 @@
         for (var i=0;i<results.length;i++)
         {
             var ref = results[i];
-            var topText = (whichSide==1) ? processGreekVerse(bibleLeft[ref]) : bibleRight[ref];
-            var bottomText = (whichSide==1) ? bibleRight[ref] : processGreekVerse(bibleLeft[ref]);
+            var topText = "";
+            var bottomText = "";
+            topText = (whichSide==1) ? bibleLeft[ref] : bibleRight[ref];
+            if (!topText) { topText = "[...]"; }
+            bottomText = (whichSide==2) ? bibleRight[ref] : bibleLeft[ref];
+            if (!bottomText) { bottomText = "[...]"; }
+            
+            var topText = (whichSide==1) ? processGreekVerse(topText) : topText;
+            var bottomText = (whichSide==1) ? bottomText : processGreekVerse(bottomText);
             //TODO: need to follow transliteration setting
             
             var terms = theWord.toLowerCase().trim().split(" ");
