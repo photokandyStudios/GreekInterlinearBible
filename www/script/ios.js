@@ -35,6 +35,8 @@ var currentContainer;
 var otherContainer;
 var usingTabBar = false;
 
+var pageLoaded = false;
+
 var menuVisible = false;                                            // PUBLIC: If true, the menu is visible.
 
 // Popovers //
@@ -59,6 +61,12 @@ var onSearch = null;                                                // PUBLIC: c
 var onSwipe = defaultSwipe;                                         // PUBLIC: called when a swipe occurs
 var onPageNext = null;                                              // PUBLIC: called when a page swipe occurs
 var onPagePrev = null;                                              // PUBLIC: called when a page swipe occurs
+
+var onPageLoaded = null;                                            // PUBLIC: called when page is finished loading
+
+var onEditClicked = null;                                           // PUBLIC: called when the "edit" button is
+                                                                    // clicked
+var editState = false;                                              // PUBLIC: Edit State
 
 /**
  *
@@ -155,6 +163,14 @@ document.addEventListener ( 'click', clickBuster, true );
 // END CLICKBUSTER
 //
 
+
+function repaint ()
+{
+    // with props to Darcy Murphy. Here: http://mrdarcymurphy.tumblr.com/post/5574489334/force-mobile-safari-to-repaint-redraw
+    var ss = document.styleSheets[0];
+    try { ss.addRule('.xxxxxx', 'position: relative'); }
+    catch(e) {}
+}
 
 /**
  *
@@ -298,6 +314,39 @@ function handleScrolling ( me, e, scrolling )
     // furthermore, set up a timer to say we aren't scrolling anymore in 5s.
     //setTimeout ( function() { sbScrolling = Array(false, false); }, 5000);
 
+}
+
+function scrollBodyTo ( x, y, t )
+{
+    var self = this;
+    self.x = x;
+    self.y = y;
+    self.t = t;
+    
+    if (sb[sbBody])
+    {
+        sb[sbBody].scrollTo (self.x, self.y, self.t);
+    }
+    else
+    {
+        setTimeout ( function() { scrollBodyTo(self.x,self.y,self.t); }, 125 );
+    }
+}
+
+function scrollBodyToElement ( el, t )
+{
+    var self = this;
+    self.el = el;
+    self.t = t;
+    
+    if (sb[sbBody])
+    {
+        sb[sbBody].scrollToElement ( self.el, t );
+    }
+    else
+    {
+        setTimeout ( function() { scrollBodyToElement(self.el, self.t); }, 125 );
+    }
 }
 
 /**
@@ -621,7 +670,6 @@ function showMenu ()
 function defaultSwipe ( e )
 {
 //TODO: handle iPhone here
-// if the menu is visible, the swipe should probably /always/ go to the menu
  if (e.x < 360 || menuVisible )
  {
     if (e.direction == "left")
@@ -804,6 +852,65 @@ function hideSearch()
     $("theSearch").style.display = "none";
 }
 
+function editButton ()
+{
+    // the edit button was clicked.
+    
+    setEditState (!editState);  // switch edit states
+}
+
+function setEditState ( s )
+{
+    if (s == editState )
+    {
+        // do nothing if we're in the same state.
+        return false;
+    }
+    
+    // set the text of the button (edit or done)
+    var ihtml = "Edit";
+    
+    editState = s;
+    if (editState)
+    {
+        ihtml = "Done";
+    }
+    $("btnEdit").innerHTML = ihtml;
+    
+    // call our callback /with/ the current state (that is, true or false)
+    if (onEditClicked)
+    {
+        onEditClicked( editState );
+    }
+}
+
+function showEdit ( callback )
+{
+    setEditState ( false ); // not in edit mode.
+    
+    if (callback)
+    {
+        onEditClicked = callback;
+    }
+    $("btnEdit").style.display = "block";
+    // if the search button is displayed, we need to move this over...
+    if ($("theSearch").style.display == "block")
+    {
+        $("btnEdit").style.right = "200px";
+    }
+    else
+    {
+        $("btnEdit").style.right = "16px";
+    }
+}
+
+function hideEdit ()
+{
+    setEditState ( false ); // not in edit mode.
+    onEditClicked = null;
+    $("btnEdit").style.display = "none";
+}
+
 //
 // AJAX SUPPORT
 // MODIFIED FROM http://www.tek-tips.com/viewthread.cfm?qid=1622697&page=13*/
@@ -894,6 +1001,9 @@ function loadContent(url, callback, animate, backTo) {
     onSwipe = defaultSwipe;
     onPageNext = null;
     onPagePrev = null;
+    onPageLoaded = null;
+    pageLoaded = false;
+    hideEdit();
                                                                                     //console.log ("824");
     // no more popover, either:
     lastpo = null;
@@ -958,15 +1068,23 @@ function loadContent(url, callback, animate, backTo) {
                         setTimeout ( function() 
                                      {
                                           $("outerContainer").style.webkitTransition = "";
+                                          $("outerContainer").style.webkitTransform = "translate3d(0,0,0)";
+                                          $("outerContainer").style.left = "1px";
+                                          $("outerContainer").style.left = "0px";
+                                          currentContainer.style.position = "relative";
                                           currentContainer.style.left = "0";
                                           currentContainer.style.top = "0";
-                                          $("outerContainer").style.webkitTransform = "translate3d(0,0,0)";
-                                          currentContainer.style.position = "relative";
                                           otherContainer.style.left = "100%";
                                           otherContainer.innerHTML = "";
-
-                                     }, 625 );
+                                     }, 500 );
                         resetSB ( sbBody, 750 );
+                        setTimeout ( function ()
+                                     {                                     
+                                         pageLoaded = true;
+                                         scrollBodyTo ( 0, 0, 0);
+                                         repaint();
+                                         if (onPageLoaded) { onPageLoaded(); }
+                                     }, 775 );
                     }
 
                     // if we have items in the returnTo stack, show the back button
@@ -979,7 +1097,15 @@ function loadContent(url, callback, animate, backTo) {
                         $("btnBack").style.display="none";
                     }
                     
-                    if (!animate) { resetSB ( sbBody, 250 );                    }
+                    if (!animate) { resetSB ( sbBody, 250 );
+                        setTimeout ( function ()
+                                     {
+                                         pageLoaded = true;
+                                         scrollBodyTo ( 0, 0, 0);
+                                         repaint();
+                                         if (onPageLoaded) { onPageLoaded(); }
+                                     }, 275 );
+                                  }
 //                }, (animate) ? 325 : 250 );
                 returnValue = true;
             }
