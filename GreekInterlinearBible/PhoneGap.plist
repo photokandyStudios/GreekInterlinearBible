@@ -21,8 +21,25 @@
 	<key>ExternalHosts</key>
 	<array>
 		<string>www.greek-dictionary.net</string>
+		<string>*.bible.cc</string>
+		<string>*.interlinear.org</string>
+		<string>*.biblebrowser.org</string>
+		<string>*.scripturetext.org</string>
+		<string>*.biblecommenter.org</string>
+		<string>*.biblos.com</string>
+		<string>*.biblelexicon.org</string>
+		<string>*.mlbible.org</string>
+		<string>*.biblescan.org</string>
+		<string>*.topicalbible.org</string>
+		<string>*.christianbookshelf.org</string>
+		<string>*.strongsnumbers.org</string>
 		<string>ulrikp.org</string>
+		<string>*.scripturetext.com</string>
+		<string>*.biblesummary.org</string>
 		<string>www.hum.aau.dk</string>
+		<string>*.bibleoutline.org</string>
+		<string>*.bibletimeline.org</string>
+		<string>*.*.*</string>
 		<string>staticccel.org</string>
 		<string>dictionary.reference.com</string>
 		<string>www.ccel.org</string>
