@@ -1,0 +1,216 @@
+<div class="content">
+    <script>
+//        showSearch( doSearchBible ); // no search
+        setPageTitle ("Bookmarks");
+    </script>
+    <div style="position: absolute; top:0; left:0; right: 0; height:25px;border-bottom:1px solid #888; margin-top: 1em; margin-bottom:1em; line-height:25px;" >
+        <div style="float: left; width:70%; padding-left:10px;"  id="BMsearchingFor"></div>
+        <div style="float: right; width:20%; text-align: right; padding-right:10px;" id="BMcurrentPage"></div>
+        <div style="clear: both;"></div>
+    </div>
+    <br /><br /><br />
+    <div id="BMlstResults"></div>
+    <div id="BMshowingResults"></div>
+<script>
+
+    var curPage = argsParsed["page"];
+    var scrollTo = argsParsed["scrollto"];
+    var pageLength = 100;
+    var maxPages = 1;
+    var maxResults = 0;
+
+    if (!curPage)
+    {
+        curPage = 1;
+    }
+    
+    if (!scrollTo)
+    {
+        scrollTo = "";
+    }
+    
+    function getBookmarks( pageStart, pageEnd )
+    {
+        var bookmarks = Array();
+        var results = Array();
+        var c = 0;
+
+        for (var i=0; i<localStorage.length; i++)
+        {
+            var key = localStorage.key(i);
+            var value = localStorage[key];            
+            if (key.indexOf ("bm_")>-1 && (bibleLeft[key.substr(3,20)] || bibleRight[key.substr(3,20)]) )
+            {
+                bookmarks.push ( key );
+            }
+        }
+
+        bookmarks.sort();
+        
+        for (var i= (pageStart-1); i<bookmarks.length && i<pageEnd; i++)
+        {
+            results.push (bookmarks[i]);
+            c += 1;
+        }
+
+        maxPages = Math.ceil( c / pageLength );
+        maxResults = c;
+        return results;
+    }
+    
+    function displayBookmarks ( thePage, noEditChange )
+    {
+        showLoader();
+        var page = (thePage) ? thePage : 1;
+        var pageStart = ( (page-1) * pageLength) + 1;
+        var pageEnd   = ( page * pageLength );
+        
+        $("BMsearchingFor").innerHTML = "Bookmarks";
+
+        var results = getBookmarks( pageStart, pageEnd );
+        
+        if (results.length == 0)
+        {
+            $("BMSearchingFor").innerHTML = "You don't have any bookmarks.";
+        }
+        
+        $("BMcurrentPage").innerHTML = "Page " + curPage + "/" + maxPages;
+        if (pageEnd > maxResults) { pageEnd = maxResults; }
+        $("BMshowingResults").innerHTML = "Showing " + pageStart + " - " + pageEnd + " of " + maxResults + " results.";
+        
+        var ihtml = "<div class='listGroup'>";
+       
+        for (var i=0;i<results.length;i++)
+        {
+            console.log (i);
+            var ref = results[i].substr(3,20);              
+            var topText = "";
+            var bottomText = "";
+            topText = bibleRight[ref];
+            if (!topText) { topText = "[...]"; }
+            bottomText = bibleLeft[ref];
+            if (!bottomText) { bottomText = "[...]"; }
+          bottomText = processGreekVerse(bottomText);   
+            
+            var url = 'if (!editState) { loadContent("./bible.html?ignore&ref=' + ref + '", updateMainMenuandTabBar,"slideOut", "./bookmarks.html?ignore&' + 
+                      'page=' + curPage + '&' +
+                      'scrollto=item' + i +
+                      '"); }';
+            var item = "<a id='item%NUM%' class='listItem arrow' style='position: relative;' href='#' onclick='%LINK%'><span style='width:" + (editState ? "50px" : "0px") + "; opacity:" + (editState ?"1":"0") + "' class='delete' onclick='return deleteBookmark(\"%RREF%\");'>&nbsp;</span><span class='deleterItem'><span style='display: block; float:left; width:25%'>%REF%</span><span style='width:74%; display: block; float:right;'><span style='display: block'>%TOP%</span><span style='display: block'>%BOTTOM%</span></span><span style='display: block; clear: both'></span></span><span class='deleteClear'></span></a>";
+            item = item.replace ( "%RREF%", ref.trim());
+            item = item.replace ( "%REF%", cvtToProperReference(ref));
+            item = item.replace ( "%TOP%", topText);
+            item = item.replace ( "%BOTTOM%", bottomText);
+            item = item.replace ( "%LINK%", url);
+            item = item.replace ( "%NUM%", i );
+            ihtml = ihtml + item;
+        }
+        
+        ihtml = ihtml + "</div>";
+        
+        $("BMlstResults").innerHTML = ihtml;
+        
+        if (maxResults > 0 && !noEditChange)
+        {
+            showEdit( switchEditStates );
+        }
+        else
+        {
+            if (!noEditChange) { hideEdit (); }
+        }
+        
+        if (pageLoaded)
+        {
+            onPageLoaded();
+        }
+        hideLoader();
+        
+    }
+    
+    function deleteBookmark ( ref )
+    {
+        localStorage.removeItem ( "bm_" + ref );
+        displayBookmarks ( curPage, true );
+        //switchEditStates ( true );
+        window.event.stopPropagation();
+        window.event.preventDefault();
+        return false;
+    }
+    
+    function switchEditStates( state )
+    {
+        console.log ("Edit state: " + state );
+        var o = $("BMlstResults").children[0].children;
+        
+        for (var i=0; i<o.length; i++)
+        {
+            o[i].children[0].style.width = (state ? '50px' : '0px' );
+            o[i].children[0].style.opacity = (state ? '1' : '0' );
+            //o[i].children[1].style.width = (state ? '95%'  : '100%');
+        }
+        setTimeout ( function () { repaint(); }, 505 );  
+    }
+    
+    onPageLoaded = function()
+    {
+          resetContentScrollBar(0);
+                  repaint();
+          setTimeout (function() {
+        if (scrollTo)
+        {
+            scrollBodyToElement ($(scrollTo),0);
+            scrollTo = null;
+        }
+        else
+        {
+            if (!editState) { scrollBodyTo (0,0,0); } // no scrolling while editing
+        }
+        },125 );
+        hideLoader();
+    }
+    
+    function bookmarksStart()
+    {
+        console.log ("In Search Start");
+        showLoader();
+        displayBookmarks(curPage);
+    
+    }
+    
+    onPageNext = function()
+    {
+        if ( curPage < maxPages )
+        {
+            curPage += 1;
+            bookmarksStart();
+        }
+    }
+
+    onPagePrev = function()
+    {
+        if ( curPage >1 )
+        {
+            curPage = curPage - 1;
+            bookmarksStart();
+        }
+    }
+
+    // load our selected bibles
+            selectedGreekText = localStorage.getItem("TextGreekText");
+            if (!selectedGreekText)
+            {
+                selectedGreekText = "byz";
+            }
+            
+            selectedRightText = localStorage.getItem("TextRightText");
+            if (!selectedRightText)
+            {
+                selectedRightText = "ylt";
+            }
+    afterBothLoaded = bookmarksStart;
+    leftLoaded = false; rightLoaded = false;
+    loadBible ( selectedGreekText );
+    loadBible ( selectedRightText );
+
+</script>
+</div>
