@@ -902,3 +902,9 @@ div.spinner div {
     font-size: 16px;
 }
 
+.zscrollable
+{
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+

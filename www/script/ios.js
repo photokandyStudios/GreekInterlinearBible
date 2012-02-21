@@ -170,6 +170,7 @@ function repaint ()
     var ss = document.styleSheets[0];
     try { ss.addRule('.xxxxxx', 'position: relative'); }
     catch(e) {}
+    
 }
 
 /**
@@ -322,7 +323,6 @@ function scrollBodyTo ( x, y, t )
     self.x = x;
     self.y = y;
     self.t = t;
-    
     if (sb[sbBody])
     {
         sb[sbBody].scrollTo (self.x, self.y, self.t);
@@ -721,8 +721,8 @@ function defaultSwipe ( e )
  */
 function showLoader()
 {
-    $("loader").style.display = "block";
-    setTimeout ( function() { hideLoader();}, 10000 );
+   // $("loader").style.display = "block";
+   // setTimeout ( function() { hideLoader();}, 10000 );
 }
 
 /**
@@ -732,7 +732,7 @@ function showLoader()
  */
 function hideLoader()
 {
-    $("loader").style.display = "none";
+   // $("loader").style.display = "none";
 }
 
 /**
