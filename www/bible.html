@@ -70,8 +70,37 @@
         scrollToPos = incomingScroll;
     }
     
+    var curPage = 0;
 </script>
-    <div id="lstStream">
+    <style>
+#a
+{
+    position:absolute;
+    top:0; left:0; right:0; bottom:0;
+    width:100%; height:100%;
+    
+}
+#b
+{
+    margin: 0 auto;
+    border:1px solid red;
+    text-align: center;
+}
+#c
+{
+    max-width: 75%;
+    max-height: 100%;
+    margin: 0 auto;
+    position: relative;
+        border:1px solid red;
+}
+</style>
+    <div id="a">
+        <div id="b">
+            <canvas width=1500 height=1250 id="c"></canvas>
+        </div>
+    </div>​
+    <div style="display: none;" id="lstStream">
       <div style="position: absolute; left: 47.5%; right: 47.5%; top: 50px; height: 50px;">
             <div class="spinner">
               <div class="bar1"></div>
@@ -89,8 +118,9 @@
             </div>
         </div>
     </div>
-    
 <script type="text/javascript">
+console.log ('122');
+
     function loadBiblePassage ( passage, noscroll )
     {
         localStorage.passage = passage;
@@ -226,44 +256,61 @@
     
     onPageNext = function()
     {
-        // go to next chapter. This is gonna be... fun?
-        var curBook = getBookIndex (passage);
-        var curChapter = getChapter (passage);
-        var maxChapters = getChapterCount (passage);
-        
-        curChapter = curChapter + 1;    // attempt to increment.
-        if ( curChapter > maxChapters )
+    
+        curPage ++;
+        if (curPage >= pages.length)
         {
-            curChapter = 1;
-            curBook = curBook + 1;
-            if (curBook > 65)
+    
+            // go to next chapter. This is gonna be... fun?
+            var curBook = getBookIndex (passage);
+            var curChapter = getChapter (passage);
+            var maxChapters = getChapterCount (passage);
+            
+            curChapter = curChapter + 1;    // attempt to increment.
+            if ( curChapter > maxChapters )
             {
-                return; // can't go past the end of the Bible
+                curChapter = 1;
+                curBook = curBook + 1;
+                if (curBook > 65)
+                {
+                    return; // can't go past the end of the Bible
+                }
             }
+            passage = bibleBooks3LC[ curBook ] + "." + curChapter;
+            formatChapter (passage);
+            curPage = 0;
         }
-        passage = bibleBooks3LC[ curBook ] + "." + curChapter;
-        loadBiblePassage ( passage );
+//        loadBiblePassage ( passage );
+        drawPage ( curPage);
     }
     
     onPagePrev = function ()
     {
-        // go to previous chapter. This is gonna be... fun?
-        var curBook = getBookIndex (passage);
-        var curChapter = getChapter (passage);
-        var maxChapters = getChapterCount (passage);
-        
-        curChapter = curChapter - 1;    // attempt to increment.
-        if ( curChapter < 1 )
+        curPage--;
+        if (curPage < 0)
         {
-            curBook = curBook - 1;
-            if (curBook < 0)
+    
+            // go to previous chapter. This is gonna be... fun?
+            var curBook = getBookIndex (passage);
+            var curChapter = getChapter (passage);
+            var maxChapters = getChapterCount (passage);
+            
+            curChapter = curChapter - 1;    // attempt to increment.
+            if ( curChapter < 1 )
             {
-                return; // can't go past the beginning of the Bible
+                curBook = curBook - 1;
+                if (curBook < 0)
+                {
+                    return; // can't go past the beginning of the Bible
+                }
+                curChapter = bibleBookChapters[curBook];
             }
-            curChapter = bibleBookChapters[curBook];
+            passage = bibleBooks3LC[ curBook ] + "." + curChapter;
+            formatChapter ( passage );
+            curPage = pages.length - 1;
         }
-        passage = bibleBooks3LC[ curBook ] + "." + curChapter;
-        loadBiblePassage ( passage );
+        drawPage ( curPage );
+//        loadBiblePassage ( passage );
     }
     
     onLongPress = function ( event )
@@ -593,7 +640,11 @@
                 //populateBibleBooks(); 
                 //TODO: We need to load the chapters for the incoming book.
                 //populateChapters( curBook );
-                loadBiblePassage ( passage );
+                //loadBiblePassage ( passage );
+                
+                formatChapter (passage);
+                drawPage ( 0 );
+                curPage = 0;
             }
 
             // load our selected bibles
