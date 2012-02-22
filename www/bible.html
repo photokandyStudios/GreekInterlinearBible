@@ -1,4 +1,4 @@
-<div class="content white">
+<div class="content white" id="bibleContent">
 <script type="text/javascript">
     setPageTitle ("Interlinear");
     showSearch( doSearchBible );
@@ -52,6 +52,16 @@
     {
         passage = localStorage.passage;
     }
+    var topReference = passage + ".1";   // verse at top of screen
+    if (!localStorage.topReference)
+    {
+        localStorage.topReference = topReference;
+    }
+    else
+    {
+        topReference = localStorage.topReference;
+    }
+    
     var scrollTo = "";
     var scrollToPos;
     var highlightText = argsParsed["highlight"];
@@ -62,8 +72,10 @@
         // we've an incoming passage. Handle with care!
         scrollTo = incomingRef;
         passage = incomingRef.substr(0, incomingRef.lastIndexOf("."));
+        topReference = incomingRef;
         console.log ('Forced navigation to ' + passage);
-        localStorage.passage = passage; // not sure?
+        localStorage.passage = passage;
+        localStorage.topReference = topReference;
     }
     if (incomingScroll)
     {
@@ -83,21 +95,19 @@
 #b
 {
     margin: 0 auto;
-    border:1px solid red;
     text-align: center;
 }
 #c
 {
-    max-width: 75%;
-    max-height: 100%;
+    zmax-width: 75%;
+    zmax-height: 100%;
     margin: 0 auto;
     position: relative;
-        border:1px solid red;
 }
 </style>
     <div id="a">
         <div id="b">
-            <canvas width=1500 height=1250 id="c"></canvas>
+            <canvas width=1024 height=676 id="c"></canvas>
         </div>
     </div>​
     <div style="display: none;" id="lstStream">
@@ -273,15 +283,34 @@ console.log ('122');
                 curBook = curBook + 1;
                 if (curBook > 65)
                 {
+                    curPage--;
                     return; // can't go past the end of the Bible
                 }
             }
             passage = bibleBooks3LC[ curBook ] + "." + curChapter;
-            formatChapter (passage);
+                localStorage.passage = passage;
+            pages = formatChapter (passage);
             curPage = 0;
         }
 //        loadBiblePassage ( passage );
+        // determine topReference
+        topReference = passage + "." + pages[curPage].verseYStart.indexOf (30);
+        localStorage.topReference = topReference;
         drawPage ( curPage);
+    }
+    
+    onOrientation = function()
+    {
+        pages = formatChapter ( passage );
+        // when orientation changes, we want to go to the topReference
+        // so the user's text is reasonably local to the where they
+        // last where.
+        curPage = pageReferences [ topReference ];
+        if (curPage >= pages.length)
+        {
+            curPage = pages.length-1;
+        }
+        drawPage (curPage);
     }
     
     onPagePrev = function ()
@@ -301,14 +330,18 @@ console.log ('122');
                 curBook = curBook - 1;
                 if (curBook < 0)
                 {
+                    curPage = 0;
                     return; // can't go past the beginning of the Bible
                 }
                 curChapter = bibleBookChapters[curBook];
             }
             passage = bibleBooks3LC[ curBook ] + "." + curChapter;
-            formatChapter ( passage );
+                localStorage.passage = passage;
+            pages = formatChapter ( passage );
             curPage = pages.length - 1;
         }
+        topReference = passage + "." + pages[curPage].verseYStart.indexOf (30);
+        localStorage.topReference = topReference;
         drawPage ( curPage );
 //        loadBiblePassage ( passage );
     }
@@ -641,10 +674,10 @@ console.log ('122');
                 //TODO: We need to load the chapters for the incoming book.
                 //populateChapters( curBook );
                 //loadBiblePassage ( passage );
-                
-                formatChapter (passage);
-                drawPage ( 0 );
-                curPage = 0;
+                localStorage.passage = passage;
+                pages = formatChapter (passage);
+                curPage = pageReferences [ topReference ];
+                drawPage ( curPage );
             }
 
             // load our selected bibles

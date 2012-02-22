@@ -14,10 +14,13 @@ function wordObject ( x, y, w, h, c, text, wordType, yOffset )
 console.log ('136');
 
 // pageObject stores the list of all the words on a page
-function pageObject ()
+function pageObject ( canvasMargin )
 {
     this.self = this;
     this.words = Array();
+    this.verseYStart = Array();
+    this.verseYEnd   = Array();
+    this.columnYEnd = Array(0, canvasMargin, canvasMargin);
     
     this.addWord = function ( wO )
     {
@@ -38,20 +41,36 @@ console.log ('155');
  *
  */
 console.log ('162');
-    var canvasWidth = 1500;         // width. TODO: change based on orientation
-    var canvasHeight = 1250;        // height: TODO: change based on orientation
+    var canvasWidth = 1024;         // width. TODO: change based on orientation
+    var canvasHeight = 676;        // height: TODO: change based on orientation
 
 function formatChapter ( passage )
 {
-    pages = Array();
+    var pages = Array();
+    var settingsGreekLayoutTransliterate = localStorage.getItem("LayoutTransliteration");
+    
+    // handle our orientation
+    if (isLandscape() && isIPad())
+    {
+        canvasWidth = 1024;
+        canvasHeight = 676;
+    }
+    if (isPortrait () && isIPad())
+    {
+        canvasWidth = 768;
+        canvasHeight = 932;
+    }
+    // TODO: handle iPhone
+    $("bibleContent").style.minHeight = canvasHeight + "px";
+    $("c").setAttribute ("width", canvasWidth);
+    $("c").setAttribute ("height", canvasHeight);
 
     var ctx = document.getElementById("c").getContext("2d");
 
-    ctx.font = "24px Georgia";      // font
+    ctx.font = settingsLayoutTextSize + " " + settingsLayoutFontFamily;      // font
     ctx.fillStyle = "#000";         // color
+   // ctx.strokeStyle = "rgba(0,0,0,0.0)"; // stroke
 
-    canvasWidth = 1500;         // width. TODO: change based on orientation
-    canvasHeight = 1250;        // height: TODO: change based on orientation
     var canvasMargin = 30;
 
     var columnAvgWidth = (canvasWidth - (canvasMargin * 6))/3;
@@ -62,39 +81,85 @@ function formatChapter ( passage )
     columnLeft[1] = canvasMargin;
     columnWidth[1] = columnAvgWidth * 1.75;   // left column
     columnLeft[3] = columnLeft[1] + columnWidth[1] + (canvasMargin * 2);
-    columnWidth[3] = columnAvgWidth * 0.25;      // middle column
+    columnWidth[3] = columnAvgWidth * 0.125;      // middle column
     columnLeft[2] = columnLeft[3] + columnWidth[3] + (canvasMargin * 2);
-    columnWidth[2] = columnAvgWidth * 1;      // right column
-    var lineHeight = 36;                        // line height
+    columnWidth[2] = columnAvgWidth * 1.125;      // right column
+    var lineHeight = ctx.measureText("—").width;                        // line height
+    lineHeight = lineHeight * ( settingsLayoutLineSpacing / 100 );  // and add our line spacing
     
     var thisPageNumber = 0;
     var y = canvasMargin;       // starting at top of page
     var x = 0;
-    var maxX = 0;
-    var prevMaxY = 0;
+    var columnHeight = lineHeight * 4; // can change if morphology is omitted.
+    var thisPage;
+    
+    // if we're non-parsed, columnHeight should be lineHeight...
+    if (selectedGreekText.indexOf("p")<0)
+    {
+        columnHeight = lineHeight;
+    }
+
     for ( var i=1; bibleLeft[passage + "." + i] || bibleRight [passage + "." + i]; i++ )
-//    for ( var i=1; i<5; i++ )
     {
         var ref = passage + "." + i;
         var curY = y;
-        var maxY = y;
         var curP = thisPageNumber;
+        
+       thisPageNumber = curP;
+       if ( !pages[thisPageNumber] )
+        {
+            pages[thisPageNumber] = new pageObject( canvasMargin );
+        }
+        thisPage = pages[thisPageNumber];
+
+        // find the first available position to start drawing on the page
+        y = Math.max ( thisPage.columnYEnd [ 1 ], thisPage.columnYEnd [ 2 ] );
+        if (!y) { y = canvasMargin; }
+
+        if (y >= (canvasHeight - (canvasMargin*2) - columnHeight))
+        {
+            // new page!
+            thisPageNumber++;
+            curP = thisPageNumber;
+            if ( !pages[thisPageNumber] )
+            {   // allocate if necessary
+                pages[thisPageNumber] = new pageObject( canvasMargin );
+            }
+            thisPage = pages[thisPageNumber];
+            
+        y = Math.max ( thisPage.columnYEnd [ 1 ], thisPage.columnYEnd [ 2 ] );
+        if (!y) { y = canvasMargin; }
+            
+            thisPage.verseYStart[i] = y;
+            thisPage.verseYEnd  [i] = y+columnHeight;
+        }
+        curY = y;
+
+        // start both verses
+
         for (var whichSide = 1; whichSide < 3; whichSide++)
         {
-           x = columnLeft [ whichSide];
-           maxX = x + columnWidth[whichSide];
-           y = curY;
-           thisPageNumber = curP;
-           if ( !pages[thisPageNumber] )
+            x = columnLeft [ whichSide];
+            maxX = x + columnWidth[whichSide];
+            thisPageNumber = curP;
+            if ( !pages[thisPageNumber] )
             {
-                pages[thisPageNumber] = new pageObject();
+                pages[thisPageNumber] = new pageObject( canvasMargin );
             }
-            var thisPage = pages[thisPageNumber];
+            thisPage = pages[thisPageNumber];
 
             var curBible = (whichSide==1 ? bibleLeft : bibleRight );
             var baseText = "";
 
             baseText = baseText + curBible[ref] + " ";
+            if (whichSide == 1 && settingsGreekLayoutTransliterate == "on")
+            {
+                baseText = transliterate (baseText);
+            }
+            
+            y=curY;
+            thisPage.verseYStart [ i ] = y;
+            thisPage.verseYEnd   [ i ] = y + columnHeight;
             
             // start drawing the verse
                 var prevWords = Array();
@@ -127,13 +192,7 @@ function formatChapter ( passage )
                     // determine what this word is, but only if we're on the greek side.
                     if (whichSide == 1)
                     {
-                        if (curWord.match ( /[0-9]+\:[0-9]+/g ))
-                        {
-                            wt = -10; // verse
-                            c = "#888";
-                            pageReferences[curWord] = thisPageNumber;   //todo: make the reference better :-)
-                        }
-                        else if (curWord.match ( /G[0-9]+/g))
+                        if (curWord.match ( /G[0-9]+/g))
                         {
                             wt = 20; // Strong's
                             c = "#248";
@@ -146,7 +205,7 @@ function formatChapter ( passage )
                         }
                         else if (curWord.match ( /([A-Z\-]{2,}[A-Z\-0-9]+)/g ) )
                         {
-                            c = "#CCC";
+                            c = "#284";
                             wt = 30; // morphology
                             yOffset += (lineHeight * 2);
                         }
@@ -164,19 +223,25 @@ function formatChapter ( passage )
                         if (x >= maxX )
                         {
                             x = columnLeft [ whichSide ] ;   // back to beginning of the line
-                            y = y + (lineHeight * 4);       // increment y
-                            if (y >= (canvasHeight - (canvasMargin*2) - (lineHeight * 4)))
+                            y = y + columnHeight;       // increment y
+                            if (y >= (canvasHeight - (canvasMargin*2) - columnHeight))
                             {
+                                // the verse's height is the maximum height
+                                thisPage.verseYEnd[i] = Math.max (y, thisPage.verseYEnd[i]);
+                                thisPage.columnYEnd[whichSide] = y;
+                                
                                 // new page!
                                 thisPageNumber++;
                                 if ( !pages[thisPageNumber] )
-                                {
-                                    pages[thisPageNumber] = new pageObject();
+                                {   // allocate if necessary
+                                    pages[thisPageNumber] = new pageObject( canvasMargin );
                                 }
                                 thisPage = pages[thisPageNumber];
-                                y = canvasMargin;   // back top top
-                                maxY = (y + (lineHeight*4));
-                                if (whichSide == 2 && thisPageNumber == curP+1 ) { maxY = prevMaxY; }
+                                
+                                y = canvasMargin;   
+                                
+                                thisPage.verseYStart[i] = y;
+                                thisPage.verseYEnd  [i] = y+columnHeight;
                             }
                             // now, we have to deal with several previous words now.
                             for (var k=0; k<prevWords.length; k++)
@@ -212,19 +277,24 @@ function formatChapter ( passage )
                 if (x >= maxX )
                 {
                     x = columnLeft [ whichSide ] ;   // back to beginning of the line
-                    y = y + (lineHeight * 4);       // increment y
-                    if (y >= (canvasHeight - (canvasMargin*2) - (lineHeight * 4)))
+                    y = y + (columnHeight);       // increment y
+                    if (y >= (canvasHeight - (canvasMargin*2) - columnHeight))
                     {
+                        // the verse's height is the maximum height
+                        thisPage.verseYEnd[i] = Math.max (y, thisPage.verseYEnd[i]);
+                        thisPage.columnYEnd[whichSide] = y;
+                        
                         // new page!
                         thisPageNumber++;
                         if ( !pages[thisPageNumber] )
-                        {
-                            pages[thisPageNumber] = new pageObject();
+                        {   // allocate if necessary
+                            pages[thisPageNumber] = new pageObject( canvasMargin );
                         }
                         thisPage = pages[thisPageNumber];
-                        y = canvasMargin;   // back top top
-                        maxY = (y + (lineHeight*4));
-                        if (whichSide == 2 && thisPageNumber == curP+1 ) { maxY = prevMaxY; }
+                        
+                        y = canvasMargin;           
+                        thisPage.verseYStart[i] = y;
+                        thisPage.verseYEnd  [i] = y+columnHeight;
                     }
                     // now, we have to deal with several previous words now.
                     for (var k=0; k<prevWords.length; k++)
@@ -240,20 +310,33 @@ function formatChapter ( passage )
                 }
             
             // end drawing the verse
-            if ( (y+ (lineHeight*4)) > maxY)
-            {
-                maxY = (y+ (lineHeight*4));
-            }
-            if (whichSide == 1)
-            {
-                prevMaxY = maxY;
-            }
             
+            thisPage.verseYEnd[i] = Math.max ( y + columnHeight, thisPage.verseYEnd[i]);
+            thisPage.columnYEnd[whichSide] = y + columnHeight;
         }
-        y = maxY;
-        if (y==30) { y = y + (lineHeight * 4); }      // increment y
+        // end both verses
+        
         curP = thisPageNumber;
     }
+
+    // set up pageReferences
+    pageReferences = Array();
+    for (var i=0; i<pages.length; i++)
+    {
+        for (var j=0; j<pages[i].verseYStart.length; j++)
+        {
+             if ( pages[i].verseYStart[j] )
+             {
+                if (!pageReferences [j])
+                {
+                 pageReferences[ j ] = i;   // for non-passage references
+                 pageReferences[ passage + "." + j] = i;    // for regular references
+                }
+             }
+        }
+    }
+    
+    return pages;
 }
 
 
@@ -267,11 +350,15 @@ function clearCtx ( ctx )
 function drawPage ( pageNumber )
 {
     var ctx = document.getElementById("c").getContext("2d");
-
-    ctx.font = "24px Georgia";      // font
-    ctx.fillStyle = "#000";         // color
-    clearCtx ( ctx );
     ctx.save();
+    clearCtx ( ctx );
+
+    ctx.font = settingsLayoutTextSize + " " + settingsLayoutFontFamily;      // font
+    ctx.fillStyle = "#000";         // color
+    
+    // TODO: draw any selection and highlight colors
+    
+    // draw the words
     for (i=0; i<pages[pageNumber].words.length; i++)
     {
         ctx.fillStyle = pages[pageNumber].words[i].color;

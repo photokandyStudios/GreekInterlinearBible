@@ -191,7 +191,7 @@ body
 {
     color: #5E6A85;
     zposition: relative;
-    min-height: 1024px;
+    zmin-height: 1024px;
     y-webkit-transform:translate3d(0,0,0);
 }
 

@@ -68,6 +68,8 @@ var onEditClicked = null;                                           // PUBLIC: c
                                                                     // clicked
 var editState = false;                                              // PUBLIC: Edit State
 
+var onOrientation = null;                                           // fires when the orientation changes
+
 /**
  *
  * "Fast Buttons" / Ghost Click Buster.
@@ -580,18 +582,25 @@ function processScriptTags ( id )
     var t = d.length
     for (var x=0;x<t;x++)
     {
-        var newScript = document.createElement('script');
-        newScript.type = "text/javascript";
-        newScript.charset = "utf-8";
-        if (d[x].src)
+        try
         {
-            newScript.src = d[x].src;
+            var newScript = document.createElement('script');
+            newScript.type = "text/javascript";
+            newScript.charset = "utf-8";
+            if (d[x].src)
+            {
+                newScript.src = d[x].src;
+            }
+            else
+            {
+                newScript.text = d[x].text;
+            }
+            $(id).appendChild (newScript);
         }
-        else
+        catch ( err )
         {
-            newScript.text = d[x].text;
+            console.log (err.message);
         }
-        $(id).appendChild (newScript);
     }    
 }
 
@@ -623,6 +632,11 @@ function updateOrientation()
         $("menuPanel").style.display = "none";
     }
     */
+    
+    if (onOrientation)
+    {
+        onOrientation();
+    }
 
     // and reset our scrollers.
         setTimeout(function () {
@@ -1003,6 +1017,7 @@ function loadContent(url, callback, animate, backTo) {
     onPagePrev = null;
     onPageLoaded = null;
     pageLoaded = false;
+    onOrientation = null;
     hideEdit();
                                                                                     //console.log ("824");
     // no more popover, either:
