@@ -21,7 +21,7 @@ body
     right: 0;
     overflow: hidden;
     border: none;
-    y-webkit-user-select: none;
+    webkit-user-select: none;
     background-color: #E1E4E9;
     ybackground-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#E1E4E9), to(#DDDFE3));
     y-webkit-transform:translate3d(0,0,0);
@@ -193,6 +193,7 @@ body
     zposition: relative;
     zmin-height: 1024px;
     y-webkit-transform:translate3d(0,0,0);
+    webkit-user-select: none;
 }
 
 .content.white
