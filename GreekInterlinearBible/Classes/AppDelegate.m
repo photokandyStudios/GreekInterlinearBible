@@ -31,7 +31,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Uncomment to enable remote debugging
-    [NSClassFromString(@"WebView") _enableRemoteInspector];
+//    [NSClassFromString(@"WebView") _enableRemoteInspector];
     
     NSURL* url = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
     if (url && [url isKindOfClass:[NSURL class]])
@@ -76,14 +76,14 @@
 	 // Black base color for background matches the native apps
    	theWebView.backgroundColor = [UIColor blackColor];
     
-    for (id subview in theWebView.subviews)
+ /*   for (id subview in theWebView.subviews)
     {
         if ([[subview class] isSubclassOfClass: [UIScrollView class]])
         {
             ((UIScrollView *)subview).bounces = NO;
         }
     }
-    
+  */  
 	return [ super webViewDidFinishLoad:theWebView ];
 }
 
