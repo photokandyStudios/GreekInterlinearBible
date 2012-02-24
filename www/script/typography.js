@@ -1,5 +1,5 @@
 // wordObject will store information about a word
-function wordObject ( x, y, w, h, c, text, wordType, yOffset )
+function wordObject ( x, y, w, h, c, text, wordType, yOffset, verse, whichSide )
 {
     this.self = this;
     this.x    = x;
@@ -10,6 +10,8 @@ function wordObject ( x, y, w, h, c, text, wordType, yOffset )
     this.height=h;
     this.wordType = wordType;
     this.yOffset = yOffset;
+    this.verse = verse;
+    this.whichSide = whichSide;
 }
 console.log ('136');
 
@@ -81,9 +83,9 @@ function formatChapter ( passage )
     columnLeft[1] = canvasMargin;
     columnWidth[1] = columnAvgWidth * 1.75;   // left column
     columnLeft[3] = columnLeft[1] + columnWidth[1] + (canvasMargin * 2);
-    columnWidth[3] = columnAvgWidth * 0.125;      // middle column
+    columnWidth[3] = columnAvgWidth * 0.0625;      // middle column
     columnLeft[2] = columnLeft[3] + columnWidth[3] + (canvasMargin * 2);
-    columnWidth[2] = columnAvgWidth * 1.125;      // right column
+    columnWidth[2] = columnAvgWidth * 1.1875;      // right column
     var lineHeight = ctx.measureText("—").width;                        // line height
     lineHeight = lineHeight * ( settingsLayoutLineSpacing / 100 );  // and add our line spacing
     
@@ -134,8 +136,16 @@ function formatChapter ( passage )
             thisPage.verseYEnd  [i] = y+columnHeight;
         }
         curY = y;
+        
+        // create a new word that is the verse #
+        thisPage.addWord ( new wordObject ( columnLeft [ 3 ] + ((columnWidth [ 3 ])/2) // center
+                         - (ctx.measureText ( i ).width / 2) // center the #
+                         , y, ctx.measureText ( i ).width, lineHeight, "#333", i, 99, 0, i, 3 ));
 
         // start both verses
+            y=curY;
+            thisPage.verseYStart [ i ] = y;
+            thisPage.verseYEnd   [ i ] = y + columnHeight;
 
         for (var whichSide = 1; whichSide < 3; whichSide++)
         {
@@ -151,15 +161,20 @@ function formatChapter ( passage )
             var curBible = (whichSide==1 ? bibleLeft : bibleRight );
             var baseText = "";
 
-            baseText = baseText + curBible[ref] + " ";
+            if (curBible[ref])
+            {
+                baseText = baseText + curBible[ref] + " ";
+            }
+            else
+            {
+                baseText = baseText + "[...]";
+            }
             if (whichSide == 1 && settingsGreekLayoutTransliterate == "on")
             {
                 baseText = transliterate (baseText);
             }
             
             y=curY;
-            thisPage.verseYStart [ i ] = y;
-            thisPage.verseYEnd   [ i ] = y + columnHeight;
             
             // start drawing the verse
                 var prevWords = Array();
@@ -267,7 +282,7 @@ function formatChapter ( passage )
                     {
                         maxWidth = curWidth;
                     }
-                    prevWords.push ( new wordObject ( x, y+yOffset, curWidth, lineHeight, c, curWord, wt, yOffset ) );
+                    prevWords.push ( new wordObject ( x, y+yOffset, curWidth, lineHeight, c, curWord, wt, yOffset, i, whichSide ) );
                     prevwt = wt;
                 }
 
@@ -354,17 +369,64 @@ function drawPage ( pageNumber )
     clearCtx ( ctx );
 
     ctx.font = settingsLayoutTextSize + " " + settingsLayoutFontFamily;      // font
+    ctx.textBaseline = "top";
     ctx.fillStyle = "#000";         // color
     
-    // TODO: draw any selection and highlight colors
-    
-    // draw the words
-    for (i=0; i<pages[pageNumber].words.length; i++)
+    // draw any selection (the only thing that will get a full rectangle; all others highlight the text.)
+
+    ctx.fillStyle = "#C0E0FF";
+    for (var i=0; i<pages[pageNumber].verseYStart.length; i++)
     {
+        if ( selectedVerse[passage + "." + i]=="Y" )
+        {
+            ctx.fillRect ( 0,           pages[pageNumber].verseYStart[i] - 4, 
+                           canvasWidth, (pages[pageNumber].verseYEnd[i] - pages[pageNumber].verseYStart[i]) + 8 );
+        }
+    }
+    
+    ctx.fillStyle = "#000";         // color
+    // draw the words
+    for (var i=0; i<pages[pageNumber].words.length; i++)
+    {
+        // determine if this word should be highlighted
+        var ref = passage + "." + pages[pageNumber].words[i].verse;
+        var highlightNum = -1;
+        var highlight = "";
+        
+        if (localStorage.getItem ( "hl_" + ref ))
+        {
+            highlightNum = localStorage.getItem ( "hl_" + ref );
+            highlight = "rgba(";
+            highlight = highlight + highlightColors [ highlightNum ];
+            highlight = highlight + ")";
+        }
+        if (highlightText)
+        {
+            if ( pages[pageNumber].words[i].text.length > 0 )
+            {
+                if ( pages[pageNumber].words[i].text.toLowerCase() == highlightText.toLowerCase() )
+                {
+                    // scratch that, highlight the text from a search...
+                    highlight = "#FF0";
+                }
+            }
+        }
+        if (highlight.length > 0)
+        {
+            ctx.fillStyle = highlight;
+            ctx.fillRect ( pages[pageNumber].words[i].x - 4, 
+                           pages[pageNumber].words[i].y,
+                           pages[pageNumber].words[i].width + 8,
+                           pages[pageNumber].words[i].height); // give a little border
+        }
+        
         ctx.fillStyle = pages[pageNumber].words[i].color;
         ctx.fillText(pages[pageNumber].words[i].text, 
                      pages[pageNumber].words[i].x, 
                      pages[pageNumber].words[i].y);
     }
     ctx.restore();
+    
+    // set the page title to the top verse
+    setPageTitle ( cvtToProperReference ( passage + "." + pages[pageNumber].verseYStart.indexOf(30)) );
 }
