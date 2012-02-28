@@ -91,9 +91,18 @@
 
         var results = searchDict( strongsGreekDictionary, theWord, allRequired, pageStart, pageEnd, translit );
         
+        console.log ( results.length );
+        
         if (results.length == 0)
         {
-            $("SearchingFor").innerHTML = "No results found in Strong's for " + theWord;
+            $("searchingFor").innerHTML = "No results found. " ;
+            console.log ("Finish page loading...");
+            if (pageLoaded)
+            {
+                onPageLoaded();
+            }
+            console.log ( "No results found.");
+            return;
         }
 
         console.log ( "SearchStrongs: " + results.length );
