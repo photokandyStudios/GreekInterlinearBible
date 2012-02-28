@@ -24,6 +24,7 @@
                 <option value="ylt">Young's Literal Translation</option>
             </select>
         </li>
+        <li class="listItem">Show Notes Inline<div class="switch"><span class="thumb"></span><input type="checkbox" localStorage="LayoutInlineNotes"/></div></li>
         <li class="listItem">English Transliteration<div class="switch"><span class="thumb"></span><input type="checkbox" localStorage="LayoutTransliteration"/></div></li>
     </ul>
     <p style="text-align: center">English Transliteration takes the selected Greek text and converts the Greek characters into characters English speakers are more
@@ -31,7 +32,7 @@
     uses one which hopefully makes the text reasonably readable.</p>
     <h3>Layout</h3>
     <ul class="listGroup">
-        <li class="listItem">Column Widths
+        <li class="listItem">Column Width
             <select id="ddColumnWidths" class="dropdown" default="600930" localStorage="LayoutColumnWidths">
                 <option value="600930">Wide Greek Column</option>
                 <option value="300960">Wide English Column</option>
@@ -39,16 +40,16 @@
             </select>
         </li>
         <li class="listItem">Text Size
-            <select id="ddTextSize" class="dropdown" default="12pt" localStorage="LayoutTextSize">
-                <option value="8pt">8pt</option>
-                <option value="10pt">10pt</option>
-                <option value="12pt">12pt</option>
-                <option value="14pt">14pt</option>
-                <option value="16pt">16pt</option>
-                <option value="18pt">18pt</option>
-                <option value="20pt">20pt</option>
-                <option value="22pt">22pt</option>
-                <option value="24pt">24pt</option>
+            <select id="ddTextSize" class="dropdown" default="14" localStorage="LayoutTextSize">
+                <option value="8">Tiny Print</option>
+                <option value="10">Smaller Print</option>
+                <option value="12">Small Print</option>
+                <option value="14">Normal Print</option>
+                <option value="16">Large Print</option>
+                <option value="18">Larger Print</option>
+                <option value="20">Extra Large Print</option>
+                <option value="22">Huge Print</option>
+                <option value="24">Humongous Print</option>
             </select>
         </li>
         <li class="listItem">Typeface
@@ -64,20 +65,23 @@
         </li>
         <li class="listItem">Line Spacing
             <select id="ddLineSpacing" class="dropdown" default="100" localStorage="LayoutLineSpacing">
+                <option value="50">Tightest Spacing</option>
+                <option value="66">Tighter Spacing</option>
                 <option value="75">Tight Spacing</option>
                 <option value="100">Normal Spacing</option>
                 <option value="125">One and one-half Spacing</option>
                 <option value="150">Double Spacing</option>
             </select>
         </li>
-        <li class="listItem">Verse Spacing
-            <select id="ddVerseSpacing" class="dropdown" default="1em" localStorage="LayoutVerseSpacing">
+<!--        <li class="listItem">Verse Spacing
+            <select id="ddVerseSpacing" class="dropdown" default="50" localStorage="LayoutVerseSpacing">
                 <option value="0">None</option>
-                <option value="1em">Small</option>
-                <option value="2em">Large</option>
+                <option value="50">Small</option>
+                <option value="100">Large</option>
             </select>
         </li>
     </ul>
+-->
 <!--
     <button onclick="localStorage.clear();" class="button">Clear all Settings</button>
     <button onclick="showLoader();" class="Button">Show the loader</button>
