@@ -9,15 +9,33 @@ body.landscape.iphone #bodyPanel
     right: 0;
 }
 
-body.landscape.iphone #menuPanel
-{
-    display: none;
-}
+
 
 body.landscape.iphone #tabBar
 {
     left: 0;
     right: 0;
+}
+
+body.landscape.iphone #noteWindow
+{
+    width: 480px;
+    height: 300px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    display: none;
+    border: none;
+}
+
+body.landscape.iphone #noteWindow textarea
+{
+    width: 460px;
+    top: 54px;
+    left: 10px;
+    right: 10px;
+    bottom: 6px;
+    position: absolute;
 }
 
 
