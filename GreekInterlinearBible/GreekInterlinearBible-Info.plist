@@ -13,6 +13,8 @@
 	<key>CFBundleIconFiles</key>
 	<array>
 		<string>GreekInterlinearBibleIcon-iPad72.png</string>
+		<string>GreekInterlinearBibleIcon-57.png</string>
+		<string>GreekInterlinearBibleIcon-114.png</string>
 	</array>
 	<key>CFBundleIcons</key>
 	<dict>
@@ -21,6 +23,8 @@
 			<key>CFBundleIconFiles</key>
 			<array>
 				<string>GreekInterlinearBibleIcon-iPad72.png</string>
+				<string>GreekInterlinearBibleIcon-57.png</string>
+				<string>GreekInterlinearBibleIcon-114.png</string>
 			</array>
 			<key>UIPrerenderedIcon</key>
 			<true/>

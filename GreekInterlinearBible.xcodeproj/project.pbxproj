@@ -35,6 +35,10 @@
 		6A56E06214CA475100F3F8BB /* Capture.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6A56E06114CA475100F3F8BB /* Capture.bundle */; };
 		6A56E06414CA475100F3F8BB /* PhoneGap.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6A56E06314CA475100F3F8BB /* PhoneGap.plist */; };
 		6A56E06814CA475100F3F8BB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A56E06714CA475100F3F8BB /* AppDelegate.m */; };
+		6A58D7F314FD9A0E0090631C /* GreekInterlinearBibleIcon-57.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A58D7F214FD9A0E0090631C /* GreekInterlinearBibleIcon-57.png */; };
+		6A58D7F614FD9A120090631C /* GreekInterlinearBibleIcon-114.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A58D7F514FD9A120090631C /* GreekInterlinearBibleIcon-114.png */; };
+		6A58D7F814FD9A160090631C /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A58D7F714FD9A160090631C /* Default.png */; };
+		6A58D7FA14FD9A1B0090631C /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A58D7F914FD9A1B0090631C /* Default@2x.png */; };
 		6AB8EF6A14D26A2800CD7189 /* GreekInterlinearBibleIcon-iPad72.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AB8EF6914D26A2800CD7189 /* GreekInterlinearBibleIcon-iPad72.png */; };
 		6AC0324614CE6DB4001F06EF /* clipboardPlugin.js in Sources */ = {isa = PBXBuildFile; fileRef = 6AC0324314CE6DB4001F06EF /* clipboardPlugin.js */; };
 		6AC0324714CE6DB4001F06EF /* ClipboardPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC0324414CE6DB4001F06EF /* ClipboardPlugin.m */; };
@@ -85,6 +89,10 @@
 		6A56E06614CA475100F3F8BB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Classes/AppDelegate.h; sourceTree = "<group>"; };
 		6A56E06714CA475100F3F8BB /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Classes/AppDelegate.m; sourceTree = "<group>"; };
 		6A56E06A14CA475100F3F8BB /* README */ = {isa = PBXFileReference; lastKnownFileType = text; name = README; path = Plugins/README; sourceTree = "<group>"; };
+		6A58D7F214FD9A0E0090631C /* GreekInterlinearBibleIcon-57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreekInterlinearBibleIcon-57.png"; sourceTree = "<group>"; };
+		6A58D7F514FD9A120090631C /* GreekInterlinearBibleIcon-114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreekInterlinearBibleIcon-114.png"; sourceTree = "<group>"; };
+		6A58D7F714FD9A160090631C /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		6A58D7F914FD9A1B0090631C /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		6AB8EF6914D26A2800CD7189 /* GreekInterlinearBibleIcon-iPad72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreekInterlinearBibleIcon-iPad72.png"; sourceTree = "<group>"; };
 		6AC0324214CE6DB4001F06EF /* ClipboardPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClipboardPlugin.h; sourceTree = "<group>"; };
 		6AC0324314CE6DB4001F06EF /* clipboardPlugin.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = clipboardPlugin.js; sourceTree = "<group>"; };
@@ -140,6 +148,10 @@
 		6A56E01514CA474F00F3F8BB = {
 			isa = PBXGroup;
 			children = (
+				6A58D7F914FD9A1B0090631C /* Default@2x.png */,
+				6A58D7F714FD9A160090631C /* Default.png */,
+				6A58D7F514FD9A120090631C /* GreekInterlinearBibleIcon-114.png */,
+				6A58D7F214FD9A0E0090631C /* GreekInterlinearBibleIcon-57.png */,
 				6AB8EF6914D26A2800CD7189 /* GreekInterlinearBibleIcon-iPad72.png */,
 				6AC0324914CE714A001F06EF /* www */,
 				6A19776F14CB805B00DB6AD9 /* Default-Portrait~ipad.png */,
@@ -380,6 +392,10 @@
 				6AE9629514D09D0D0016DF97 /* README.txt in Resources */,
 				6AB8EF6A14D26A2800CD7189 /* GreekInterlinearBibleIcon-iPad72.png in Resources */,
 				6AF041C514DE475E00658AE7 /* README.md in Resources */,
+				6A58D7F314FD9A0E0090631C /* GreekInterlinearBibleIcon-57.png in Resources */,
+				6A58D7F614FD9A120090631C /* GreekInterlinearBibleIcon-114.png in Resources */,
+				6A58D7F814FD9A160090631C /* Default.png in Resources */,
+				6A58D7FA14FD9A1B0090631C /* Default@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
