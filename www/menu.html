@@ -8,55 +8,10 @@
   function toggleGrid ( o )
   {
        o.nextSibling.nextSibling.classList.toggle("open");
-       /*if (theLastO)
-       {
-        if (theLastO.nextSibling.nextSibling.className.indexOf("open")>-1)
-        {
-         theLastO.nextSibling.nextSibling.classList.toggle("open");
-        }
-       }
-       theLastO = o;*/
        resetSB ( sbMenu, 550 );
   }
  </script>
-<!--
-    <a id="mnuMainHome"
-       title="Home"
-       href="javascript:loadContent('./home.html', updateMainMenuandTabBar );"
-       class="navSubItem sel">
-        <img src="./images/tabs/Home.png"> Home
-    </a>
-
-    <a id="mnuMainHome"
-       title="Interlinear Bible"
-       href="javascript:loadContent('./bible.html', updateMainMenuandTabBar );"
-       class="navSubItem ">
-        <img src="./images/tabs/Bookmark.png"> Read Bible
-    </a>
--->    
-<!--
-    <a id="mnuMainHome"
-       title="Bookmarks"
-       href="javascript:loadContent('./bookmarks.html', updateMainMenuandTabBar );"
-       class="navSubItem ">
-        <img src="./images/tabs/Star.png"> Bookmarks
-    </a>
-
-    <a id="mnuMainHome"
-       title="Notes"
-       href="javascript:loadContent('./notes.html', updateMainMenuandTabBar );"
-       class="navSubItem ">
-        <img src="./images/tabs/Pen-Slated.png"> Notes
-    </a>
-
-    <a id="mnuMainHome"
-       title="Strong's Lookup"
-       href="javascript:loadContent('./strongs.html', updateMainMenuandTabBar );"
-       class="navSubItem ">
-        <img src="./images/tabs/Magic-Wand.png"> Strong's Lookup
-    </a>-->
-
-    <div>
+    <div id="mnuBooks">
         <a title="Matthew 1" onclick="toggleGrid(this);" class="navSubItem">Matthew</a>
         <div class="gridExpander">
          <a href="javascript:navToPassage('40N.1.1');" class="gridItem">&gt;</a>
@@ -435,5 +390,4 @@
          <a href="javascript:navToPassage('66N.22.1');" class="gridItem">22</a>
 
     </div>
-
 </div>
