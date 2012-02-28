@@ -48,6 +48,7 @@ var sbBody = 1;                                                     // PUBLIC:  
 var sb = Array();                                                   // PUBLIC:  scrollers for the various areas.
 var sbAreas = Array("pnlMainArea","pnlBodyArea");                   // PUBLIC:  scroller's associated elements
 var sbScrolling = Array(false, false);                              // PUBLIC:  indicate if a scroller is scrolling.
+var sbDisabled = Array(false, false);                               // PUBLIC:  indicate if a scroller is disabled.
 
 // Back-button History//
 var returnTo = Array();                                             // PRIVATE: stack for back-button history
@@ -63,12 +64,16 @@ var onPageNext = null;                                              // PUBLIC: c
 var onPagePrev = null;                                              // PUBLIC: called when a page swipe occurs
 
 var onPageLoaded = null;                                            // PUBLIC: called when page is finished loading
+var onMenuLoaded = null;
+var onMenuDisplayed = null;
 
 var onEditClicked = null;                                           // PUBLIC: called when the "edit" button is
                                                                     // clicked
 var editState = false;                                              // PUBLIC: Edit State
 
 var onOrientation = null;                                           // fires when the orientation changes
+
+var disableGestures = false;
 
 /**
  *
@@ -250,7 +255,7 @@ function allClasses(selector)
  */
 function longpress ( event )
 {
-    if (onLongPress)
+    if (!disableGestures && onLongPress)
     {
         onLongPress ( event );
     }
@@ -263,6 +268,7 @@ function longpress ( event )
  */
 function doSearch ()
 {
+    $("txtSearch").blur();
     if (onSearch)
     {
         onSearch();
@@ -325,6 +331,9 @@ function scrollBodyTo ( x, y, t )
     self.x = x;
     self.y = y;
     self.t = t;
+
+    if (sbDisabled[sbBody]) { return; }
+
     if (sb[sbBody])
     {
         sb[sbBody].scrollTo (self.x, self.y, self.t);
@@ -341,6 +350,8 @@ function scrollBodyToElement ( el, t )
     self.el = el;
     self.t = t;
     
+    if (sbDisabled[sbBody]) { return; }
+    
     if (sb[sbBody])
     {
         sb[sbBody].scrollToElement ( self.el, t );
@@ -349,6 +360,19 @@ function scrollBodyToElement ( el, t )
     {
         setTimeout ( function() { scrollBodyToElement(self.el, self.t); }, 125 );
     }
+}
+
+function _newSB ( o )
+{
+    if (sbAreas[o]!="pnlBodyArea") { sb[o] = new iScroll ( sbAreas[o], { hScrollbar: false, vScrollbar: false, 
+                                                                         onScrollMove: function(me) {handleScrolling(this,null, true);},
+                                                                         onScrollEnd:  function(me) {handleScrolling(this,null, false);} 
+                                                                        } ); } else
+                                   { sb[o] = new iScroll ( sbAreas[o], { hScrollbar: false, vScrollbar: false, 
+                                                                         onScrollMove: function(me) {handleScrolling(this,null, true);},
+                                                                         onScrollEnd:  function(me) {handleScrolling(this,null, false);},
+                                                                         longpress: function (e) { longpress(e); } } ); }
+    if ( sbDisabled[o] ) { sb[o].disable(); }
 }
 
 /**
@@ -378,31 +402,13 @@ function _resetSB ( o )
         {
             if (!refreshed)
             {
-                if (sbAreas[o]!="pnlBodyArea") { sb[o] = new iScroll ( sbAreas[o], { hScrollbar: false, vScrollbar: false, 
-                                                                                     onScrollMove: function(me) {handleScrolling(this,null, true);},
-                                                                                     onScrollEnd:  function(me) {handleScrolling(this,null, false);}, 
-                                                                                     zonTouchEnd:  function(me) {handleScrolling(this,null, false);} 
-                                                                                    } ); } else
-                                               { sb[o] = new iScroll ( sbAreas[o], { hScrollbar: false, vScrollbar: false, 
-                                                                                     onScrollMove: function(me) {handleScrolling(this,null, true);},
-                                                                                     onScrollEnd:  function(me) {handleScrolling(this,null, false);},
-                                                                                     zonTouchEnd:  function(me) {handleScrolling(this,null, false);}, 
-                                                                                     longpress: function (e) { longpress(e); } } ); }
+                _newSB ( o );
             }
         }
     }
     else
     {
-                if (sbAreas[o]!="pnlBodyArea") { sb[o] = new iScroll ( sbAreas[o], { hScrollbar: false, vScrollbar: false, 
-                                                                                     onScrollMove: function(me) {handleScrolling(this,null, true);},
-                                                                                     onScrollEnd:  function(me) {handleScrolling(this,null, false);}, 
-                                                                                     zonTouchEnd:  function(me) {handleScrolling(this,null, false);} 
-                                                                                    } ); } else
-                                               { sb[o] = new iScroll ( sbAreas[o], { hScrollbar: false, vScrollbar: false, 
-                                                                                     onScrollMove: function(me, e) {handleScrolling(this,null, true);},
-                                                                                     onScrollEnd:  function(me) {handleScrolling(this,null, false);},
-                                                                                     zonTouchEnd:  function(me) {handleScrolling(this,null, false);}, 
-                                                                                     longpress: function (e) { longpress(e); } } ); }
+        _newSB ( o );
     }
     sb[o].whichScrollerAmI = o;
 }
@@ -436,12 +442,24 @@ function destroySB ( o )
     }
     catch (e)
     {
-        ;
+        console.log ( "Couldn't destroy sb " + o );
     }
     finally
     {
         sb[o] = null;
     }
+}
+
+function disableSB ( o )
+{
+    sbDisabled[o] = true;
+    try{
+        sb[o].disable();
+    } catch (err) {
+        console.log ("When disabling scroller: " + err.message);
+    }
+    
+    //destroySB(o);
 }
 
 /**
@@ -453,6 +471,11 @@ function resetContentScrollBar (dly)
 {
     resetSB ( sbBody,dly );
     return true;
+}
+
+function disableContentScrollBar()
+{
+    disableSB (sbBody);
 }
 
 /**
@@ -510,7 +533,7 @@ function isIPad()
  */
 function isIPhone()
 {
-    return navigator.platform == "iPhone" || window.location.href.indexOf("?iphone")>-1;
+    return navigator.platform == "iPhone" || navigator.platform == "iPhone Simulator" || window.location.href.indexOf("?iphone")>-1;
 }
 
 /**
@@ -679,12 +702,14 @@ function showMenu ()
     setTimeout(function () {
         resetSB ( sbMenu );
     }, 375);
+    if (onMenuDisplayed) { onMenuDisplayed (); }
 }
 
 function defaultSwipe ( e )
 {
+    if (disableGestures) { return; }
 //TODO: handle iPhone here
- if (e.x < 360 || menuVisible )
+ if ( (e.x < 240 && isIPad()) || menuVisible )
  {
     if (e.direction == "left")
     {
@@ -858,12 +883,14 @@ function showSearch(callback)
         onSearch = callback;
     }
     $("theSearch").style.display = "block";
+    if (isIPhone()) { $("navTitleArea").style.display = "none"; }
 }
 
 function hideSearch()
 {
     onSearch = null;
     $("theSearch").style.display = "none";
+    if (isIPhone()) { $("navTitleArea").style.display = "block"; }
 }
 
 function editButton ()
@@ -1019,6 +1046,8 @@ function loadContent(url, callback, animate, backTo) {
     pageLoaded = false;
     onOrientation = null;
     hideEdit();
+    sbDisabled = Array(false, false);
+    disableGestures = false;
                                                                                     //console.log ("824");
     // no more popover, either:
     lastpo = null;
@@ -1028,7 +1057,14 @@ function loadContent(url, callback, animate, backTo) {
     if (animate)
     {
         otherContainer.style.position = "absolute";
-        y = (sb[sbBody].y);
+        if (sb[sbBody])
+        {
+            y = (sb[sbBody].y);
+        }
+        else
+        {
+            y = 0;
+        }
         otherContainer.style.top = "" + (-y) + "px";   // so we can scroll horizontally first
         $("outerContainer").style.webkitTransition = "left,-webkit-transform 0.5s ease-in-out";
 
@@ -1169,6 +1205,7 @@ function loadContent(url, callback, animate, backTo) {
 function updateMainMenu( url, title )
 {
     var mnu = $("grpMainMenu");
+    if (!mnu) { return; }
     
     // unselect any active items, while selecting the correct item based on url
     for (var o in mnu.childNodes )
@@ -1181,7 +1218,7 @@ function updateMainMenu( url, title )
             {   // selected!
                 obj.setAttribute ("class", "navSubItem sel");
                 // update the page title, if possible
-                $ ("navBodyTitle").innerHTML = title ? title : obj.getAttribute("title");
+                //$ ("navBodyTitle").innerHTML = title ? title : obj.getAttribute("title");
             }
             else
             {   // not selected!
@@ -1245,6 +1282,9 @@ function loadMenu(url, callback) {
     var tid = setTimeout( function() { showLoader(); }, 100 );
     setTimeout ( function() { hideLoader();}, 10000 );    
     
+    onMenuLoaded = null;
+    onMenuDisplayed = null;
+    
     page_request = new XMLHttpRequest()
     
     // set our return value (this will depend on if things work right or not)
@@ -1261,17 +1301,16 @@ function loadMenu(url, callback) {
                 if (tid) clearTimeout(tid);
                 hideLoader();
         
-                // fill content
-                setTimeout ( function () {
                     // nuke our scrollbar
                     destroySB ( sbMenu );
                     // set the content
                     document.getElementById('menuMain').innerHTML = page_request.responseText;
                     // process scripts
                     processScriptTags('menuMain');
-                                        
-                    resetSB ( sbMenu, 375 );                    
-                }, 250 );
+                    if (onMenuLoaded) { onMenuLoaded(); }
+
+                    resetSB ( sbMenu, 250 );                    
+
                 returnValue = true;
             }
             
@@ -1319,6 +1358,7 @@ function loadMenu(url, callback) {
 function updateTabBar( url, title )
 {
     var mnu = $("grpTabBar");
+    if (!mnu) { return; }
     
     // unselect any active items, while selecting the correct item based on url
     for (var o in mnu.childNodes )
@@ -1331,7 +1371,7 @@ function updateTabBar( url, title )
             {   // selected!
                 obj.setAttribute ("class", "barItem sel");
                 // update the page title, if possible
-                $ ("navBodyTitle").innerHTML = title ? title : obj.getAttribute("title");
+                //$ ("navBodyTitle").innerHTML = title ? title : obj.getAttribute("title");
             }
             else
             {   // not selected!
@@ -1377,8 +1417,6 @@ function loadTabBar(url, callback) {
             // at this point, we have a page; 200 means success. 
             if (window.location.href.indexOf("http")==-1 || page_request.status==200) {
 
-                // fill content
-                setTimeout ( function () {
                     // nuke our scrollbar
                     destroySB ( sbMenu );
                     // set the content
@@ -1389,7 +1427,6 @@ function loadTabBar(url, callback) {
                     {
                         showTabBar();
                     }
-                }, 250 );
                 returnValue = true;
             }
             
@@ -1492,6 +1529,8 @@ function loaded() {
     resetSB ( sbBody );
     
     }, 300 );
+    
+
     
 
 
@@ -2030,6 +2069,72 @@ function addSwipeListener(el, listener)
  el.addEventListener('touchstart', onTouchStart, false);
 }
 
+/**
+ *
+ * Content Text Area aka Notes Implementation
+ *
+ */
+ 
+function showNotes ( title, k, saveCallback, override )
+{
+    var noteContent;
+    
+    disableGestures = true;
+    $("nw_title").innerHTML = title;
+    
+    noteContent = localStorage.getItem ( k );
+    if (!noteContent) { noteContent = ""; }
+    if (override) { noteContent = override; }
+    $("nw_txtNote").value=noteContent;
+    
+    $("noteWindow").saveCallback = saveCallback;
+    $("noteWindow").autoSaveKey = k;
+    $("noteWindow").oldContent = localStorage.getItem ( k );
+    $("noteWindow").autoSave = setInterval ( function() 
+                                              { 
+                                                localStorage.setItem (
+                                                    $("noteWindow").autoSaveKey, $("nw_txtNote").value
+                                                ); 
+                                              } ,250
+                                            );
+    
+    // show it
+    $("nw_hide").style.display = "block";
+    $("noteWindow").style.display = "block";
+    $("nw_txtNote").focus();
+}
+
+function hideNotes ()
+{
+    clearInterval ( $("noteWindow").autoSave );
+    $("noteWindow").autoSaveKey = "";
+    $("noteWindow").oldContent = "";    
+    $("noteWindow").saveCallback = null;
+    $("nw_txtNote").blur();
+    $("noteWindow").style.display = "none";
+    $("nw_hide").style.display = "none";
+    disableGestures = false;
+}
+
+function cancelNotes()
+{
+    localStorage.setItem (
+        $("noteWindow").autoSaveKey, $("noteWindow").oldContent
+    );
+    hideNotes();
+}
+
+function saveNotes()
+{
+    if ($("noteWindow").saveCallback)
+    {
+        $("noteWindow").saveCallback();
+    }
+    localStorage.setItem (
+        $("noteWindow").autoSaveKey, $("nw_txtNote").value
+    );
+    hideNotes();
+}
 
 //
 // end ios.js
