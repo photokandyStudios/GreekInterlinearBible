@@ -61,14 +61,14 @@
 	}
 
 	// Toggle ActionSheet
-  //  if( rectx < 0)
-//    {
+    if( rectx < 0)
+    {
         [actionSheet showInView:self.webView.superview];
-  //  }
-//    else
-    //{
-  //      [actionSheet showFromRect:CGRectMake( rectx, recty, rectw, recth ) inView:self.webView.superview animated:YES];
-//    }
+    }
+    else
+    {
+        [actionSheet showFromRect:CGRectMake( rectx, recty, rectw, recth ) inView:self.webView.superview animated:YES];
+    }
 
 }
 
