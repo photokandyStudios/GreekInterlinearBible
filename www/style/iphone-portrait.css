@@ -9,10 +9,6 @@ body.portrait.iphone #bodyPanel
     right: 0;
 }
 
-body.portrait.iphone #menuPanel
-{
-    display: none;
-}
 
 body.portrait.iphone #tabBar
 {
@@ -20,3 +16,29 @@ body.portrait.iphone #tabBar
     right: 0;
 }
 
+
+body.portrait.iphone #noteWindow
+{
+    width: 320px;
+    height: 460px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    display: none;
+    border: none;
+}
+
+body.portrait.iphone #noteWindow textarea
+{
+    width: 300px;
+    top: 54px;
+    left: 10px;
+    right: 10px;
+    bottom: 6px;
+    position: absolute;
+}
+
+body.portrait.iphone .dropdown
+{
+    width: 150px;
+}

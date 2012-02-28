@@ -18,8 +18,8 @@
 .iphone .navBar #navTitleArea
 {
     position: absolute;
-    left: 160px;
-    right: 160px;
+    left: 0px;
+    right: 0px;
 }
 
 .iphone #pnlBodyArea .content
