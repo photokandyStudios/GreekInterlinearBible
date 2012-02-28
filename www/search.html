@@ -111,6 +111,12 @@
         if (results.length == 0)
         {
             $("SBSearchingFor").innerHTML = "No results found for " + theWord;
+            if (pageLoaded)
+            {
+                onPageLoaded();
+            }
+            hideLoader();
+            return;
         }
         
         $("SBcurrentPage").innerHTML = "Page " + curPage + "/" + maxPages;
