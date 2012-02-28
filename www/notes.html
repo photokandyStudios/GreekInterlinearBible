@@ -1,0 +1,103 @@
+<div class="navSubItemGroup" id="NTlstResults" >
+</div>
+<script>
+
+    function getNotes( )
+    {
+        var notes = Array();
+        var results = Array();
+        var c = 0;
+
+        for (var i=0; i<localStorage.length; i++)
+        {
+            var key = localStorage.key(i);
+            var value = localStorage[key];            
+            if (key.indexOf ("note_")>-1 && (bibleLeft[key.substr(5,20)] || bibleRight[key.substr(5,20)]) )
+            {
+                if (value.trim()!="")
+                {
+                    notes.push ( key );
+                }
+            }
+        }
+
+        notes.sort();
+        
+        for (var i=0; i<notes.length; i++)
+        {
+            results.push (notes[i]);
+            c += 1;
+        }
+
+        return results;
+    }
+    
+    function displaySpecificNote ( )
+    {
+//        updateMainMenuandTabBar();
+        currentReference = incomingRef;
+        editNote();
+    }
+    
+    function displayNotes ()
+    {
+        var results = getNotes();
+        
+        if (results.length == 0)
+        {
+            $("NTlstResults").innerHTML = "You don't have any notes.";
+            return;
+        }
+        
+        var ihtml = "";
+       
+        for (var i=0;i<results.length;i++)
+        {
+            console.log (i);
+            var ref = results[i].substr(5,20);              
+            var topText = "";
+            var bottomText = "";
+            topText = localStorage.getItem ( "note_" + ref );
+            if (!topText) { topText = ""; }
+            if (topText.length > 50)
+            {
+                topText = topText.substr(0,50) + "...";
+            }
+            
+            var url = 'loadContent("./bible.html?ignore&ref=' + ref + '", displaySpecificNote);';
+            
+            var item = '<a href=\'javascript:%LINK%\' class=\'navSubItem\'>%REF% <span class=\'minor\'>%TEXT%</span></a>';
+            item = item.replace ( "%RREF%", ref.trim());
+            item = item.replace ( "%REF%", cvtToProperReference(ref));
+            item = item.replace ( "%TEXT%", topText);
+            item = item.replace ( "%LINK%", url);
+            item = item.replace ( "%NUM%", i );
+            ihtml = ihtml + item;
+        }
+        
+        ihtml = ihtml + "";
+        
+        $("NTlstResults").innerHTML = ihtml;
+        
+        resetSB(sbMenu, 125);
+    }
+    
+    function notesStart()
+    {
+        console.log ("In Search Start");
+        displayNotes();
+    
+    }
+    
+    onMenuLoaded = function()
+    {
+        notesStart();
+    }
+
+    onMenuDisplayed = function()
+    {
+        notesStart();
+    }
+   
+    
+</script>

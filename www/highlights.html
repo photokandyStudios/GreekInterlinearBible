@@ -1,41 +1,42 @@
-<div class="navSubItemGroup" id="BMlstResults" >
+<div class="navSubItemGroup" id="HLlstResults" >
 </div>
 <script>
 
-    function getBookmarks( )
+    function getHighlights( )
     {
-        var bookmarks = Array();
+        var highlights = Array();
         var results = Array();
         var c = 0;
+        
 
         for (var i=0; i<localStorage.length; i++)
         {
             var key = localStorage.key(i);
             var value = localStorage[key];            
-            if (key.indexOf ("bm_")>-1 && (bibleLeft[key.substr(3,20)] || bibleRight[key.substr(3,20)]) )
+            if (key.indexOf ("hl_")>-1 && (bibleLeft[key.substr(3,20)] || bibleRight[key.substr(3,20)]) )
             {
-                bookmarks.push ( key );
+                highlights.push ( key ); 
             }
         }
 
-        bookmarks.sort();
+        highlights.sort();
         
-        for (var i=0; i<bookmarks.length; i++)
+        for (var i=0; i<highlights.length; i++)
         {
-            results.push (bookmarks[i]);
+            results.push (highlights[i]);
             c += 1;
         }
 
         return results;
     }
     
-    function displayBookmarks ()
+    function displayHighlights ()
     {
-        var results = getBookmarks();
+        var results = getHighlights();
         
         if (results.length == 0)
         {
-            $("BMlstResults").innerHTML = "You don't have any bookmarks.";
+            $("HLlstResults").innerHTML = "You don't have any highlights.";
             return;
         }
         
@@ -55,7 +56,7 @@
             
             var url = 'loadContent("./bible.html?ignore&ref=' + ref + '", updateMainMenuandTabBar);';
             
-            var item = '<a href=\'javascript:%LINK%\' class=\'navSubItem\'>%REF%</a>';
+            var item = '<a style=\'background-color:rgba(%COLOR%)\' href=\'javascript:%LINK%\' class=\'navSubItem\'>%REF%</a>';
 //            var item = "<a id='item%NUM%' class='listItem arrow' style='position: relative;' href='#' onclick='%LINK%'><span style='width:" + (editState ? "50px" : "0px") + "; opacity:" + (editState ?"1":"0") + "' class='delete' onclick='return deleteBookmark(\"%RREF%\");'>&nbsp;</span><span class='deleterItem'><span style='display: block; float:left; width:25%'>%REF%</span><span style='width:74%; display: block; float:right;'><span style='display: block'>%TOP%</span><span style='display: block'>%BOTTOM%</span></span><span style='display: block; clear: both'></span></span><span class='deleteClear'></span></a>";
             item = item.replace ( "%RREF%", ref.trim());
             item = item.replace ( "%REF%", cvtToProperReference(ref));
@@ -63,32 +64,33 @@
             item = item.replace ( "%BOTTOM%", bottomText);
             item = item.replace ( "%LINK%", url);
             item = item.replace ( "%NUM%", i );
+            item = item.replace ( "%COLOR%", highlightColors[ localStorage.getItem ( "hl_"+ ref.trim() ) ]);
             ihtml = ihtml + item;
         }
         
         ihtml = ihtml + "";
         
-        $("BMlstResults").innerHTML = ihtml;
+        $("HLlstResults").innerHTML = ihtml;
         
         resetSB(sbMenu, 125);
     }
     
-    function bookmarksStart()
+    function highlightsStart()
     {
         console.log ("In Search Start");
-        displayBookmarks();
+        displayHighlights();
     
     }
     
     onMenuLoaded = function()
     {
-        bookmarksStart();
+        highlightsStart();
     }
-
+    
     onMenuDisplayed = function()
     {
-        bookmarksStart();
+        highlightStart();
     }
-   
+    
     
 </script>
