@@ -250,17 +250,31 @@ function formatChapter ( passage )
                         {
                             wt = 20; // Strong's
                             c = "#248";
-                            yOffset += lineHeight;
+                            yOffset += (lineHeight*1);
+                            // do we have anything in _gl?
+                            /*
+                            if (_gl[curWord])
+                            {
+                                baseText = "[[" + _gl[curWord] + "]] " + baseText;
+                            }
+                            */
                         }
                         else if (curWord.match ( /VAR[0-9]/g ) )
                         {
                             wt = 5; // Just a variant.
                             curWord = curWord.replace ( /VAR([0-9])/g, "$1"); // simplify it.
                         }
+                        else if (curWord.match ( /\[\[([A-Za-z0-9\-]*)\]\]/g))
+                        {
+                            c = "#842";
+                            wt = 30;    // Grenglish
+                            yOffset += (lineHeight);
+                            curWord = curWord.replace ( /\[\[([A-Za-z0-9\-]*)\]\]/g, "$1"); // simplify it.
+                        }
                         else if (curWord.match ( /([A-Z\-]{2,}[A-Z\-0-9]+)/g ) )
                         {
                             c = "#284";
-                            wt = 30; // morphology
+                            wt = 40; // morphology
                             yOffset += (lineHeight * 2);
                         }
                     }
@@ -592,16 +606,29 @@ function drawPage ( pageNumber )
     ctx.textBaseline = "top";
     ctx.fillStyle = "#000";         // color
     
-    // draw any selection (the only thing that will get a full rectangle; all others highlight the text.)
+    // draw any selection and highlights
 
-    ctx.fillStyle = "#C0E0FF";
     for (var i=0; i<pages[pageNumber].verseYStart.length; i++)
-    {
-        if ( selectedVerse[passage + "." + i]=="Y" )
-        {
+    {   var ref = passage + "." + i;
+        if (localStorage.getItem ( "hl_" + ref ))
+        {   var highlight;
+            var highlightNum;
+            highlightNum = localStorage.getItem ( "hl_" + ref );
+            highlight = "rgba(";
+            highlight = highlight + highlightColors [ highlightNum ];
+            highlight = highlight + ")";
+            ctx.fillStyle = highlight;
             ctx.fillRect ( 0,           pages[pageNumber].verseYStart[i] - 4, 
                            canvasWidth, (pages[pageNumber].verseYEnd[i] - pages[pageNumber].verseYStart[i]) + 8 );
         }
+        if ( selectedVerse[passage + "." + i]=="Y" )
+        {
+            ctx.fillStyle = "#C0E0FF";
+            ctx.fillRect ( 5,           pages[pageNumber].verseYStart[i] - 4, 
+                           canvasWidth-10, (pages[pageNumber].verseYEnd[i] - pages[pageNumber].verseYStart[i]) + 8 );
+        }
+
+
     }
     
     ctx.fillStyle = "#000";         // color
@@ -613,13 +640,14 @@ function drawPage ( pageNumber )
         var highlightNum = -1;
         var highlight = "";
         
-        if (localStorage.getItem ( "hl_" + ref ))
+        ctx.fillStyle = pages[pageNumber].words[i].color;
+        ctx.font = settingsLayoutTextSize + "px " + settingsLayoutFontFamily;      // font
+        if (pages[pageNumber].words[i].wordType == 98)
         {
-            highlightNum = localStorage.getItem ( "hl_" + ref );
-            highlight = "rgba(";
-            highlight = highlight + highlightColors [ highlightNum ];
-            highlight = highlight + ")";
+            // we're a note... need to handle a note image here TODO?
+            ctx.font = "italic " + settingsLayoutTextSize + "px " + settingsLayoutFontFamily;      // font
         }
+
         if (highlightText)
         {
             if ( pages[pageNumber].words[i].text.length > 0 )
@@ -640,14 +668,7 @@ function drawPage ( pageNumber )
                            pages[pageNumber].words[i].height); // give a little border
         }
         
-        ctx.fillStyle = pages[pageNumber].words[i].color;
-        ctx.font = settingsLayoutTextSize + "px " + settingsLayoutFontFamily;      // font
         var theText = pages[pageNumber].words[i].text;
-        if (pages[pageNumber].words[i].wordType == 98)
-        {
-            // we're a note... need to handle a note image here TODO?
-            ctx.font = "italic " + settingsLayoutTextSize + "px " + settingsLayoutFontFamily;      // font
-        }
         if (pages[pageNumber].words[i].wordType == 99)
         {
             // we're a verse #... handle bookmarks
@@ -674,5 +695,5 @@ function drawPage ( pageNumber )
                      pages[pageNumber].words[i].y);
     }
     ctx.restore();
-    
+    repaint();
 }
