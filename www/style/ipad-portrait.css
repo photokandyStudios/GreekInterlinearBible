@@ -37,3 +37,8 @@ body.portrait.ipad
     left: 128px;
     border: 1px inset #777;
 }
+body.portrait.ipad #navSiteTitle, body.portrait.ipad #navSiteBullet
+{
+    display: none;
+}
+
