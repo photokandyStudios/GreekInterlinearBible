@@ -123,24 +123,6 @@
             <canvas width=1024 height=676 id="c" ></canvas>
         </div>
     </div>​
-    <div style="display: none;" id="lstStream">
-      <div style="position: absolute; left: 47.5%; right: 47.5%; top: 50px; height: 50px;">
-            <div class="spinner">
-              <div class="bar1"></div>
-              <div class="bar2"></div>
-              <div class="bar3"></div>
-              <div class="bar4"></div>
-              <div class="bar5"></div>
-              <div class="bar6"></div>
-              <div class="bar7"></div>
-              <div class="bar8"></div>
-              <div class="bar9"></div>
-              <div class="bar10"></div>
-              <div class="bar11"></div>
-              <div class="bar12"></div>
-            </div>
-        </div>
-    </div>
 <script type="text/javascript">
     
     function canvasMDown( event )
@@ -466,7 +448,7 @@
             if ( curChapter < 1 )
             {
                 curBook = curBook - 1;
-                if (curBook < 0)
+                if (curBook < 39)
                 {
                     curPage = 0;
                     return; // can't go past the beginning of the Bible
