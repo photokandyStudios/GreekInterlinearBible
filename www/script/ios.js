@@ -171,13 +171,17 @@ document.addEventListener ( 'click', clickBuster, true );
 //
 
 
-function repaint ()
+function _repaint ()
 {
     // with props to Darcy Murphy. Here: http://mrdarcymurphy.tumblr.com/post/5574489334/force-mobile-safari-to-repaint-redraw
     var ss = document.styleSheets[0];
     try { ss.addRule('.xxxxxx', 'position: relative'); }
     catch(e) {}
     
+}
+function repaint ()
+{
+    setTimeout ( function() { _repaint(); }, 25 );
 }
 
 /**
