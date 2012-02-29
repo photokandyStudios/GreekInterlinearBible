@@ -30,8 +30,6 @@
 		6A56E05714CA475000F3F8BB /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A56E05614CA475000F3F8BB /* icon.png */; };
 		6A56E05914CA475000F3F8BB /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A56E05814CA475000F3F8BB /* icon@2x.png */; };
 		6A56E05B14CA475000F3F8BB /* icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A56E05A14CA475000F3F8BB /* icon-72.png */; };
-		6A56E05E14CA475000F3F8BB /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A56E05D14CA475000F3F8BB /* Default.png */; };
-		6A56E06014CA475000F3F8BB /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A56E05F14CA475000F3F8BB /* Default@2x.png */; };
 		6A56E06214CA475100F3F8BB /* Capture.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6A56E06114CA475100F3F8BB /* Capture.bundle */; };
 		6A56E06414CA475100F3F8BB /* PhoneGap.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6A56E06314CA475100F3F8BB /* PhoneGap.plist */; };
 		6A56E06814CA475100F3F8BB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A56E06714CA475100F3F8BB /* AppDelegate.m */; };
@@ -44,6 +42,8 @@
 		6AC0324714CE6DB4001F06EF /* ClipboardPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC0324414CE6DB4001F06EF /* ClipboardPlugin.m */; };
 		6AC0324814CE6DB4001F06EF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 6AC0324514CE6DB4001F06EF /* README.md */; };
 		6AC0324A14CE714A001F06EF /* www in Resources */ = {isa = PBXBuildFile; fileRef = 6AC0324914CE714A001F06EF /* www */; };
+		6AE783F814FDFE5B0086DCE8 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AE783F714FDFE5B0086DCE8 /* Default.png */; };
+		6AE783FB14FDFE700086DCE8 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AE783FA14FDFE700086DCE8 /* Default@2x.png */; };
 		6AE9628C14D09D0D0016DF97 /* ChildBrowser.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6AE9627F14D09D0D0016DF97 /* ChildBrowser.bundle */; };
 		6AE9628D14D09D0D0016DF97 /* ChildBrowser.js in Sources */ = {isa = PBXBuildFile; fileRef = 6AE9628014D09D0D0016DF97 /* ChildBrowser.js */; };
 		6AE9628E14D09D0D0016DF97 /* ChildBrowserCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AE9628214D09D0D0016DF97 /* ChildBrowserCommand.m */; };
@@ -82,8 +82,6 @@
 		6A56E05614CA475000F3F8BB /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon.png; path = Resources/icons/icon.png; sourceTree = "<group>"; };
 		6A56E05814CA475000F3F8BB /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon@2x.png"; path = "Resources/icons/icon@2x.png"; sourceTree = "<group>"; };
 		6A56E05A14CA475000F3F8BB /* icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-72.png"; path = "Resources/icons/icon-72.png"; sourceTree = "<group>"; };
-		6A56E05D14CA475000F3F8BB /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = Resources/splash/Default.png; sourceTree = "<group>"; };
-		6A56E05F14CA475000F3F8BB /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "Resources/splash/Default@2x.png"; sourceTree = "<group>"; };
 		6A56E06114CA475100F3F8BB /* Capture.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Capture.bundle; path = Resources/Capture.bundle; sourceTree = "<group>"; };
 		6A56E06314CA475100F3F8BB /* PhoneGap.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PhoneGap.plist; sourceTree = "<group>"; };
 		6A56E06614CA475100F3F8BB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Classes/AppDelegate.h; sourceTree = "<group>"; };
@@ -99,6 +97,8 @@
 		6AC0324414CE6DB4001F06EF /* ClipboardPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClipboardPlugin.m; sourceTree = "<group>"; };
 		6AC0324514CE6DB4001F06EF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		6AC0324914CE714A001F06EF /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; path = www; sourceTree = "<group>"; };
+		6AE783F714FDFE5B0086DCE8 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		6AE783FA14FDFE700086DCE8 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		6AE9627F14D09D0D0016DF97 /* ChildBrowser.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ChildBrowser.bundle; sourceTree = "<group>"; };
 		6AE9628014D09D0D0016DF97 /* ChildBrowser.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ChildBrowser.js; sourceTree = "<group>"; };
 		6AE9628114D09D0D0016DF97 /* ChildBrowserCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChildBrowserCommand.h; sourceTree = "<group>"; };
@@ -255,8 +255,8 @@
 		6A56E05C14CA475000F3F8BB /* splash */ = {
 			isa = PBXGroup;
 			children = (
-				6A56E05D14CA475000F3F8BB /* Default.png */,
-				6A56E05F14CA475000F3F8BB /* Default@2x.png */,
+				6AE783F714FDFE5B0086DCE8 /* Default.png */,
+				6AE783FA14FDFE700086DCE8 /* Default@2x.png */,
 			);
 			name = splash;
 			sourceTree = "<group>";
@@ -379,8 +379,6 @@
 				6A56E05714CA475000F3F8BB /* icon.png in Resources */,
 				6A56E05914CA475000F3F8BB /* icon@2x.png in Resources */,
 				6A56E05B14CA475000F3F8BB /* icon-72.png in Resources */,
-				6A56E05E14CA475000F3F8BB /* Default.png in Resources */,
-				6A56E06014CA475000F3F8BB /* Default@2x.png in Resources */,
 				6A56E06214CA475100F3F8BB /* Capture.bundle in Resources */,
 				6A56E06414CA475100F3F8BB /* PhoneGap.plist in Resources */,
 				6A19776D14CB7E5400DB6AD9 /* Default-Landscape~ipad.png in Resources */,
@@ -396,6 +394,8 @@
 				6A58D7F614FD9A120090631C /* GreekInterlinearBibleIcon-114.png in Resources */,
 				6A58D7F814FD9A160090631C /* Default.png in Resources */,
 				6A58D7FA14FD9A1B0090631C /* Default@2x.png in Resources */,
+				6AE783F814FDFE5B0086DCE8 /* Default.png in Resources */,
+				6AE783FB14FDFE700086DCE8 /* Default@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
