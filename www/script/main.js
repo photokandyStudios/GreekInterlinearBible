@@ -134,14 +134,14 @@
 
     function biblesLoaded()
     {
-        console.log ("in biblesLoaded!");
+        //console.log ("in biblesLoaded!");
         if (leftLoaded && rightLoaded)
         {
-            console.log ("both sides ready.");
+            //console.log ("both sides ready.");
             hideLoader();
             if (afterBothLoaded)
             {
-                console.log ("calling afterBothLoaded.");
+                //console.log ("calling afterBothLoaded.");
              afterBothLoaded( ); 
             }
             afterBothLoaded = null;
@@ -151,7 +151,7 @@
 
     function bibleRightCallback()
     {
-        console.log ("in bibleRightCallback!");
+        //console.log ("in bibleRightCallback!");
         rightLoaded = true;
         bibleRight = _br;
         biblesLoaded();
@@ -159,7 +159,7 @@
 
     function bibleLeftCallback()
     {
-        console.log ("in bibleLeftCallback!");
+        //console.log ("in bibleLeftCallback!");
         leftLoaded = true;
         bibleLeft = _bl;
         biblesLoaded();
@@ -167,7 +167,7 @@
     
     function loadBible( bc )
     {
-        console.log ("attempted to load " + bc);
+        //console.log ("attempted to load " + bc);
         if (bc == "kjv" || bc == "ylt")
         {
             if (bibleRightCode == bc)
@@ -297,7 +297,7 @@
     
             function processGreekVerse( s )
             {
-                console.log ('Processing Greek Verse');
+                //console.log ('Processing Greek Verse');
                 var settingsGreekLayoutTransliterate = localStorage.getItem("LayoutTransliteration");
                 var leftVerse = s;
             
@@ -311,7 +311,7 @@
                   leftVerse = transliterate(leftVerse); 
                 }
 
-                console.log ('Done processing.');
+                //console.log ('Done processing.');
                 return leftVerse;
             }
             
