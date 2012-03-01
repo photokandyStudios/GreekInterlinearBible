@@ -76,7 +76,7 @@
         scrollTo = incomingRef;
         passage = incomingRef.substr(0, incomingRef.lastIndexOf("."));
         topReference = incomingRef;
-        console.log ('Forced navigation to ' + passage);
+        //console.log ('Forced navigation to ' + passage);
         localStorage.passage = passage;
         localStorage.topReference = topReference;
     }
@@ -125,6 +125,25 @@
     </div>​
 <script type="text/javascript">
     
+    function calcTopRef()
+    {
+        if (!curPage)
+        {
+            curPage = 0;    // catch it if curPage isn't defined
+        }
+        topReference = passage + "." + pages[curPage].verseYStart.indexOf (canvasMargin);
+        localStorage.topReference = topReference;
+    }
+    function drawCurrentPage ( noCalcTopRef )
+    {
+        if (!curPage)
+        {
+            curPage = 0;    // catch it if curPage isn't defined
+        }
+        drawPage (curPage);
+        if (!noCalcTopRef) { calcTopRef(); }
+    }
+    
     function canvasMDown( event )
     {
         var x = event.touches[0].clientX;
@@ -136,7 +155,7 @@
         curX = x;
         curY = y;
         isLongPress = false;
-      //  console.log ("Down at: " + x + ", " + y );
+        //console.log ("Down at: " + x + ", " + y );
         longPressTimer = setTimeout ( function() { isLongPress = true; canvasClicked( );}, 500 );
     }
     
@@ -146,7 +165,7 @@
         var y = event.touches[0].clientY;
         curX = x;
         curY = y;
-      //  console.log ("Move at: " + x + ", " + y );
+        //console.log ("Move at: " + x + ", " + y );
 
         if ( x <= longPressX - 50 ||
              x >= longPressX + 50 ||
@@ -165,7 +184,7 @@
     {
         var x = curX;
         var y = curY;
-      //  console.log ("Up at: " + lastX + ", " + lastY );
+        //console.log ("Up at: " + lastX + ", " + lastY );
 
         if (longPressTimer)
         {
@@ -201,7 +220,7 @@
         whichSide = 0;
         var items = Array();
 
-       // console.log ("Click canvas at: " + x + ", " + y );
+        //console.log ("Click canvas at: " + x + ", " + y );
 
 
         var overElement = $("c");
@@ -217,7 +236,7 @@
         
         if (!isLongPress)
         {
-          //  console.log ("regular click");
+          //  //console.log ("regular click");
             for ( var i=0; i<pages[curPage].verseYStart.length; i++)
             {
                 // find the verse we're in
@@ -234,7 +253,7 @@
         }
         else
         {
-          //  console.log ("long click");
+          //  //console.log ("long click");
             // now, find which word we're over
             currentReference = "";
             // see first if we can't find the verse we're over, word or no word...
@@ -263,8 +282,8 @@
                     whichSide = pages[curPage].words[i].whichSide;
                 }
             }
-            //console.log (theWord);
-            //console.log (whichSide);
+            ////console.log (theWord);
+            ////console.log (whichSide);
             
             var numSelected = 0;
             var numBookmarked = 0;
@@ -285,15 +304,15 @@
             if (numSelected != 0)
             {
                 // we have selected, allow copying and highlighting
-                items.push ("Copy Selection");              //console.log ("1");
+                items.push ("Copy Selection");              ////console.log ("1");
                 items.push ("Highlight Yellow");
                 items.push ("Highlight Magenta");
-                items.push ("Highlight Blue");           //console.log ("2");
+                items.push ("Highlight Blue");           ////console.log ("2");
 
                 if(numHighlighted>0)            { items.push ("Remove Highlight(s)"); }
                 if(numBookmarked<numSelected)   { items.push ("Add Bookmark"); }
                 if(numBookmarked>0)             { items.push ("Remove Bookmark(s)"); }
-                                                           // console.log ("3");
+                                                           // //console.log ("3");
 
             }
 
@@ -313,7 +332,7 @@
             }
             if (theWord && window.navigator.onLine && whichSide==2)
                                                 { items.push ("BLB LexiConc (Online)..."); }
-                                                          //  console.log ("4");
+                                                          //  //console.log ("4");
             if (numSelected == 0)
             {
                 items.push ("Cancel");
@@ -322,7 +341,7 @@
             {
                 items.push ("Cancel Selection");
             }
-                                                           // console.log ("5");
+                                                           // //console.log ("5");
             //addClick(x,y);
             var actionTitle = "";
             if (currentReference && currentReference.length > 0)
@@ -370,7 +389,7 @@
                                }, 
                                {destructiveButtonIndex: -1, cancelButtonIndex: -1},
                                x,y, 1, 1
-                            );                              //console.log ("6");
+                            );                              ////console.log ("6");
         }
     }
     function toggleSelection ( o )
@@ -409,11 +428,7 @@
             pages = formatChapter (passage);
             curPage = 0;
         }
-//        loadBiblePassage ( passage );
-        // determine topReference
-        topReference = passage + "." + pages[curPage].verseYStart.indexOf (canvasMargin);
-        localStorage.topReference = topReference;
-        drawPage ( curPage);
+        drawCurrentPage();
     }
     
     onOrientation = function()
@@ -421,16 +436,13 @@
         pages = formatChapter ( passage );
         // when orientation changes, we want to go to the topReference
         // so the user's text is reasonably local to the where they
-        // last where.
+        // last were.
         curPage = pageReferences [ topReference ];
         if (curPage >= pages.length)
         {
             curPage = pages.length-1;
         }
-        // determine topReference
-        topReference = passage + "." + pages[curPage].verseYStart.indexOf (canvasMargin);
-        localStorage.topReference = topReference;
-        drawPage (curPage);
+        drawCurrentPage();
     }
     
     onPagePrev = function ()
@@ -444,7 +456,7 @@
             var curChapter = getChapter (passage);
             var maxChapters = getChapterCount (passage);
             
-            curChapter = curChapter - 1;    // attempt to increment.
+            curChapter = curChapter - 1;    // attempt to decrement.
             if ( curChapter < 1 )
             {
                 curBook = curBook - 1;
@@ -460,17 +472,8 @@
             pages = formatChapter ( passage );
             curPage = pages.length - 1;
         }
-        // determine topReference
-        topReference = passage + "." + pages[curPage].verseYStart.indexOf (canvasMargin);
-        localStorage.topReference = topReference;
-        drawPage ( curPage );
-//        loadBiblePassage ( passage );
+        drawCurrentPage();
     }
-    
-    onLongPress = function ( event )
-    {
-        return;
-    }           
     
     function copySelection ()
     {
@@ -522,7 +525,6 @@
             }
         }
         cancelSelection();
-        //loadBiblePassage ( passage, true );
     }
     
     function removeBookmark ( ref )
@@ -530,7 +532,6 @@
         if (ref)
         {
             localStorage.removeItem ( "bm_" + ref );
-            //loadBiblePassage ( passage, true );
         }
         else
         {
@@ -542,7 +543,6 @@
             }
         }
         cancelSelection();
-        //loadBiblePassage ( passage, true );
         }
     }
     
@@ -573,22 +573,23 @@
         }
         localStorage.removeItem ( "note_" + currentReference );
         cancelSelection();
+        
+        /* our view may have changed due to the removal of the note.
+           recalc our pages. */
         pages = formatChapter (passage);
         curPage = pageReferences [ topReference ];
-        // determine topReference
-        topReference = passage + "." + pages[curPage].verseYStart.indexOf (canvasMargin);
-        localStorage.topReference = topReference;
+        drawCurrentPage();
 
     }
     
     function noteSaved()
     {
+        /* once a note is saved, we need to refresh our pages as the
+           content may have shifted. */
+           
         pages = formatChapter (passage);
         curPage = pageReferences [ topReference ];
-        drawPage (curPage);
-        // determine topReference
-        topReference = passage + "." + pages[curPage].verseYStart.indexOf (canvasMargin);
-        localStorage.topReference = topReference;
+        drawCurrentPage();
     }
     
     function addNote()
@@ -630,10 +631,7 @@
         }
         selectedVerse = Array();
         hidePopOver();
-        drawPage (curPage);
-        // determine topReference
-        topReference = passage + "." + pages[curPage].verseYStart.indexOf (canvasMargin);
-        localStorage.topReference = topReference;
+        drawCurrentPage();
     }
     
     function explainPassage ()
@@ -663,8 +661,6 @@
         
         if (whichSide == 1)
         {   // greek
-//            url = "http://www.greek-dictionary.net/" + transliterate(theWord);
-//            url = "https://www.google.com/search?q=" + transliterate(theWord) + "+site:greek-dictionary.net";
               // try using Perseus
               url = "http://www.perseus.tufts.edu/hopper/searchresults?q=" + transliterate(theWord, betaCode);
         }
@@ -740,10 +736,7 @@
                 pages = formatChapter (passage);
                 curPage = pageReferences [ topReference ];
                 if (!curPage) { curPage = 0; }
-                drawPage ( curPage );
-                // determine topReference
-                topReference = passage + "." + pages[curPage].verseYStart.indexOf ( canvasMargin );
-                localStorage.topReference = topReference;
+                drawCurrentPage();
                 
                 $("c").addEventListener ( "touchstart", canvasMDown, false );
                 $("c").addEventListener ( "touchmove", canvasMove, false );
