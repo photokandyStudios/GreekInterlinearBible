@@ -52,3 +52,14 @@
     bottom: 35%;
     line-height: 400%;
 }
+
+.iphone .bottomTabs .barItem
+{
+    padding-left: 5px;
+    padding-right: 5px;    
+}
+
+.iphone #theSearch
+{
+    width: 110px;
+}
