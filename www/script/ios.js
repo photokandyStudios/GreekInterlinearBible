@@ -1146,10 +1146,19 @@ function loadContent(url, callback, animate, backTo) {
                     if (returnTo.length > 0)
                     {
                         $("btnBack").style.display="block";
+                        // are we an iPhone? Move the title over, possibly
+                        if ( isIPhone() )
+                        {
+                            $("navTitleArea").style.left = "80px";
+                        }
                     }
                     else
                     {
                         $("btnBack").style.display="none";
+                        if ( isIPhone() )
+                        {
+                            $("navTitleArea").style.left = "0px";
+                        }
                     }
                     
                     if (!animate) { resetSB ( sbBody, 250 );
