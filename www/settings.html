@@ -73,19 +73,25 @@
                 <option value="150">Double Spacing</option>
             </select>
         </li>
-<!--        <li class="listItem">Verse Spacing
-            <select id="ddVerseSpacing" class="dropdown" default="50" localStorage="LayoutVerseSpacing">
-                <option value="0">None</option>
-                <option value="50">Small</option>
-                <option value="100">Large</option>
-            </select>
-        </li>
     </ul>
--->
-<!--
-    <button onclick="localStorage.clear();" class="button">Clear all Settings</button>
-    <button onclick="showLoader();" class="Button">Show the loader</button>
--->
+    <h3>Import / Export</h3>
+    <ul class="listGroup">
+        <li class="listItem">Export Notes...</li>
+        <li class="listItem">Export Bookmarks...</li>
+        <li class="listItem">Export Highlights...</li>
+    </ul>
+    <p style="text-align: center">Export will create a file (export_YYYYMMDD.txt) that you can
+                                  download when you connect your device to iTunes.</p>
+        
+    <ul class="listGroup">
+        <li class="listItem">Import Notes...</li>
+        <li class="listItem">Import Bookmarks...</li>
+        <li class="listItem">Import Highlights...</li>
+    </ul>
+    <p style="text-align: center">Before importing, connect your device to iTunes, and then copy the file
+                                  you want to import. Be sure to name it "import.txt", or the import will
+                                  fail.</p>
+
     <script>
         processCheckBoxes();
         processDropDowns();
