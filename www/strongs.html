@@ -30,7 +30,7 @@
         scrollTo = "";
     }
     
-    console.log ("on strong's page. args:" + englishWord + ", " + curPage);
+//    console.log ("on strong's page. args:" + englishWord + ", " + curPage);
 
     function searchDict( searchArray, searchTerm, allRequired, pageStart, pageEnd, translit )
     {
@@ -85,27 +85,27 @@
         var pageEnd   = ( page * 100 );
         var searchArray = (whichSide==1) ? bibleLeft : bibleRight;
         
-        console.log ( "SearchStrongs: " + thePage + ", " + pageStart + ", " + pageEnd + ", " + theWord + ", " + whichSide );
+//        console.log ( "SearchStrongs: " + thePage + ", " + pageStart + ", " + pageEnd + ", " + theWord + ", " + whichSide );
         
-        $("searchingFor").innerHTML = "Strong's Search Results for " + theWord;
+        $("searchingFor").innerHTML = "Strong's Search Results";
 
         var results = searchDict( strongsGreekDictionary, theWord, allRequired, pageStart, pageEnd, translit );
         
-        console.log ( results.length );
+//        console.log ( results.length );
         
         if (results.length == 0)
         {
             $("searchingFor").innerHTML = "No results found. " ;
-            console.log ("Finish page loading...");
+//            console.log ("Finish page loading...");
             if (pageLoaded)
             {
                 onPageLoaded();
             }
-            console.log ( "No results found.");
+//            console.log ( "No results found.");
             return;
         }
 
-        console.log ( "SearchStrongs: " + results.length );
+//        console.log ( "SearchStrongs: " + results.length );
 
         $("currentPage").innerHTML = "Page " + curPage + "/" + maxPages;
         if (pageEnd > maxResults) { pageEnd = maxResults; }
@@ -133,7 +133,15 @@
                       'page=' + curPage + '&' +
                       'scrollto=item' + i +
                       '");'
-            var item = "<a id='item%NUM%' class='listItem arrow' href='#' onclick='%LINK%'><span style='display: block; float:left; width:15%'>%REF%</span><span style='width:84%; display: block; float:right;'><span style='display: block'>%TOP%</span></span><span style='display: block; clear: both'></span></a>";
+            var item = "";
+            if (isIPad())
+            {
+                item = "<a id='item%NUM%' class='listItem arrow' href='#' onclick='%LINK%'><span style='display: block; float:left; width:15%'>%REF%</span><span style='width:84%; display: block; float:right;'><span style='display: block'>%TOP%</span></span><span style='display: block; clear: both'></span></a>";
+            }
+            else
+            {
+                item = "<a id='item%NUM%' class='listItem arrow' href='#' onclick='%LINK%'>%REF%<br/>%TOP%</a>";
+            }
             item = item.replace ( "%REF%", ref);
             item = item.replace ( "%TOP%", topText);
             item = item.replace ( "%LINK%", url);
@@ -173,7 +181,7 @@
         {
             if (englishWord)
             {
-                console.log ("searching english");
+//                console.log ("searching english");
                 searchStrongs ( englishWord, 2, true, curPage, false );
             }
         }
@@ -193,6 +201,7 @@
             curPage += 1;
             searchStart();
         }
+        repaint();
     }
 
     onPagePrev = function()
@@ -202,6 +211,7 @@
             curPage = curPage - 1;
             searchStart();
         }
+        repaint();
     }
 
     // load our selected bibles

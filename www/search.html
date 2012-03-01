@@ -42,7 +42,7 @@
         scrollTo = "";
     }
     
-    console.log ("on search page. args:" + englishWord + ", " + greekWord + ", " + curPage);
+//    console.log ("on search page. args:" + englishWord + ", " + greekWord + ", " + curPage);
 
     function search( searchArray, searchTerm, allRequired, pageStart, pageEnd, translit )
     {
@@ -102,9 +102,9 @@
         var pageEnd   = ( page * pageLength );
         var searchArray = (whichSide==1) ? bibleLeft : bibleRight;
         
-        console.log ( "SearchBible: " + thePage + ", " + pageStart + ", " + pageEnd + ", " + theWord + ", " + whichSide );
+//        console.log ( "SearchBible: " + thePage + ", " + pageStart + ", " + pageEnd + ", " + theWord + ", " + whichSide );
         
-        $("SBsearchingFor").innerHTML = "Search Results for " + theWord;
+        $("SBsearchingFor").innerHTML = theWord;
 
         var results = search( searchArray, theWord, allRequired, pageStart, pageEnd, translit );
         
@@ -153,7 +153,15 @@
                       'page=' + curPage + '&' +
                       'scrollto=item' + i +
                       '");'
-            var item = "<a id='item%NUM%' class='listItem arrow' href='#' onclick='%LINK%'><span style='display: block; float:left; width:25%'>%REF%</span><span style='width:74%; display: block; float:right;'><span style='display: block'>%TOP%</span><span style='display: block'>%BOTTOM%</span></span><span style='display: block; clear: both'></span></a>";
+            var item = "";
+            if (isIPad())
+            {
+                item = "<a id='item%NUM%' class='listItem arrow' href='#' onclick='%LINK%'><span style='display: block; float:left; width:25%'>%REF%</span><span style='width:74%; display: block; float:right;'><span style='display: block'>%TOP%</span><span style='display: block'>%BOTTOM%</span></span><span style='display: block; clear: both'></span></a>";
+            }
+            else
+            {
+                item = "<a id='item%NUM%' class='listItem arrow' href='#' onclick='%LINK%'>%REF%</a>";                
+            }
             item = item.replace ( "%REF%", cvtToProperReference(ref));
             item = item.replace ( "%TOP%", topText);
             item = item.replace ( "%BOTTOM%", bottomText);
@@ -195,18 +203,18 @@
     
     function searchStart()
     {
-        console.log ("In Search Start");
+//        console.log ("In Search Start");
         showLoader();
         if (englishWord || greekWord)
         {
             if (englishWord)
             {
-                console.log ("Treating as English");
+//                console.log ("Treating as English");
                 searchBible ( englishWord, 2, true, curPage, false );
             }
             else
             {
-                console.log ("Treating as Greek");
+//                console.log ("Treating as Greek");
                 searchBible ( greekWord, 1, true, curPage, true);
             }
         }
@@ -220,6 +228,7 @@
             curPage += 1;
             searchStart();
         }
+        repaint();
     }
 
     onPagePrev = function()
@@ -229,6 +238,7 @@
             curPage = curPage - 1;
             searchStart();
         }
+        repaint();
     }
 
     // load our selected bibles
