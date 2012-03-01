@@ -1,4 +1,27 @@
+/**
+ *
+ * typography.js
+ *
+ * Supports bible.html by calculating and rendering the canvas typography.
+ *
+ * This code is (C) photoKandy Studios LLC. It's so hacky, you wouldn't want it
+ * anyway, believe me.
+ *
+ */
 var canvasMargin;
+
+function myMax ( a, b, c )
+{
+    var _a = a;
+    var _b = b;
+    var _c = c;
+    
+    if (!_a) { _a = 0; }
+    if (!_b) { _b = 0; }
+    if (!_c) { _c = 0; }
+    
+    return Math.max ( _a, _b, _c );
+}
 
 // wordObject will store information about a word
 function wordObject ( x, y, w, h, c, text, wordType, yOffset, verse, whichSide )
@@ -15,7 +38,6 @@ function wordObject ( x, y, w, h, c, text, wordType, yOffset, verse, whichSide )
     this.verse = verse;
     this.whichSide = whichSide;
 }
-console.log ('136');
 
 // pageObject stores the list of all the words on a page
 function pageObject ( canvasMargin )
@@ -37,14 +59,12 @@ var pages = Array();
 
 // page references stores the verse reference and the page it is on
 var pageReferences = Array();
-console.log ('155');
 
 /**
  *
  * formats a chapter using the page and word objects.
  *
  */
-console.log ('162');
     var canvasWidth = 1024;         // width. TODO: change based on orientation
     var canvasHeight = 676;        // height: TODO: change based on orientation
 
@@ -74,7 +94,7 @@ function formatChapter ( passage )
         canvasWidth = 480;
         canvasHeight = 206;
     }
-    // TODO: handle iPhone
+
     $("bibleContent").style.minHeight = canvasHeight + "px";
     $("c").setAttribute ("width", canvasWidth * window.devicePixelRatio);
     $("c").setAttribute ("height", canvasHeight * window.devicePixelRatio);
@@ -83,11 +103,9 @@ function formatChapter ( passage )
     $("c").style.height = canvasHeight + "px";
 
     var ctx = document.getElementById("c").getContext("2d");
-    //ctx.scale ( window.devicePixelRatio, window.devicePixelRatio );
 
     ctx.font = settingsLayoutTextSize + "px " + settingsLayoutFontFamily;      // font
     ctx.fillStyle = "#000";         // color
-   // ctx.strokeStyle = "rgba(0,0,0,0.0)"; // stroke
 
     canvasMargin = isIPad() ? 30 : 5;
 
@@ -147,32 +165,49 @@ function formatChapter ( passage )
         var curP = thisPageNumber;
         
        thisPageNumber = curP;
+       /*if (thisPage)
+       {            console.log ("156: " + thisPage.verseYEnd[i]);
+            thisPage.verseYEnd[i] = myMax (y, thisPage.verseYEnd[i]);
+//            console.log ("158: " + thisPage.verseYEnd[i]);
+            thisPage.columnYEnd[whichSide] = y;
+        }*/
        if ( !pages[thisPageNumber] )
         {
+
             pages[thisPageNumber] = new pageObject( canvasMargin );
+                pages[thisPageNumber].verseYStart[i] = canvasMargin;
+                pages[thisPageNumber].verseYEnd  [i] = canvasMargin;
+
         }
         thisPage = pages[thisPageNumber];
 
         // find the first available position to start drawing on the page
-        y = Math.max ( thisPage.columnYEnd [ 1 ], thisPage.columnYEnd [ 2 ], thisPage.columnYEnd[ 4 ] );
+        y = myMax ( thisPage.columnYEnd [ 1 ], thisPage.columnYEnd [ 2 ], thisPage.columnYEnd[ 4 ] );
         if (!y) { y = canvasMargin; }
 
         if (y >= (canvasHeight - (canvasMargin*2) - columnHeight))
         {
+                thisPage.verseYEnd[i] = myMax (y, thisPage.verseYEnd[i]);
+                thisPage.columnYEnd[whichSide] = y;
+//            console.log ("179: " + thisPage.verseYEnd[i]);
+
             // new page!
             thisPageNumber++;
             curP = thisPageNumber;
             if ( !pages[thisPageNumber] )
             {   // allocate if necessary
                 pages[thisPageNumber] = new pageObject( canvasMargin );
+                pages[thisPageNumber].verseYStart[i] = canvasMargin;
+                pages[thisPageNumber].verseYEnd  [i] = canvasMargin;
             }
             thisPage = pages[thisPageNumber];
             
-            y = Math.max ( thisPage.columnYEnd [ 1 ], thisPage.columnYEnd [ 2 ], thisPage.columnYEnd[ 4 ] );
+            y = myMax ( thisPage.columnYEnd [ 1 ], thisPage.columnYEnd [ 2 ], thisPage.columnYEnd[ 4 ] );
             if (!y) { y = canvasMargin; }
             
             thisPage.verseYStart[i] = y;
-            thisPage.verseYEnd  [i] = y+columnHeight;
+            thisPage.verseYEnd  [i] = myMax ( y+columnHeight, thisPage.verseYEnd[i]);
+//            console.log ("197: " + thisPage.verseYEnd[i]);
         }
         curY = y;
         
@@ -184,16 +219,22 @@ function formatChapter ( passage )
         // start both verses
             y=curY;
             thisPage.verseYStart [ i ] = y;
-            thisPage.verseYEnd   [ i ] = y + columnHeight;
+            thisPage.verseYEnd  [i] = myMax ( y+columnHeight, thisPage.verseYEnd[i]);
+//            console.log ("210: " + thisPage.verseYEnd[i]);
 
         for (var whichSide = 1; whichSide < 3; whichSide++)
         {
             x = columnLeft [ whichSide];
             maxX = x + columnWidth[whichSide];
             thisPageNumber = curP;
+            thisPage.verseYEnd[i] = myMax (y, thisPage.verseYEnd[i]);
+            thisPage.columnYEnd[whichSide] = y;
+//                        console.log ("219: " + thisPage.verseYEnd[i]);
             if ( !pages[thisPageNumber] )
             {
                 pages[thisPageNumber] = new pageObject( canvasMargin );
+                pages[thisPageNumber].verseYStart[i] = canvasMargin;
+                pages[thisPageNumber].verseYEnd  [i] = canvasMargin;
             }
             thisPage = pages[thisPageNumber];
 
@@ -295,21 +336,26 @@ function formatChapter ( passage )
                             if (y >= (canvasHeight - (canvasMargin*2) - columnHeight))
                             {
                                 // the verse's height is the maximum height
-                                thisPage.verseYEnd[i] = Math.max (y, thisPage.verseYEnd[i]);
+                                thisPage.verseYEnd[i] = myMax (y, thisPage.verseYEnd[i]);
                                 thisPage.columnYEnd[whichSide] = y;
-                                
+//                                            console.log ("328: " + thisPage.verseYEnd[i]);
+
                                 // new page!
                                 thisPageNumber++;
                                 if ( !pages[thisPageNumber] )
                                 {   // allocate if necessary
                                     pages[thisPageNumber] = new pageObject( canvasMargin );
+                                    pages[thisPageNumber].verseYStart[i] = canvasMargin;
+                                    pages[thisPageNumber].verseYEnd  [i] = canvasMargin;
                                 }
                                 thisPage = pages[thisPageNumber];
                                 
                                 y = canvasMargin;   
                                 
                                 thisPage.verseYStart[i] = y;
-                                thisPage.verseYEnd  [i] = y+columnHeight;
+                                thisPage.verseYEnd  [i] = myMax ( y+columnHeight, thisPage.verseYEnd[i]);
+//                                            console.log ("344: " + thisPage.verseYEnd[i]);
+
                             }
                             // now, we have to deal with several previous words now.
                             for (var k=0; k<prevWords.length; k++)
@@ -349,20 +395,25 @@ function formatChapter ( passage )
                     if (y >= (canvasHeight - (canvasMargin*2) - columnHeight))
                     {
                         // the verse's height is the maximum height
-                        thisPage.verseYEnd[i] = Math.max (y, thisPage.verseYEnd[i]);
+                        thisPage.verseYEnd[i] = myMax (y, thisPage.verseYEnd[i]);
                         thisPage.columnYEnd[whichSide] = y;
-                        
+//                                    console.log ("387: " + thisPage.verseYEnd[i]);
+
                         // new page!
                         thisPageNumber++;
                         if ( !pages[thisPageNumber] )
                         {   // allocate if necessary
                             pages[thisPageNumber] = new pageObject( canvasMargin );
+                            pages[thisPageNumber].verseYStart[i] = canvasMargin;
+                            pages[thisPageNumber].verseYEnd  [i] = canvasMargin;
                         }
                         thisPage = pages[thisPageNumber];
                         
                         y = canvasMargin;           
                         thisPage.verseYStart[i] = y;
-                        thisPage.verseYEnd  [i] = y+columnHeight;
+                        thisPage.verseYEnd  [i] = myMax ( y+columnHeight, thisPage.verseYEnd[i]);
+//                                    console.log ("402: " + thisPage.verseYEnd[i]);
+
                     }
                     // now, we have to deal with several previous words now.
                     for (var k=0; k<prevWords.length; k++)
@@ -380,7 +431,9 @@ function formatChapter ( passage )
             // end drawing the verse
             
             
-            thisPage.verseYEnd[i] = Math.max ( y + columnHeight, thisPage.verseYEnd[i]);
+            thisPage.verseYEnd[i] = myMax ( y + columnHeight, thisPage.verseYEnd[i]);
+//                        console.log ("422: " + thisPage.verseYEnd[i]);
+
             thisPage.columnYEnd[whichSide] = y + columnHeight;
         }
         // end both verses
@@ -395,7 +448,7 @@ function formatChapter ( passage )
                 var whichSide = 4;
 
                 // find the first available position to start drawing on the page
-                y = Math.max ( thisPage.columnYEnd [ 1 ], thisPage.columnYEnd [ 2 ], thisPage.columnYEnd[ 4 ] );
+                y = myMax ( thisPage.columnYEnd [ 1 ], thisPage.columnYEnd [ 2 ], thisPage.columnYEnd[ 4 ] );
                 if (!y) { y = canvasMargin; }
 
                 if (y >= (canvasHeight - (canvasMargin*2) - columnHeight))
@@ -403,25 +456,31 @@ function formatChapter ( passage )
                     // new page!
                     thisPageNumber++;
                     curP = thisPageNumber;
+                    thisPage.verseYEnd[i] = myMax (y, thisPage.verseYEnd[i]);
+                    thisPage.columnYEnd[whichSide] = y;
+//            console.log ("448: " + thisPage.verseYEnd[i]);
                     if ( !pages[thisPageNumber] )
                     {   // allocate if necessary
                         pages[thisPageNumber] = new pageObject( canvasMargin );
+                            pages[thisPageNumber].verseYStart[i] = canvasMargin;
+                            pages[thisPageNumber].verseYEnd  [i] = canvasMargin;
                     }
                     thisPage = pages[thisPageNumber];
                     
-                    y = Math.max ( thisPage.columnYEnd [ 1 ], thisPage.columnYEnd [ 2 ], thisPage.columnYEnd[ 4 ] );
+                    y = myMax ( thisPage.columnYEnd [ 1 ], thisPage.columnYEnd [ 2 ], thisPage.columnYEnd[ 4 ] );
                     if (!y) { y = canvasMargin; }
                     
                     thisPage.verseYStart[i] = y;
-                    thisPage.verseYEnd  [i] = y+columnHeight;
+                    thisPage.verseYEnd  [i] = myMax ( y+lineHeight, thisPage.verseYEnd[i]);
+//            console.log ("462: " + thisPage.verseYEnd[i]);
                 }
 
 
 
                 baseText = "Notes for Verse " + i + ": " + baseText + " ";
-               // y=y+lineHeight;
-                                thisPage.verseYEnd[i] = Math.max (y, thisPage.verseYEnd[i]);
-                                thisPage.columnYEnd[whichSide] = y;
+                thisPage.verseYEnd[i] = myMax (y, thisPage.verseYEnd[i]);
+                thisPage.columnYEnd[whichSide] = y;
+//            console.log ("470: " + thisPage.verseYEnd[i]);
                 x=columnLeft[whichSide];
                 var maxX = x + columnWidth[whichSide];
                 var prevWords = Array();
@@ -470,21 +529,25 @@ function formatChapter ( passage )
                             if (y >= (canvasHeight - (canvasMargin*2) - lineHeight))
                             {
                                 // the verse's height is the maximum height
-                                thisPage.verseYEnd[i] = Math.max (y, thisPage.verseYEnd[i]);
+                                thisPage.verseYEnd[i] = myMax (y, thisPage.verseYEnd[i]);
                                 thisPage.columnYEnd[whichSide] = y;
+//            console.log ("521: " + thisPage.verseYEnd[i]);
                                 
                                 // new page!
                                 thisPageNumber++;
                                 if ( !pages[thisPageNumber] )
                                 {   // allocate if necessary
                                     pages[thisPageNumber] = new pageObject( canvasMargin );
+                                    pages[thisPageNumber].verseYStart[i] = canvasMargin;
+                                    pages[thisPageNumber].verseYEnd  [i] = canvasMargin;
                                 }
                                 thisPage = pages[thisPageNumber];
                                 
                                 y = canvasMargin;   
                                 
                                 thisPage.verseYStart[i] = y;
-                                thisPage.verseYEnd  [i] = y+lineHeight;
+                                thisPage.verseYEnd  [i] = myMax ( y+lineHeight, thisPage.verseYEnd[i]);
+//            console.log ("537: " + thisPage.verseYEnd[i]);
                             }
                             // now, we have to deal with several previous words now.
                             for (var k=0; k<prevWords.length; k++)
@@ -524,20 +587,24 @@ function formatChapter ( passage )
                     if (y >= (canvasHeight - (canvasMargin*2) - lineHeight))
                     {
                         // the verse's height is the maximum height
-                        thisPage.verseYEnd[i] = Math.max (y, thisPage.verseYEnd[i]);
+                        thisPage.verseYEnd[i] = myMax (y, thisPage.verseYEnd[i]);
                         thisPage.columnYEnd[whichSide] = y;
+//            console.log ("579: " + thisPage.verseYEnd[i]);
                         
                         // new page!
                         thisPageNumber++;
                         if ( !pages[thisPageNumber] )
                         {   // allocate if necessary
                             pages[thisPageNumber] = new pageObject( canvasMargin );
+                            pages[thisPageNumber].verseYStart[i] = canvasMargin;
+                            pages[thisPageNumber].verseYEnd  [i] = canvasMargin;
                         }
                         thisPage = pages[thisPageNumber];
                         
                         y = canvasMargin;           
                         thisPage.verseYStart[i] = y;
-                        thisPage.verseYEnd  [i] = y+lineHeight;
+                        thisPage.verseYEnd  [i] = myMax ( y+lineHeight, thisPage.verseYEnd[i]);
+//            console.log ("594: " + thisPage.verseYEnd[i]);
                     }
                     // now, we have to deal with several previous words now.
                     for (var k=0; k<prevWords.length; k++)
@@ -552,8 +619,9 @@ function formatChapter ( passage )
                     thisPage.addWord ( prevWords[j] );
                 }
                 y=y+lineHeight*2;
-                thisPage.verseYEnd[i] = Math.max (y, thisPage.verseYEnd[i]);
+                thisPage.verseYEnd[i] = myMax (y, thisPage.verseYEnd[i]);
                 thisPage.columnYEnd[whichSide] = y;
+//            console.log ("611: " + thisPage.verseYEnd[i]);
             
             }
             // end drawing the notes
@@ -567,11 +635,11 @@ function formatChapter ( passage )
     pageReferences = Array();
     for (var i=0; i<pages.length; i++)
     {
-        for (var j=0; j<pages[i].verseYStart.length; j++)
+        for (var j=1; j<pages[i].verseYStart.length; j++)
         {
              if ( pages[i].verseYStart[j] )
              {
-                if (!pageReferences [j])
+                if (pageReferences [j] == undefined)
                 {
                  pageReferences[ j ] = i;   // for non-passage references
                  pageReferences[ passage + "." + j] = i;    // for regular references
@@ -655,7 +723,7 @@ function drawPage ( pageNumber )
                 if ( pages[pageNumber].words[i].text.toLowerCase() == highlightText.toLowerCase() )
                 {
                     // scratch that, highlight the text from a search...
-                    highlight = "#FF0";
+                    highlight = "#F84";
                 }
             }
         }
@@ -664,9 +732,10 @@ function drawPage ( pageNumber )
             ctx.fillStyle = highlight;
             ctx.fillRect ( pages[pageNumber].words[i].x - 4, 
                            pages[pageNumber].words[i].y,
-                           pages[pageNumber].words[i].width + 8,
+                           pages[pageNumber].words[i].width+4,
                            pages[pageNumber].words[i].height); // give a little border
         }
+        ctx.fillStyle = pages[pageNumber].words[i].color;
         
         var theText = pages[pageNumber].words[i].text;
         if (pages[pageNumber].words[i].wordType == 99)
