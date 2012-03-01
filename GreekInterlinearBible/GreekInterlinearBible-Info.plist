@@ -15,6 +15,12 @@
 		<string>GreekInterlinearBibleIcon-iPad72.png</string>
 		<string>GreekInterlinearBibleIcon-57.png</string>
 		<string>GreekInterlinearBibleIcon-114.png</string>
+		<string>GreekInterlinearBibleIcon-29.png</string>
+		<string>GreekInterlinearBibleIcon-48.png</string>
+		<string>GreekInterlinearBibleIcon-58.png</string>
+		<string>GreekInterlinearBibleIcon-64.png</string>
+		<string>GreekInterlinearBibleIcon-144.png</string>
+		<string>GreekInterlinearBibleIcon-320.png</string>
 	</array>
 	<key>CFBundleIcons</key>
 	<dict>
@@ -25,6 +31,12 @@
 				<string>GreekInterlinearBibleIcon-iPad72.png</string>
 				<string>GreekInterlinearBibleIcon-57.png</string>
 				<string>GreekInterlinearBibleIcon-114.png</string>
+				<string>GreekInterlinearBibleIcon-29.png</string>
+				<string>GreekInterlinearBibleIcon-48.png</string>
+				<string>GreekInterlinearBibleIcon-58.png</string>
+				<string>GreekInterlinearBibleIcon-64.png</string>
+				<string>GreekInterlinearBibleIcon-144.png</string>
+				<string>GreekInterlinearBibleIcon-320.png</string>
 			</array>
 			<key>UIPrerenderedIcon</key>
 			<true/>
@@ -64,5 +76,7 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UIFileSharingEnabled</key>
+	<true/>
 </dict>
 </plist>

@@ -37,6 +37,12 @@
 		6A58D7F614FD9A120090631C /* GreekInterlinearBibleIcon-114.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A58D7F514FD9A120090631C /* GreekInterlinearBibleIcon-114.png */; };
 		6A58D7F814FD9A160090631C /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A58D7F714FD9A160090631C /* Default.png */; };
 		6A58D7FA14FD9A1B0090631C /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A58D7F914FD9A1B0090631C /* Default@2x.png */; };
+		6A6E428014FF2883004D1B1E /* GreekInterlinearBibleIcon-29.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A6E427A14FF2883004D1B1E /* GreekInterlinearBibleIcon-29.png */; };
+		6A6E428114FF2883004D1B1E /* GreekInterlinearBibleIcon-48.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A6E427B14FF2883004D1B1E /* GreekInterlinearBibleIcon-48.png */; };
+		6A6E428214FF2883004D1B1E /* GreekInterlinearBibleIcon-58.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A6E427C14FF2883004D1B1E /* GreekInterlinearBibleIcon-58.png */; };
+		6A6E428314FF2883004D1B1E /* GreekInterlinearBibleIcon-64.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A6E427D14FF2883004D1B1E /* GreekInterlinearBibleIcon-64.png */; };
+		6A6E428414FF2883004D1B1E /* GreekInterlinearBibleIcon-144.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A6E427E14FF2883004D1B1E /* GreekInterlinearBibleIcon-144.png */; };
+		6A6E428514FF2883004D1B1E /* GreekInterlinearBibleIcon-320.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A6E427F14FF2883004D1B1E /* GreekInterlinearBibleIcon-320.png */; };
 		6AB8EF6A14D26A2800CD7189 /* GreekInterlinearBibleIcon-iPad72.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AB8EF6914D26A2800CD7189 /* GreekInterlinearBibleIcon-iPad72.png */; };
 		6AC0324614CE6DB4001F06EF /* clipboardPlugin.js in Sources */ = {isa = PBXBuildFile; fileRef = 6AC0324314CE6DB4001F06EF /* clipboardPlugin.js */; };
 		6AC0324714CE6DB4001F06EF /* ClipboardPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC0324414CE6DB4001F06EF /* ClipboardPlugin.m */; };
@@ -56,8 +62,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		6A19776C14CB7E5400DB6AD9 /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape~ipad.png"; sourceTree = "<group>"; };
-		6A19776F14CB805B00DB6AD9 /* Default-Portrait~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait~ipad.png"; sourceTree = "<group>"; };
+		6A19776C14CB7E5400DB6AD9 /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Landscape~ipad.png"; path = "../Default-Landscape~ipad.png"; sourceTree = "<group>"; };
+		6A19776F14CB805B00DB6AD9 /* Default-Portrait~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Portrait~ipad.png"; path = "../Default-Portrait~ipad.png"; sourceTree = "<group>"; };
 		6A56E02314CA475000F3F8BB /* GreekInterlinearBible.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GreekInterlinearBible.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A56E02714CA475000F3F8BB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		6A56E02914CA475000F3F8BB /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -87,11 +93,17 @@
 		6A56E06614CA475100F3F8BB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Classes/AppDelegate.h; sourceTree = "<group>"; };
 		6A56E06714CA475100F3F8BB /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Classes/AppDelegate.m; sourceTree = "<group>"; };
 		6A56E06A14CA475100F3F8BB /* README */ = {isa = PBXFileReference; lastKnownFileType = text; name = README; path = Plugins/README; sourceTree = "<group>"; };
-		6A58D7F214FD9A0E0090631C /* GreekInterlinearBibleIcon-57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreekInterlinearBibleIcon-57.png"; sourceTree = "<group>"; };
-		6A58D7F514FD9A120090631C /* GreekInterlinearBibleIcon-114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreekInterlinearBibleIcon-114.png"; sourceTree = "<group>"; };
-		6A58D7F714FD9A160090631C /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
-		6A58D7F914FD9A1B0090631C /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
-		6AB8EF6914D26A2800CD7189 /* GreekInterlinearBibleIcon-iPad72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreekInterlinearBibleIcon-iPad72.png"; sourceTree = "<group>"; };
+		6A58D7F214FD9A0E0090631C /* GreekInterlinearBibleIcon-57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreekInterlinearBibleIcon-57.png"; sourceTree = SOURCE_ROOT; };
+		6A58D7F514FD9A120090631C /* GreekInterlinearBibleIcon-114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreekInterlinearBibleIcon-114.png"; sourceTree = SOURCE_ROOT; };
+		6A58D7F714FD9A160090631C /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = ../Default.png; sourceTree = "<group>"; };
+		6A58D7F914FD9A1B0090631C /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "../Default@2x.png"; sourceTree = "<group>"; };
+		6A6E427A14FF2883004D1B1E /* GreekInterlinearBibleIcon-29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreekInterlinearBibleIcon-29.png"; sourceTree = SOURCE_ROOT; };
+		6A6E427B14FF2883004D1B1E /* GreekInterlinearBibleIcon-48.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreekInterlinearBibleIcon-48.png"; sourceTree = SOURCE_ROOT; };
+		6A6E427C14FF2883004D1B1E /* GreekInterlinearBibleIcon-58.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreekInterlinearBibleIcon-58.png"; sourceTree = SOURCE_ROOT; };
+		6A6E427D14FF2883004D1B1E /* GreekInterlinearBibleIcon-64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreekInterlinearBibleIcon-64.png"; sourceTree = SOURCE_ROOT; };
+		6A6E427E14FF2883004D1B1E /* GreekInterlinearBibleIcon-144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreekInterlinearBibleIcon-144.png"; sourceTree = SOURCE_ROOT; };
+		6A6E427F14FF2883004D1B1E /* GreekInterlinearBibleIcon-320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreekInterlinearBibleIcon-320.png"; sourceTree = SOURCE_ROOT; };
+		6AB8EF6914D26A2800CD7189 /* GreekInterlinearBibleIcon-iPad72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreekInterlinearBibleIcon-iPad72.png"; sourceTree = SOURCE_ROOT; };
 		6AC0324214CE6DB4001F06EF /* ClipboardPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClipboardPlugin.h; sourceTree = "<group>"; };
 		6AC0324314CE6DB4001F06EF /* clipboardPlugin.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = clipboardPlugin.js; sourceTree = "<group>"; };
 		6AC0324414CE6DB4001F06EF /* ClipboardPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClipboardPlugin.m; sourceTree = "<group>"; };
@@ -148,14 +160,7 @@
 		6A56E01514CA474F00F3F8BB = {
 			isa = PBXGroup;
 			children = (
-				6A58D7F914FD9A1B0090631C /* Default@2x.png */,
-				6A58D7F714FD9A160090631C /* Default.png */,
-				6A58D7F514FD9A120090631C /* GreekInterlinearBibleIcon-114.png */,
-				6A58D7F214FD9A0E0090631C /* GreekInterlinearBibleIcon-57.png */,
-				6AB8EF6914D26A2800CD7189 /* GreekInterlinearBibleIcon-iPad72.png */,
 				6AC0324914CE714A001F06EF /* www */,
-				6A19776F14CB805B00DB6AD9 /* Default-Portrait~ipad.png */,
-				6A19776C14CB7E5400DB6AD9 /* Default-Landscape~ipad.png */,
 				6A56E04114CA475000F3F8BB /* GreekInterlinearBible */,
 				6A56E02614CA475000F3F8BB /* Frameworks */,
 				6A56E02414CA475000F3F8BB /* Products */,
@@ -245,6 +250,15 @@
 		6A56E05514CA475000F3F8BB /* icons */ = {
 			isa = PBXGroup;
 			children = (
+				6A6E427A14FF2883004D1B1E /* GreekInterlinearBibleIcon-29.png */,
+				6A6E427B14FF2883004D1B1E /* GreekInterlinearBibleIcon-48.png */,
+				6A6E427C14FF2883004D1B1E /* GreekInterlinearBibleIcon-58.png */,
+				6A6E427D14FF2883004D1B1E /* GreekInterlinearBibleIcon-64.png */,
+				6A6E427E14FF2883004D1B1E /* GreekInterlinearBibleIcon-144.png */,
+				6A6E427F14FF2883004D1B1E /* GreekInterlinearBibleIcon-320.png */,
+				6A58D7F514FD9A120090631C /* GreekInterlinearBibleIcon-114.png */,
+				6A58D7F214FD9A0E0090631C /* GreekInterlinearBibleIcon-57.png */,
+				6AB8EF6914D26A2800CD7189 /* GreekInterlinearBibleIcon-iPad72.png */,
 				6A56E05614CA475000F3F8BB /* icon.png */,
 				6A56E05814CA475000F3F8BB /* icon@2x.png */,
 				6A56E05A14CA475000F3F8BB /* icon-72.png */,
@@ -255,6 +269,10 @@
 		6A56E05C14CA475000F3F8BB /* splash */ = {
 			isa = PBXGroup;
 			children = (
+				6A58D7F914FD9A1B0090631C /* Default@2x.png */,
+				6A58D7F714FD9A160090631C /* Default.png */,
+				6A19776F14CB805B00DB6AD9 /* Default-Portrait~ipad.png */,
+				6A19776C14CB7E5400DB6AD9 /* Default-Landscape~ipad.png */,
 				6AE783F714FDFE5B0086DCE8 /* Default.png */,
 				6AE783FA14FDFE700086DCE8 /* Default@2x.png */,
 			);
@@ -396,6 +414,12 @@
 				6A58D7FA14FD9A1B0090631C /* Default@2x.png in Resources */,
 				6AE783F814FDFE5B0086DCE8 /* Default.png in Resources */,
 				6AE783FB14FDFE700086DCE8 /* Default@2x.png in Resources */,
+				6A6E428014FF2883004D1B1E /* GreekInterlinearBibleIcon-29.png in Resources */,
+				6A6E428114FF2883004D1B1E /* GreekInterlinearBibleIcon-48.png in Resources */,
+				6A6E428214FF2883004D1B1E /* GreekInterlinearBibleIcon-58.png in Resources */,
+				6A6E428314FF2883004D1B1E /* GreekInterlinearBibleIcon-64.png in Resources */,
+				6A6E428414FF2883004D1B1E /* GreekInterlinearBibleIcon-144.png in Resources */,
+				6A6E428514FF2883004D1B1E /* GreekInterlinearBibleIcon-320.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
