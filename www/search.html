@@ -4,8 +4,8 @@
         setPageTitle ("Search Results");
     </script>
     <div style="position: absolute; top:0; left:0; right: 0; height:25px;border-bottom:1px solid #888; margin-top: 1em; margin-bottom:1em; line-height:25px;" >
-        <div style="float: left; width:70%; padding-left:10px;"  id="SBsearchingFor"></div>
-        <div style="float: right; width:20%; text-align: right; padding-right:10px;" id="SBcurrentPage"></div>
+        <div style="float: left; width:60%; padding-left:10px;"  id="SBsearchingFor">Searching...</div>
+        <div style="float: right; width:25%; text-align: right; padding-right:10px;" id="SBcurrentPage"></div>
         <div style="clear: both;"></div>
     </div>
     <br /><br /><br />
@@ -113,7 +113,7 @@
             $("SBSearchingFor").innerHTML = "No results found for " + theWord;
             if (pageLoaded)
             {
-                onPageLoaded();
+                handleScroll();
             }
             hideLoader();
             return;
@@ -175,13 +175,13 @@
         $("SBlstResults").innerHTML = ihtml;
         if (pageLoaded)
         {
-            onPageLoaded();
+            handleScroll();
         }
         hideLoader();
         
     }
     
-    onPageLoaded = function()
+    function handleScroll ()
     {
 //        resetContentScrollBar((scrollTo ? 1125 : 500));
           resetContentScrollBar(0);
@@ -205,6 +205,8 @@
     {
 //        console.log ("In Search Start");
         showLoader();
+        $("SBsearchingFor").innerHTML = "Loading...";
+        repaint();
         if (englishWord || greekWord)
         {
             if (englishWord)
@@ -217,6 +219,10 @@
 //                console.log ("Treating as Greek");
                 searchBible ( greekWord, 1, true, curPage, true);
             }
+        }
+        else
+        {
+            $("SBsearchingFor").innerHTML = "Search";
         }
     
     }
@@ -241,37 +247,39 @@
         repaint();
     }
 
-    // load our selected bibles
-            selectedGreekText = localStorage.getItem("TextGreekText");
-            if (!selectedGreekText)
+    onPageLoaded = function()
+    {
+        // load our selected bibles
+        selectedGreekText = localStorage.getItem("TextGreekText");
+        if (!selectedGreekText)
+        {
+            selectedGreekText = "byz";
+        }
+        
+        if (forceParsings)
+        {
+            // if we don't have a parsed version, make it one.
+            if (selectedGreekText.indexOf ("p") < 0)
             {
-                selectedGreekText = "byz";
-            }
-            
-            if (forceParsings)
-            {
-                // if we don't have a parsed version, make it one.
-                if (selectedGreekText.indexOf ("p") < 0)
+                selectedGreekText = selectedGreekText + "p";
+                if (selectedGreekText == "tisp")
                 {
-                    selectedGreekText = selectedGreekText + "p";
-                    if (selectedGreekText == "tisp")
-                    {
-                        // Tischendorf doesn't have parsings. Use byzp instead.
-                        selectedGreekText = "byzp";
-                    }
+                    // Tischendorf doesn't have parsings. Use byzp instead.
+                    selectedGreekText = "byzp";
                 }
             }
-            
-            
-            selectedRightText = localStorage.getItem("TextRightText");
-            if (!selectedRightText)
-            {
-                selectedRightText = "ylt";
-            }
-    afterBothLoaded = searchStart;
-    leftLoaded = false; rightLoaded = false;
-    loadBible ( selectedGreekText );
-    loadBible ( selectedRightText );
-
+        }
+        
+        
+        selectedRightText = localStorage.getItem("TextRightText");
+        if (!selectedRightText)
+        {
+            selectedRightText = "ylt";
+        }
+        afterBothLoaded = searchStart;
+        leftLoaded = false; rightLoaded = false;
+        loadBible ( selectedGreekText );
+        loadBible ( selectedRightText );
+    }
 </script>
 </div>

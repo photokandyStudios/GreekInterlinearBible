@@ -1,7 +1,7 @@
 <div class="content">
     <div style="position: absolute; top:0; left:0; right: 0; height:25px;border-bottom:1px solid #888; margin-top: 1em; margin-bottom:1em; line-height:25px;" >
-        <div style="float: left; width:70%; padding-left:10px;"  id="searchingFor"></div>
-        <div style="float: right; width:20%; text-align: right; padding-right:10px;" id="currentPage"></div>
+        <div style="float: left; width:60%; padding-left:10px;"  id="searchingFor">Loading...</div>
+        <div style="float: right; width:25%; text-align: right; padding-right:10px;" id="currentPage"></div>
         <div style="clear: both;"></div>
     </div>
     <br /><br /><br />
@@ -37,12 +37,13 @@
         var results = Array();
         var terms = searchTerm.split(" ");
         var c = 0;
-
+        var m = 0;
             // do need to see if the incoming term is actually the index, though.
             if ( searchArray[searchTerm.toUpperCase().trim()] )
             {
                 results.push ( searchTerm.toUpperCase().trim() ); // it is, add it to the list. This one will always be outside
                                     // the paging limits. Might be good. Might not?
+                m = 1;
             }
 
 
@@ -72,8 +73,8 @@
                 if (c>=pageStart && c<=pageEnd) { results.push ( v ); }
             }
         }
-        maxPages = Math.ceil( c / (pageEnd - pageStart + 1) );
-        maxResults = c;
+        maxPages = Math.ceil( (c+m) / (pageEnd - pageStart + 1) );
+        maxResults = c + m;
         return results;
     }
     
@@ -99,7 +100,7 @@
 //            console.log ("Finish page loading...");
             if (pageLoaded)
             {
-                onPageLoaded();
+                handleStrongScroll();
             }
 //            console.log ( "No results found.");
             return;
@@ -116,9 +117,9 @@
         for (var i=0;i<results.length;i++)
         {
             var ref = results[i];
-            var topText = "Derivation: " + strongsGreekDictionary[ref].derivation +
+            var topText = "Root word: " + strongsGreekDictionary[ref].lemma +
+                          "<br>Derivation: " + strongsGreekDictionary[ref].derivation +
                           "<br>KJV usage: " + strongsGreekDictionary[ref].kjv_def +
-                          "<br>Root word: " + strongsGreekDictionary[ref].lemma +
                           "<br>Definition: " + strongsGreekDictionary[ref].strongs_def;
             
             var terms = theWord.toLowerCase().trim().split(" ");
@@ -155,11 +156,11 @@
         
         if (pageLoaded)
         {
-            onPageLoaded();
+            handleStrongScroll();
         }
     }
     
-    onPageLoaded = function()
+    function handleStrongScroll()
     {
         resetContentScrollBar(0);
         setTimeout (function() {
@@ -176,6 +177,7 @@
     {
         showSearch( doSearchStrongs ); // search us instead
         setPageTitle ("Strong's Lookup");
+        $("searchingFor").innerHTML = "Loading...";
     
         if (englishWord)
         {
@@ -184,6 +186,10 @@
 //                console.log ("searching english");
                 searchStrongs ( englishWord, 2, true, curPage, false );
             }
+        }
+        else
+        {
+            $("searchingFor").innerHTML = "Strong's Lookup";        
         }
     
     }
@@ -214,32 +220,34 @@
         repaint();
     }
 
-    // load our selected bibles
-            selectedGreekText = localStorage.getItem("TextGreekText");
-            if (!selectedGreekText)
+    onPageLoaded = function()
+    {
+        // load our selected bibles
+        selectedGreekText = localStorage.getItem("TextGreekText");
+        if (!selectedGreekText)
+        {
+            selectedGreekText = "byzp"; // default to byzantine parsed
+        }
+        // if we don't have a parsed version, make it one.
+        if (selectedGreekText.indexOf ("p") < 0)
+        {
+            selectedGreekText = selectedGreekText + "p";
+            if (selectedGreekText == "tisp")
             {
-                selectedGreekText = "byzp"; // default to byzantine parsed
+                // Tischendorf doesn't have parsings. Use byzp instead.
+                selectedGreekText = "byzp";
             }
-            // if we don't have a parsed version, make it one.
-            if (selectedGreekText.indexOf ("p") < 0)
-            {
-                selectedGreekText = selectedGreekText + "p";
-                if (selectedGreekText == "tisp")
-                {
-                    // Tischendorf doesn't have parsings. Use byzp instead.
-                    selectedGreekText = "byzp";
-                }
-            }
-            
-            selectedRightText = localStorage.getItem("TextRightText");
-            if (!selectedRightText)
-            {
-                selectedRightText = "ylt";
-            }
-    afterBothLoaded = searchStart;
-    leftLoaded = false; rightLoaded = false;
-    loadBible ( selectedGreekText );
-    loadBible ( selectedRightText );
-
+        }
+        
+        selectedRightText = localStorage.getItem("TextRightText");
+        if (!selectedRightText)
+        {
+            selectedRightText = "ylt";
+        }
+        afterBothLoaded = searchStart;
+        leftLoaded = false; rightLoaded = false;
+        loadBible ( selectedGreekText );
+        loadBible ( selectedRightText );
+    }
 </script>
 </div>
