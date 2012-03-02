@@ -87,12 +87,12 @@ function formatChapter ( passage )
     if ( isPortrait() && isIPhone() )
     {
         canvasWidth = 320;
-        canvasHeight = 366;
+        canvasHeight = 366 - 23;
     }
     if ( isLandscape() && isIPhone() )
     {
         canvasWidth = 480;
-        canvasHeight = 206;
+        canvasHeight = 206 - 23;
     }
 
     $("bibleContent").style.minHeight = canvasHeight + "px";
@@ -664,6 +664,7 @@ function drawPage ( pageNumber )
 {
     // set the page title to the top verse
     setPageTitle ( cvtToProperReference ( passage + "." + pages[pageNumber].verseYStart.indexOf(canvasMargin)) );
+    $("iphoneReference").innerHTML = cvtToProperReference ( passage + "." + pages[pageNumber].verseYStart.indexOf(canvasMargin));
 
     var ctx = document.getElementById("c").getContext("2d");
     ctx.save();
@@ -676,8 +677,11 @@ function drawPage ( pageNumber )
     
     // draw any selection and highlights
 
-    for (var i=0; i<pages[pageNumber].verseYStart.length; i++)
-    {   var ref = passage + "." + i;
+    for (var i=1; i<pages[pageNumber].verseYStart.length; i++)
+    {   
+      if ( pages[pageNumber].verseYStart[i] != undefined )
+      {
+        var ref = passage + "." + i;
         if (localStorage.getItem ( "hl_" + ref ))
         {   var highlight;
             var highlightNum;
@@ -686,17 +690,32 @@ function drawPage ( pageNumber )
             highlight = highlight + highlightColors [ highlightNum ];
             highlight = highlight + ")";
             ctx.fillStyle = highlight;
-            ctx.fillRect ( 0,           pages[pageNumber].verseYStart[i] - 4, 
-                           canvasWidth, (pages[pageNumber].verseYEnd[i] - pages[pageNumber].verseYStart[i]) + 8 );
+            ctx.fillRect ( 0,           pages[pageNumber].verseYStart[i], 
+                           canvasWidth, (pages[pageNumber].verseYEnd[i] - pages[pageNumber].verseYStart[i]) );
         }
         if ( selectedVerse[passage + "." + i]=="Y" )
         {
-            ctx.fillStyle = "#C0E0FF";
-            ctx.fillRect ( 5,           pages[pageNumber].verseYStart[i] - 4, 
-                           canvasWidth-10, (pages[pageNumber].verseYEnd[i] - pages[pageNumber].verseYStart[i]) + 8 );
+            ctx.fillStyle = "rgba(192,224,255,0.75)"; //#C0E0FF";
+            ctx.fillRect ( 0,           pages[pageNumber].verseYStart[i], 
+                           canvasWidth, (pages[pageNumber].verseYEnd[i] - pages[pageNumber].verseYStart[i]) );
         }
 
+        // now, try to be fancy?
+        var lingrad = ctx.createLinearGradient(0,Math.floor(pages[pageNumber].verseYStart[i]),
+                                               0,Math.floor(pages[pageNumber].verseYStart[i]+50));
+        lingrad.addColorStop(0,      'rgba(0,16,32,0.0625)');
+        lingrad.addColorStop(0.125,  'rgba(0,16,32,0)');
+        lingrad.addColorStop(1,      'rgba(0,16,32,0)');
+        
+        ctx.fillStyle = lingrad;
+        ctx.fillRect ( 0,           pages[pageNumber].verseYStart[i], 
+                       canvasWidth, 50 );
 
+        ctx.fillStyle = "rgba(0,16,32,0.25)";
+        ctx.fillRect ( 0,           Math.floor(pages[pageNumber].verseYStart[i]), 
+                       canvasWidth, 1 );
+        
+      }
     }
     
     ctx.fillStyle = "#000";         // color
@@ -749,7 +768,7 @@ function drawPage ( pageNumber )
                 var ww = (isIPad() ? 80 : 60);    // iPhone needs this smaller
                 xx = xx + (pages[pageNumber].words[i].width / 2);
                 xx = xx - (ww/2); // should now be center of the verse #
-                yy = yy - (isIPad() ? 28 : 22);
+                yy = yy - (isIPad() ? 24 : 18);
                 ctx.drawImage ( bmImage, xx, yy, ww, ww);
             }
             // check for notes
