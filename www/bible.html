@@ -55,9 +55,10 @@
     {
         passage = localStorage.passage;
     }
-    var topReference = passage + ".1";   // verse at top of screen
+    var topReference ;
     if (!localStorage.topReference)
     {
+        topReference = passage + ".1";   // verse at top of screen
         localStorage.topReference = topReference;
     }
     else
@@ -105,6 +106,22 @@
     width:100%; height:100%;
     
 }
+.iphone #a
+{
+    top:23px;
+}
+.iphone #iphoneReference
+{
+    line-height: 22px;
+    height: 22px;
+    border-bottom: 1px solid #248;
+    text-align: center;
+    margin-top: -5px;
+}
+.ipad #iphoneReference
+{
+    display: none;
+}
 #b
 {
     margin: 0 auto;
@@ -118,6 +135,7 @@
     position: relative;
 }
 </style>
+    <div class="iphone" id="iphoneReference"></div>
     <div id="a">
         <div id="b">
             <canvas width=1024 height=676 id="c" ></canvas>
@@ -266,6 +284,8 @@
                     // now, select the verse
                     var ref = passage + "." + i;
                     currentReference = ref;
+                    // and actually select it...
+                    selectedVerse [ currentReference ] = "Y";
                 }
             }
             
@@ -366,7 +386,7 @@
             {
                 actionTitle = "What do you want to do?";
             }
-
+            drawCurrentPage();
             window.plugins.actionSheet.create(actionTitle, 
                                items,
                                function(buttonValue, buttonIndex) 
@@ -392,14 +412,7 @@
                             );                              ////console.log ("6");
         }
     }
-    function toggleSelection ( o )
-    {
-        var ref = o.getAttribute("id");
-        selectedVerse [ ref ] = (selectedVerse [ ref ] == "Y" ? "" : "Y" ); // TODO: null?
-        $(ref).classList.toggle ( "verseSelected" );
-    }
 
-    
     onPageNext = function()
     {
     
@@ -722,52 +735,55 @@
         }
     }
 
+    function populateBible()
+    {
+        hideLoader();
+        localStorage.passage = passage;
+        pages = formatChapter (passage);
+        curPage = pageReferences [ topReference ];
+        if (!curPage) { curPage = 0; }
+        drawCurrentPage();
+        
+        $("c").addEventListener ( "touchstart", canvasMDown, false );
+        $("c").addEventListener ( "touchmove", canvasMove, false );
+        $("c").addEventListener ( "touchend", canvasMUp, false );
+        $("bibleLoadingText").innerHTML = "";
+        // and, if possible, hide the splash
+        if (navigator)
+        {
+            if (navigator.splashscreen)
+            {
+                navigator.splashscreen.hide();
+            }
+        }
+        
+    }
+
+    onPageLoaded = function ()
+    {
+        // load our selected bibles
+        selectedGreekText = localStorage.getItem("TextGreekText");
+        if (!selectedGreekText)
+        {
+            selectedGreekText = "byz";
+        }
+        selectedRightText = localStorage.getItem("TextRightText");
+        if (!selectedRightText)
+        {
+            selectedRightText = "ylt";
+        }
+        afterBothLoaded = populateBible;
+        leftLoaded = false; rightLoaded = false;
+        loadBible ( selectedGreekText );
+        loadBible ( selectedRightText );
+    }
+
 </script>
-    <div style="clear: both"></div>
+    <div style="clear: both"></div><div id="bibleLoadingText">Loading...</div>
+    <br/><br/><br/><br/><br/><br/>
+    <br/><br/><br/><br/><br/><br/>
+    <br/><br/><br/><br/><br/><br/>
+    <br/><br/><br/><br/><br/><br/>
+    <br/><br/><br/><br/><br/><br/>
     <br/><br/><br/><br/><br/><br/>
 </div>
-
-<script>
-
-            function populateBible()
-            {
-                hideLoader();
-                localStorage.passage = passage;
-                pages = formatChapter (passage);
-                curPage = pageReferences [ topReference ];
-                if (!curPage) { curPage = 0; }
-                drawCurrentPage();
-                
-                $("c").addEventListener ( "touchstart", canvasMDown, false );
-                $("c").addEventListener ( "touchmove", canvasMove, false );
-                $("c").addEventListener ( "touchend", canvasMUp, false );
-
-                // and, if possible, hide the splash
-                if (navigator)
-                {
-                    if (navigator.splashscreen)
-                    {
-                        navigator.splashscreen.hide();
-                    }
-                }
-                
-            }
-
-            // load our selected bibles
-            selectedGreekText = localStorage.getItem("TextGreekText");
-            if (!selectedGreekText)
-            {
-                selectedGreekText = "byz";
-            }
-            selectedRightText = localStorage.getItem("TextRightText");
-            if (!selectedRightText)
-            {
-                selectedRightText = "ylt";
-            }
-            afterBothLoaded = populateBible;
-            leftLoaded = false; rightLoaded = false;
-            loadBible ( selectedGreekText );
-            loadBible ( selectedRightText );
-
-
-</script>
