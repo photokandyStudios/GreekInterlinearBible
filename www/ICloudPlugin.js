@@ -107,12 +107,6 @@ function cloudLocalStorage ( filename, msgQueue )
             localStorage.setItem ( kv[0], kv[1] );
         }
         if (consoleLogging) { console.log ("Cloud: Sync read complete."); }
-        
-        if (self.saveDelay)
-        {
-            self.cid = setTimeout ( function() { self.saveTo(); }, self.saveDelay );
-        }
-
         self.msgQCloud.loadFileFromCloud ( self.queueLoadComplete,   self.queueLoadComplete,  self.msgQueue );
 
     }
@@ -126,6 +120,11 @@ function cloudLocalStorage ( filename, msgQueue )
             localStorage.removeItem ( ls[i] );
         }
         if (consoleLogging) { console.log ("Cloud: Message Queue read complete."); }
+
+        if (self.saveDelay)
+        {
+            self.cid = setTimeout ( function() { self.saveTo(); }, self.saveDelay );
+        }
     }
     
     self.removedItem = function ( k )
@@ -187,22 +186,23 @@ function cloudLocalStorage ( filename, msgQueue )
     self.contentSaveComplete = function ( o )
     {
         console.log ("localStorage saved to cloud");
-        contentChanged = false;
+        self.contentChanged = false;
         if (self.qcontentChanged)
         {
             self.msgQCloud.setContent ( self.queueSet, self.queueSetFailure, qContent );
-        }
-        if (self.saveDelay)
-        {
-            self.cid = setTimeout ( function() { self.saveTo(); }, self.saveDelay );
         }
     }
     
     self.queueSaveComplete = function ( o )
     {
         console.log ("Queue saved.");
-        qcontent = "";
-        qcontentChanged = false;
+        self.qcontent = "";
+        self.qcontentChanged = false;
+
+        if (self.saveDelay)
+        {
+            self.cid = setTimeout ( function() { self.saveTo(); }, self.saveDelay );
+        }
     }
     
     self.contentSaveFailure = function ( o )
