@@ -2049,7 +2049,7 @@ function addSwipeListener(el, listener)
     direction = dx;
     e.preventDefault();
    }
-   else if ((direction < 0 && dx > 0) || (direction > 0 && dx < 0) || Math.abs(dy) > 50) //25
+   else if ((direction < 0 && dx > 0) || (direction > 0 && dx < 0) || Math.abs(dy) > 75) // 50 //25
    {
     cancelTouch();
    }
@@ -2061,7 +2061,7 @@ function addSwipeListener(el, listener)
   var sX = startX;
   var sY = startY;
   cancelTouch();
-  if (Math.abs(dx) > 35) //50
+  if (Math.abs(dx) > 50) //35 //50
   {
    listener({ target: el, direction: dx > 0 ? 'right' : 'left', x:sX, y:sY });
   }

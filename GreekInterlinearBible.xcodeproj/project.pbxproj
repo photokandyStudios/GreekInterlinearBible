@@ -64,6 +64,7 @@
 /* Begin PBXFileReference section */
 		6A19776C14CB7E5400DB6AD9 /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Landscape~ipad.png"; path = "../Default-Landscape~ipad.png"; sourceTree = "<group>"; };
 		6A19776F14CB805B00DB6AD9 /* Default-Portrait~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Portrait~ipad.png"; path = "../Default-Portrait~ipad.png"; sourceTree = "<group>"; };
+		6A508789150480890022C66F /* GreekInterlinearBible.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = GreekInterlinearBible.entitlements; sourceTree = "<group>"; };
 		6A56E02314CA475000F3F8BB /* GreekInterlinearBible.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GreekInterlinearBible.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A56E02714CA475000F3F8BB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		6A56E02914CA475000F3F8BB /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -198,6 +199,7 @@
 		6A56E04114CA475000F3F8BB /* GreekInterlinearBible */ = {
 			isa = PBXGroup;
 			children = (
+				6A508789150480890022C66F /* GreekInterlinearBible.entitlements */,
 				6A56E04A14CA475000F3F8BB /* PhoneGap.framework */,
 				6A56E04C14CA475000F3F8BB /* Resources */,
 				6A56E06514CA475100F3F8BB /* Classes */,
@@ -543,6 +545,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				CODE_SIGN_ENTITLEMENTS = GreekInterlinearBible/GreekInterlinearBible.entitlements;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = /Users/Shared/PhoneGap/Frameworks;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -571,6 +574,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				CODE_SIGN_ENTITLEMENTS = GreekInterlinearBible/GreekInterlinearBible.entitlements;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = /Users/Shared/PhoneGap/Frameworks;
