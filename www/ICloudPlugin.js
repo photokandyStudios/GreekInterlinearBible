@@ -191,6 +191,13 @@ function cloudLocalStorage ( filename, msgQueue )
         {
             self.msgQCloud.setContent ( self.queueSet, self.queueSetFailure, qContent );
         }
+        else
+        {
+            if (self.saveDelay)
+            {
+                self.cid = setTimeout ( function() { self.saveTo(); }, self.saveDelay );
+            }
+        }
     }
     
     self.queueSaveComplete = function ( o )
