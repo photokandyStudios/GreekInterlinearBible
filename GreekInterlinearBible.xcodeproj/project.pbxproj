@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		6A19776D14CB7E5400DB6AD9 /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A19776C14CB7E5400DB6AD9 /* Default-Landscape~ipad.png */; };
 		6A19777014CB805B00DB6AD9 /* Default-Portrait~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A19776F14CB805B00DB6AD9 /* Default-Portrait~ipad.png */; };
+		6A275F771506960B00B5D180 /* ICloudPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A275F761506960B00B5D180 /* ICloudPlugin.m */; };
+		6A275F7A1506999A00B5D180 /* ICloudDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A275F791506999A00B5D180 /* ICloudDocument.m */; };
 		6A56E02814CA475000F3F8BB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A56E02714CA475000F3F8BB /* Foundation.framework */; };
 		6A56E02A14CA475000F3F8BB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A56E02914CA475000F3F8BB /* UIKit.framework */; };
 		6A56E02C14CA475000F3F8BB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A56E02B14CA475000F3F8BB /* CoreGraphics.framework */; };
@@ -64,6 +66,10 @@
 /* Begin PBXFileReference section */
 		6A19776C14CB7E5400DB6AD9 /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Landscape~ipad.png"; path = "../Default-Landscape~ipad.png"; sourceTree = "<group>"; };
 		6A19776F14CB805B00DB6AD9 /* Default-Portrait~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Portrait~ipad.png"; path = "../Default-Portrait~ipad.png"; sourceTree = "<group>"; };
+		6A275F751506960B00B5D180 /* ICloudPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICloudPlugin.h; sourceTree = "<group>"; };
+		6A275F761506960B00B5D180 /* ICloudPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICloudPlugin.m; sourceTree = "<group>"; };
+		6A275F781506999A00B5D180 /* ICloudDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICloudDocument.h; sourceTree = "<group>"; };
+		6A275F791506999A00B5D180 /* ICloudDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICloudDocument.m; sourceTree = "<group>"; };
 		6A508789150480890022C66F /* GreekInterlinearBible.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = GreekInterlinearBible.entitlements; sourceTree = "<group>"; };
 		6A56E02314CA475000F3F8BB /* GreekInterlinearBible.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GreekInterlinearBible.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A56E02714CA475000F3F8BB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -158,6 +164,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6A275F73150695A000B5D180 /* iCloudPlugin */ = {
+			isa = PBXGroup;
+			children = (
+				6A275F751506960B00B5D180 /* ICloudPlugin.h */,
+				6A275F761506960B00B5D180 /* ICloudPlugin.m */,
+				6A275F781506999A00B5D180 /* ICloudDocument.h */,
+				6A275F791506999A00B5D180 /* ICloudDocument.m */,
+			);
+			name = iCloudPlugin;
+			sourceTree = "<group>";
+		};
 		6A56E01514CA474F00F3F8BB = {
 			isa = PBXGroup;
 			children = (
@@ -293,6 +310,7 @@
 		6A56E06914CA475100F3F8BB /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
+				6A275F73150695A000B5D180 /* iCloudPlugin */,
 				6AF041BE14DE475E00658AE7 /* ActionSheet */,
 				6AE9627E14D09D0D0016DF97 /* ChildBrowser */,
 				6AC0324114CE6DB4001F06EF /* ClipboardPlugin */,
@@ -331,8 +349,8 @@
 			isa = PBXGroup;
 			children = (
 				6AF041BF14DE475E00658AE7 /* ActionSheet.h */,
-				6AF041C014DE475E00658AE7 /* ActionSheet.js */,
 				6AF041C114DE475E00658AE7 /* ActionSheet.m */,
+				6AF041C014DE475E00658AE7 /* ActionSheet.js */,
 				6AF041C214DE475E00658AE7 /* README.md */,
 			);
 			path = ActionSheet;
@@ -457,6 +475,8 @@
 				6AE9628F14D09D0D0016DF97 /* ChildBrowserViewController.m in Sources */,
 				6AF041C314DE475E00658AE7 /* ActionSheet.js in Sources */,
 				6AF041C414DE475E00658AE7 /* ActionSheet.m in Sources */,
+				6A275F771506960B00B5D180 /* ICloudPlugin.m in Sources */,
+				6A275F7A1506999A00B5D180 /* ICloudDocument.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -552,6 +572,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "GreekInterlinearBible/GreekInterlinearBible-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "PHONEGAP_FRAMEWORK=YES";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "GreekInterlinearBible/GreekInterlinearBible-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = (
@@ -581,6 +602,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "GreekInterlinearBible/GreekInterlinearBible-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "PHONEGAP_FRAMEWORK=YES";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "GreekInterlinearBible/GreekInterlinearBible-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = (
