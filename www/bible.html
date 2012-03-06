@@ -519,6 +519,7 @@
             if ( selectedVerse [i] == "Y" )
             {
                 localStorage.setItem ( "hl_" + i, c ); // store color # to note_ref
+                cls.updatedItem();
                 if ($(i))
                 {
                     $(i).style.backgroundColor = "rgba(" + highlightColors [c]+")";
@@ -535,6 +536,7 @@
             if ( selectedVerse [i] == "Y" )
             {
                 localStorage.setItem ( "bm_" + i, "Y" ); 
+                cls.updatedItem();
             }
         }
         cancelSelection();
@@ -545,6 +547,7 @@
         if (ref)
         {
             localStorage.removeItem ( "bm_" + ref );
+            cls.removedItem  ( "bm_" + ref );
         }
         else
         {
@@ -553,6 +556,7 @@
             if ( selectedVerse [i] == "Y" )
             {
                 localStorage.removeItem ( "bm_" + i ); 
+                cls.removedItem ( "bm_" + i ); 
             }
         }
         cancelSelection();
@@ -565,7 +569,8 @@
         {
             if ( selectedVerse [i] == "Y" )
             {
-                localStorage.removeItem ( "hl_" + i )
+                localStorage.removedItem ( "hl_" + i )
+                cls.removeItem ( "hl_" + i )
                 if ($(i))
                 {
                     $(i).style.backgroundColor = "transparent";
@@ -581,10 +586,12 @@
         {
             if ( selectedVerse [i] == "Y" )
             {
-                localStorage.removeItem ( "note_" + i )
+                localStorage.removedItem ( "note_" + i )
+                cls.removedItem ( "hl_" + i )
             }
         }
         localStorage.removeItem ( "note_" + currentReference );
+        cls.removedItem ( "note_" + currentReference );
         cancelSelection();
         
         /* our view may have changed due to the removal of the note.
@@ -597,6 +604,8 @@
     
     function noteSaved()
     {
+        cls.updatedItem();
+
         /* once a note is saved, we need to refresh our pages as the
            content may have shifted. */
            

@@ -7,7 +7,7 @@
  **/
 
     var highlightColors = [ "", "255,255,192,1", "255,192,255,1", "192,255,255,1" ];
-
+    var cls; // cloud
     //
     // Books of the bible, chapter count, and verse count obtained from http://www.deafmissions.com/tally/bkchptrvrs.html
     //
@@ -289,10 +289,19 @@
     
     function getGoing()
     {
+        // set up our cloud
+        cls = new cloudLocalStorage ( "grkinterlinear_ls.dat", "grkinterlinear_ls.q" );
+        cls.addMatchKey ( "notes\_.*" );
+        cls.addMatchKey ( "bm\_.*" );
+        cls.addMatchKey ( "hl\_.*" );
+        cls.start ( 30000 );
+        
+        // load app settings and go
         setTimeout (function()
                     { 
                        loadLocalStorageAndSync ( startApp ); // start the app after we load the settings!
-                    }, 250); // kick off a load in 1000ms
+                    }, 250);
+                       
     }
     
             function processGreekVerse( s )

@@ -89,6 +89,10 @@
 		<string>PGSplashScreen</string>
 		<key>ActionSheet</key>
 		<string>ActionSheet</string>
+		<key>ICloudPlugin</key>
+		<string>ICloudPlugin</string>
+		<key>ICloudDocument</key>
+		<string>ICloudDocument</string>
 	</dict>
 </dict>
 </plist>
