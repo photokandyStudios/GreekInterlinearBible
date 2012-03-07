@@ -72,8 +72,14 @@ var fileImportExport = function( filename )
             for (var i=0;i<ls.length;i++)
             {
                 var kv = ls[i].split("[EQ]");
-                //TODO: Question: import only matchkeys? or all?
-                localStorage.setItem ( kv[0], kv[1] );
+                for (var j=0; j<self.matchKeys.length; j++)
+                {
+                    var re = new RegExp ( self.matchKeys[j], "gi" );
+                    if ( kv[0].match ( re ) )
+                    {
+                        localStorage.setItem ( kv[0], kv[1] );
+                    }
+                }
             }
             if (consoleLogging) { console.log ("Import complete."); }
             if (self.readCallback)
@@ -129,7 +135,7 @@ var fileImportExport = function( filename )
         console.log ("Error: " + error.code);
             if (self.readCallback)
             {
-                self.readCallback();
+                self.readCallback( error );
             }
     }
 
@@ -162,16 +168,82 @@ var fileImportExport = function( filename )
         window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, self.gotFStoRead, self.fail);
     }
 }        
-        
+       
+function generateExport ( whichStuff )
+{
+    console.log ("Starting export...");
+    var filename = "export_";
+    var now = new Date();
+    filename += now.format ("yyyymmdd_HHMMss");
+    filename += ".dat";
+
+    console.log ("... filename is " + filename);
+    
+    var exporter = new fileImportExport ( filename );
+    
+    switch (whichStuff)
+    {
+        case 1:    // export notes only
+                exporter.addMatchKey ( "note\_.*" ); 
+                break;
+        case 2:     // export bookmarks only
+                exporter.addMatchKey ( "bm\_.*" );
+                break;
+        case 3:     // export highlights only
+                exporter.addMatchKey ( "hl\_.*" );
+                break;
+        default:    // export everything, including settings
+                exporter.addMatchKey ( ".*" );
+                break;
+    }
+    console.log ("... finished adding keys...");
+    
+    exporter.write ( function() { navigator.notification.alert ("Export completed successfully.", null, "Export Status" );} );
+}
+
+function generateImport ( whichStuff )
+{
+    var filename = "import.dat";
+    var importer = new fileImportExport ( filename );
+ 
+    switch (whichStuff)
+    {
+        case 1:    // import notes only
+                importer.addMatchKey ( "note\_.*" ); 
+                break;
+        case 2:     // import bookmarks only
+                importer.addMatchKey ( "bm\_.*" );
+                break;
+        case 3:     // import highlights only
+                importer.addMatchKey ( "hl\_.*" );
+                break;
+        default:    // import everything, including settings
+                importer.addMatchKey ( ".*" );
+                break;
+    }
+    
+    importer.read ( function( e ) 
+                    {
+                        if (!e)
+                        { 
+                            navigator.notification.alert ("Import completed successfully.", null, "Import Status" );
+                        }
+                        else
+                        {
+                            navigator.notification.alert ("Import encountered an error.", null, "Import Status" );
+                        }
+                    } );
+       
+}
+
+
     </script>
     <h3>Text</h3>
     <ul class="listGroup">
         <li class="listItem">Greek Text
-            <select id="ddGreekText" class="dropdown" default="byz" localStorage="TextGreekText">
+            <select id="ddGreekText" class="dropdown" default="byzp" localStorage="TextGreekText">
                 <option value="byz">Byzantine (2000)</option>
                 <option value="byzp">Byzantine (2000) Parsed</option>
-<!--                <option value="scr">Scrivener (1894)</option>
-                <option value="ste">Stephanos (1550)</option>-->
                 <option value="tr">Textus Receptus (1894)</option>
                 <option value="trp">Textus Receptus (1894) Parsed</option>
                 <option value="tis">Tischendorf 8th Edition</option>
@@ -188,9 +260,6 @@ var fileImportExport = function( filename )
         <li class="listItem">Show Notes Inline<div class="switch"><span class="thumb"></span><input type="checkbox" localStorage="LayoutInlineNotes"/></div></li>
         <li class="listItem">English Transliteration<div class="switch"><span class="thumb"></span><input type="checkbox" localStorage="LayoutTransliteration"/></div></li>
     </ul>
-    <p style="text-align: center">English Transliteration takes the selected Greek text and converts the Greek characters into characters English speakers are more
-    familiar with. For example, the Greek "Alpha" would become the English "a". There are multiple methods to do this, some more readable than others. This program
-    uses one which hopefully makes the text reasonably readable.</p>
     <h3>Layout</h3>
     <ul class="listGroup">
         <li class="listItem">Column Width
@@ -201,7 +270,7 @@ var fileImportExport = function( filename )
             </select>
         </li>
         <li class="listItem">Text Size
-            <select id="ddTextSize" class="dropdown" default="14" localStorage="LayoutTextSize">
+            <select id="ddTextSize" class="dropdown" default="12" localStorage="LayoutTextSize">
                 <option value="8">Tiny Print</option>
                 <option value="10">Smaller Print</option>
                 <option value="12">Small Print</option>
@@ -214,7 +283,7 @@ var fileImportExport = function( filename )
             </select>
         </li>
         <li class="listItem">Typeface
-            <select id="ddTypeface" class="dropdown" default="Georgia" localStorage="LayoutFontFamily">
+            <select id="ddTypeface" class="dropdown" default="Helvetica" localStorage="LayoutFontFamily">
                 <option value="Arial">Arial</option>
                 <option value="Courier">Courier</option>
                 <option value="Georgia">Georgia</option>
@@ -225,7 +294,7 @@ var fileImportExport = function( filename )
             </select>
         </li>
         <li class="listItem">Line Spacing
-            <select id="ddLineSpacing" class="dropdown" default="100" localStorage="LayoutLineSpacing">
+            <select id="ddLineSpacing" class="dropdown" default="75" localStorage="LayoutLineSpacing">
                 <option value="50">Tightest Spacing</option>
                 <option value="66">Tighter Spacing</option>
                 <option value="75">Tight Spacing</option>
@@ -244,24 +313,27 @@ var fileImportExport = function( filename )
                                   prior to turning on iCloud.</p>    
     <h3>Import / Export</h3>
     <ul class="listGroup">
-        <li class="listItem">Export Notes...</li>
-        <li class="listItem">Export Bookmarks...</li>
-        <li class="listItem">Export Highlights...</li>
+        <li class="listItem" onclick="generateExport(0);" >Export...</li>
     </ul>
-    <p style="text-align: center">Export will create a file (export_YYYYMMDD.txt) that you can
-                                  download when you connect your device to iTunes.</p>
+    <p style="text-align: center">Export will create a file (export_YYYYMMDD_HHMMSS.dat) that you can
+                                  download when you connect your device to iTunes. It contains
+                                  all your settings, notes, bookmarks, and highlights.</p>
         
     <ul class="listGroup">
-        <li class="listItem">Import Notes...</li>
-        <li class="listItem">Import Bookmarks...</li>
-        <li class="listItem">Import Highlights...</li>
+        <li class="listItem" onclick="generateImport(1);" >Import Notes...</li>
+        <li class="listItem" onclick="generateImport(2);" >Import Bookmarks...</li>
+        <li class="listItem" onclick="generateImport(3);" >Import Highlights...</li>
+        <li class="listItem" onclick="generateImport(0);" >Import Everything...</li>
     </ul>
     <p style="text-align: center">Before importing, connect your device to iTunes, and then copy the file
-                                  you want to import. Be sure to name it "import.txt", or the import will
+                                  you want to import. Be sure to name it "import.dat", or the import will
                                   fail.</p>
 
     <script>
+    onPageLoaded = function ()
+    {
         processCheckBoxes();
         processDropDowns();
+    }
     </script>
 </div>
