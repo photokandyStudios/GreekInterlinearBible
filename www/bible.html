@@ -14,13 +14,13 @@
     var settingsLayoutTextSize = localStorage.getItem("LayoutTextSize");
     if (!settingsLayoutTextSize)
     {
-        settingsLayoutTextSize = "14";
+        settingsLayoutTextSize = "12";
     }
 
     var settingsLayoutFontFamily = localStorage.getItem("LayoutFontFamily");
     if (!settingsLayoutFontFamily)
     {
-        settingsLayoutFontFamily = "Georgia";
+        settingsLayoutFontFamily = "Helvetica";
     }
     
     var settingsLayoutColumnWidths = localStorage.getItem("LayoutColumnWidths");
@@ -32,7 +32,7 @@
     var settingsLayoutLineSpacing = localStorage.getItem("LayoutLineSpacing");
     if (!settingsLayoutLineSpacing)
     {
-        settingsLayoutLineSpacing = "100";
+        settingsLayoutLineSpacing = "75";
     }
 
     var settingsLayoutVerseSpacing = localStorage.getItem("LayoutVerseSpacing");
@@ -272,7 +272,6 @@
         else
         {
           //  //console.log ("long click");
-            // now, find which word we're over
             currentReference = "";
             // see first if we can't find the verse we're over, word or no word...
             for ( var i=0; i<pages[curPage].verseYStart.length; i++)
@@ -289,17 +288,39 @@
                 }
             }
             
+            // now, find which word we're over
+            // also calculate the nearest word
+            var minDistance = 999;
+            var distanceFromPoint;
             
             for (var i=0; i < pages[curPage].words.length; i++)
             {
-                if ( pages[curPage].words[i].x <= elx &&
-                     pages[curPage].words[i].y <= ely &&
-                     elx <= pages[curPage].words[i].x + pages[curPage].words[i].width &&
-                     ely <= pages[curPage].words[i].y + pages[curPage].words[i].height )
+                var thisWord = pages[curPage].words[i];
+                
+                if (thisWord.wordType != 40) // we don't count morphology as a word
                 {
-                    theWord = pages[curPage].words[i].text;
-                    currentReference = passage + "." + pages[curPage].words[i].verse;
-                    whichSide = pages[curPage].words[i].whichSide;
+                    if ( thisWord.x <= elx &&
+                         thisWord.y <= ely &&
+                         elx <= thisWord.x + thisWord.width &&
+                         ely <= thisWord.y + thisWord.height )
+                    {
+                        theWord = thisWord.text;
+                        currentReference = passage + "." + thisWord.verse;
+                        whichSide = thisWord.whichSide;
+                        minDistance = 0; // we're /in/ the word; so nothing else can be closer.
+                    }
+                    
+                    var centerX = thisWord.x + (thisWord.width / 2);
+                    var centerY = thisWord.y + (thisWord.height / 2);
+                    distanceFromPoint = Math.sqrt ( (Math.abs ( centerX - elx )) * 2 +
+                                                    (Math.abs ( centerY - ely )) * 2 ) ;
+                    if (distanceFromPoint < minDistance )
+                    {
+                        minDistance = distanceFromPoint;
+                        theWord = thisWord.text;
+                        currentReference = passage + "." + thisWord.verse;
+                        whichSide = thisWord.whichSide;
+                    }
                 }
             }
             ////console.log (theWord);
@@ -569,8 +590,8 @@
         {
             if ( selectedVerse [i] == "Y" )
             {
-                localStorage.removedItem ( "hl_" + i )
-                cls.removeItem ( "hl_" + i )
+                localStorage.removeItem ( "hl_" + i )
+                cls.removedItem ( "hl_" + i )
                 if ($(i))
                 {
                     $(i).style.backgroundColor = "transparent";
@@ -774,7 +795,7 @@
         selectedGreekText = localStorage.getItem("TextGreekText");
         if (!selectedGreekText)
         {
-            selectedGreekText = "byz";
+            selectedGreekText = "byzp";
         }
         selectedRightText = localStorage.getItem("TextRightText");
         if (!selectedRightText)

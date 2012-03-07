@@ -121,7 +121,7 @@
     var selectedGreekText = localStorage.getItem("TextGreekText");
     if (!selectedGreekText)
     {
-        selectedGreekText = "byz";
+        selectedGreekText = "byzp";
     }
     var selectedRightText = localStorage.getItem("TextRightText");
     if (!selectedRightText)
@@ -388,7 +388,7 @@ function updateControlBar( url )
             // startup variables
             var mySiteName = "Greek Interlinear";
             var myMenuName = "<div id='mnuControlBar' class='segmentedControlBar'>" + 
-                             "<a class='sel' style='width:54px' href='javascript:loadMenu(\"./menu.html\", updateControlBar);'>Verses</a>" + 
+                             "<a class='sel' style='width:50px' href='javascript:loadMenu(\"./menu.html\", updateControlBar);'>Goto</a>" + 
                              "<a style='width:88px' href='javascript:loadMenu(\"./bookmarks.html\", updateControlBar);'>Bookmarks</a>" + 
                              "<a style='width:79px' href='javascript:loadMenu(\"./highlights.html\", updateControlBar);'>Highlights</a>" + 
                              "<a style='width:46px' href='javascript:loadMenu(\"./notes.html\", updateControlBar);'>Notes</a>" + 
