@@ -30,7 +30,7 @@ function ICloudPlugin()
     {
         var args={};
         args.content = content;
-        PhoneGap.exec ( success, fail, "ICloudPlugin", "setContent", []);
+        PhoneGap.exec ( success, fail, "ICloudPlugin", "setContent", [args]);
     }
 
 }
@@ -55,6 +55,11 @@ function cloudLocalStorage ( filename, msgQueue )
     self.dataCloud = new ICloudPlugin();
     self.msgQCloud = new ICloudPlugin();
     
+    self.qid = null;
+    self.cid = null;
+    
+    self.saveDelay = 30000; // 30s after a q or content change
+    self.enabled = true;
     self.qcontent = "";
     self.qcontentChanged = false;
     
@@ -67,6 +72,7 @@ function cloudLocalStorage ( filename, msgQueue )
     
     self.loadFrom = function ()
     {
+        if (!self.enabled) { return; }
         self.dataCloud.loadFileFromCloud ( self.contentLoadComplete, self.contentLoadFailure, self.filename );
     }
     
@@ -81,10 +87,12 @@ function cloudLocalStorage ( filename, msgQueue )
     
     self.contentLoadComplete = function ( o )
     {
+        //console.log ( o );
         self.dataCloud.getContent ( self.gotContent, self.contentGetFailure );
     }
     self.queueLoadComplete = function ( o )
     {
+        //console.log ( o );
         self.dataCloud.getContent ( self.gotQueue, self.queueGetFailure );
     }
     
@@ -100,6 +108,7 @@ function cloudLocalStorage ( filename, msgQueue )
     self.gotContent = function ( d )
     {
         if (consoleLogging) { console.log ("Cloud: reading localStorage"); }
+        //console.log ( d );
         var ls = d.split("[EOK]");
         for (var i=0;i<ls.length;i++)
         {
@@ -114,33 +123,45 @@ function cloudLocalStorage ( filename, msgQueue )
     self.gotQueue = function ( d )
     {
         if (consoleLogging) { console.log ("Cloud: reading localStorage message queue"); }
+        console.log ( d );
         var ls = d.split("[EOK]");
         for (var i=0;i<ls.length;i++)
         {
             localStorage.removeItem ( ls[i] );
         }
         if (consoleLogging) { console.log ("Cloud: Message Queue read complete."); }
-
-        if (self.saveDelay)
-        {
-            self.cid = setTimeout ( function() { self.saveTo(); }, self.saveDelay );
-        }
     }
     
     self.removedItem = function ( k )
     {
         self.qcontent += k + "[EOK]";
         self.qcontentChanged = true;
+        if (self.qid)
+        {
+            clearTimeout ( self.qid );
+            self.qid = null;
+        }
+        self.qid = setTimeout ( self.saveQTo, self.saveDelay );
     }
     
     self.updatedItem = function ()
     {
         self.contentChanged = true;
+        if (self.cid)
+        {
+            clearTimeout ( self.cid );
+            self.cid = null;
+        }
+        self.cid = setTimeout ( self.saveTo, self.saveDelay );
+        
     }
     
     self.saveTo = function ()
     {
-        if (self.contentChanged || self.qcontentChanged )
+        self.cid = null;
+    try {
+        if (!self.enabled) { return; }
+        if (self.contentChanged )
         {
             var theContent="";
 
@@ -158,10 +179,10 @@ function cloudLocalStorage ( filename, msgQueue )
                     }
                 }
             }
-
+            //console.log ( theContent );
             self.dataCloud.setContent ( self.contentSet, self.contentSetFailure, theContent );
         }
-        
+    } catch (e ) { console.log (e.message); }
     }
     
     self.contentSetFailure = function ( o )
@@ -175,41 +196,40 @@ function cloudLocalStorage ( filename, msgQueue )
     
     self.contentSet = function ( o )
     {
+        //console.log ( o );
         self.dataCloud.saveFileToCloud ( self.contentSaveComplete, self.contentSaveFailure, self.filename );
     }
     
     self.queueSet = function ( o )
     {
+        //console.log ( o );
         self.dataCloud.saveFileToCloud ( self.queueSaveComplete, self.queueSaveFailure, self.msgQueue );
     }
     
     self.contentSaveComplete = function ( o )
     {
+        //console.log ( o );
         console.log ("localStorage saved to cloud");
         self.contentChanged = false;
+    }
+    
+    self.saveQTo = function ()
+    {
+        self.qid = null;
+        if (!self.enabled) { return; }
         if (self.qcontentChanged)
         {
             self.msgQCloud.setContent ( self.queueSet, self.queueSetFailure, qContent );
-        }
-        else
-        {
-            if (self.saveDelay)
-            {
-                self.cid = setTimeout ( function() { self.saveTo(); }, self.saveDelay );
-            }
         }
     }
     
     self.queueSaveComplete = function ( o )
     {
+        //console.log ( o );
         console.log ("Queue saved.");
         self.qcontent = "";
         self.qcontentChanged = false;
 
-        if (self.saveDelay)
-        {
-            self.cid = setTimeout ( function() { self.saveTo(); }, self.saveDelay );
-        }
     }
     
     self.contentSaveFailure = function ( o )
@@ -221,15 +241,5 @@ function cloudLocalStorage ( filename, msgQueue )
     {
         console.log ("queueSaveFailure: " + o );
     }
-    
-    self.start = function ( dly )
-    {
-        self.saveDelay = dly;
-        self.loadFrom ();
-    }
-    self.stop = function ()
-    {
-        self.saveDelay = 0;
-        self.clearTimeout ( self.cid );
-    }
+
 }

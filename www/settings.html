@@ -2,6 +2,167 @@
     <script>
 //        showSearch( doSearchBible );
         setPageTitle ("Settings");
+        
+var fileImportExport = function( filename )
+{
+    var self = this;
+    self.filename = filename;
+
+    self.matchKeys = Array();   // these are localStorage keys that will be sync'd
+
+    self.addMatchKey = function ( v )
+    {
+        self.matchKeys.push ( v );
+    }
+    
+    /**
+     * Called when the filesystem is successfully returned. Will attempt to get the filename
+     * access (and create it if necesssary).
+     */
+    self.gotFStoWrite = function (fileSystem)
+    {
+        fileSystem.root.getFile(self.filename, {create: true, exclusive: false}, self.gotFileEntrytoWrite, self.fail);
+    }
+    
+    /**
+     *
+     * Called when the filesystem is successfully returned. It will attempt to open filename for
+     * read-only access.
+     */
+    self.gotFStoRead = function (fileSystem)
+    {
+        fileSystem.root.getFile(self.filename, null, self.gotFileEntrytoRead, self.fail);
+    }
+    
+    /**
+     *
+     * Called when file is obtained for writing. It will create a fileWriter
+     * which will actually write the contents of localStorage.
+     */
+    self.gotFileEntrytoWrite = function (fileEntry)
+    {
+        fileEntry.createWriter (self.gotFileWriter, self.fail);
+    }
+
+    /**
+     *
+     * Called when file is obtained for reading. It will create a fileReader
+     * which will read the contents of the file into localStorage.
+     */
+    self.gotFileEntrytoRead = function (fileEntry)
+    {
+        fileEntry.file (self.gotFileReader, self.fail);
+    }
+    
+    /**
+     *
+     * Called when the file file is successfully opened for reading.
+     * Parses the file by splitting it into key/value pairs, and then splitting
+     * those pairs into the key and the value. It then saves them to localStorage
+     * using localStorage.setItem(). 
+     *
+     * NOTE: localStorage is /not/ cleared when this file is loaded.
+     */
+    self.gotFileReader = function (file)
+    {
+        var reader = new FileReader();
+        reader.onloadend = function (evt) { 
+            if (consoleLogging) { console.log ("Importing localStorage from " + self.filename ); }
+            var ls = evt.target.result.split("[EOK]");
+            for (var i=0;i<ls.length;i++)
+            {
+                var kv = ls[i].split("[EQ]");
+                //TODO: Question: import only matchkeys? or all?
+                localStorage.setItem ( kv[0], kv[1] );
+            }
+            if (consoleLogging) { console.log ("Import complete."); }
+            if (self.readCallback)
+            {
+                self.readCallback();
+            }
+        };
+        reader.readAsText (file);
+    }
+
+    /**
+     *
+     * Called when file is open for writing and created if necessary.
+     * Writes out each value in localStorage as a key/value pair.
+     */
+    self.gotFileWriter = function (writer)
+    {
+        if (consoleLogging) { console.log ("Exporting localStorage to " + self.filename); }
+        
+        var s = "";
+        
+        for (var i=0; i<localStorage.length; i++)
+        {
+            var key = localStorage.key(i);
+            var value = localStorage[key];
+            for (var j=0; j<self.matchKeys.length; j++)
+            {
+                var re = new RegExp ( self.matchKeys[j], "gi" );
+                if ( key.match ( re ) )
+                {
+                    s = s + key + "[EQ]" + value + "[EOK]";
+                }
+            }
+        }
+        writer.write ( s );
+        
+        if (consoleLogging) { console.log ("Export Complete."); }
+        
+        if (self.writeCallback)
+        {
+            self.writeCallback();
+        }
+    }
+
+    /**
+     *
+     * If an error should occur during a read or write operation,
+     * we will display the error. If a readCallback() is defined,
+     * call it.
+     */
+    self.fail = function (error)
+    {
+        console.log ("Error: " + error.code);
+            if (self.readCallback)
+            {
+                self.readCallback();
+            }
+    }
+
+    /**
+     *
+     * Kicks off a save operation. If callback is specified,
+     * it is called when the save operation is complete.
+     */
+    self.write = function ( callback )
+    {
+        if (callback)
+        {
+            self.writeCallback = callback;
+        }
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, self.gotFStoWrite, self.fail);
+    }
+    
+    /**
+     *
+     * Kicks off a read operation. if callback is defined,
+     * it is called when the operation is complete OR a read error
+     * occurs.
+     */
+    self.read = function( callback )
+    {
+        if (callback)
+        {
+            self.readCallback = callback;
+        }
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, self.gotFStoRead, self.fail);
+    }
+}        
+        
     </script>
     <h3>Text</h3>
     <ul class="listGroup">
@@ -74,6 +235,13 @@
             </select>
         </li>
     </ul>
+    <h3>iCloud</h3>
+    <ul class="listGroup">
+        <li class="listItem">Use iCloud<div class="switch"><span class="thumb"></span><input type="checkbox" localStorage="settingsUseCloud"/></div></li>        
+    </ul>
+    <p style="text-align: center">Enabling iCloud will permit you to keep your notes, bookmarks, and
+                                  highlights in sync across all your devices. It is suggested you export your content
+                                  prior to turning on iCloud.</p>    
     <h3>Import / Export</h3>
     <ul class="listGroup">
         <li class="listItem">Export Notes...</li>

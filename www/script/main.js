@@ -6,8 +6,9 @@
  *
  **/
 
-    var highlightColors = [ "", "255,255,192,1", "255,192,255,1", "192,255,255,1" ];
     var cls; // cloud
+    var clsLoadedOnce = false;
+    var highlightColors = [ "", "255,255,192,1", "255,192,255,1", "192,255,255,1" ];
     //
     // Books of the bible, chapter count, and verse count obtained from http://www.deafmissions.com/tally/bkchptrvrs.html
     //
@@ -286,20 +287,53 @@
     }
 
 
-    
+    function checkCloudSetting ()
+    {
+        if (!cls)
+        {
+            // set up our cloud
+            cls = new cloudLocalStorage ( "grkinterlinear_ls.dat", "grkinterlinear_ls.q" );
+            cls.addMatchKey ( "note\_.*" );
+            cls.addMatchKey ( "bm\_.*" );
+            cls.addMatchKey ( "hl\_.*" );
+        }
+        var useCloud =localStorage.getItem ( "settingsUseCloud" );
+        if (!useCloud)
+        {
+            useCloud = "off";
+        } 
+        
+        cls.enabled = (useCloud == "on");    
+        
+        if (cls.enabled && !clsLoadedOnce)
+        {
+            cls.loadFrom();
+            clsLoadedOnce = true;
+        }
+        
+        setTimeout ( checkCloudSetting, 30000 ); // check for a cloud setting change every 30s
+    }
+    function loadCloud()
+    {
+        clsLoadedOnce = false;
+        checkCloudSetting();
+        startApp();
+    }
+    function resume()
+    {
+        if (cls)
+        {
+            cls.loadFrom(); // sync from the cloud after a resume
+            clsLoadedOnce = true;
+        }
+    }
     function getGoing()
     {
-        // set up our cloud
-        cls = new cloudLocalStorage ( "grkinterlinear_ls.dat", "grkinterlinear_ls.q" );
-        cls.addMatchKey ( "notes\_.*" );
-        cls.addMatchKey ( "bm\_.*" );
-        cls.addMatchKey ( "hl\_.*" );
-        cls.start ( 30000 );
         
         // load app settings and go
         setTimeout (function()
                     { 
-                       loadLocalStorageAndSync ( startApp ); // start the app after we load the settings!
+                       loadLocalStorageAndSync ( loadCloud ); // start the app after we load the settings!
                     }, 250);
                        
     }
@@ -372,3 +406,4 @@ function updateControlBar( url )
                 loadBible ( selectedRightText );
             }
             document.addEventListener ( "deviceready", onDeviceReady, false);
+            document.addEventListener ( "resume", resume, false );
