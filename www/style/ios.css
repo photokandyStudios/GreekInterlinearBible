@@ -136,16 +136,17 @@ body
     line-height: 24px;
     text-align: right;
     background-color: transparent;
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 14px;
+    font-weight: normal;
     border: none;    
-    background-image: url('../images/arrow.png');
+    background-image: url('../images/masks/BracketRightGrey@2x.png');
     background-repeat: no-repeat;
-    background-position: right center;
+    background-position: 226px center;
+    background-size: 36px 36px;
     padding-right: 24px;
     float: right;    
     width: 250px;
-    margin-top: -2px;
+    color: #5E6A85;
 }
 
 .container
@@ -237,9 +238,12 @@ body
 
 .segmentedControlBar
 {
-    border-radius: 10px;
+    border-radius: 5px;
     border: 1px single #717880;
     margin: 3px;
+    margin-bottom: 2px;
+    margin-left:12px;
+    margin-right: 12px;
     -webkit-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.5);
     background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#F4F5F7), to(#A6A7AA));
 }
@@ -247,8 +251,8 @@ body
 {
     text-decoration: none;
     padding: 3px;
-    padding-left: 5px;
-    padding-right: 5px;
+    padding-left: 3px;
+    padding-right: 3px;
     border-right: 1px solid rgba(113, 120, 128, 0.5); 
     border-left: 1px solid rgba(204, 207, 211, 0.5) ; 
     display: inline-block;
@@ -261,14 +265,14 @@ body
 .segmentedControlBar A:first-child
 {
     border-left: none;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
 }
 .segmentedControlBar A:last-child
 {
     border-right: none;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 .segmentedControlBar A.sel
 {
@@ -642,11 +646,11 @@ textarea
     border: none;
 }
 
-/* some basic hide/show to get the app in the base state */
-                #btnBack, #btnMenu, #theSearch
-                {
-                    display: none;
-                }
+#btnBack, #btnMenu, #theSearch
+{
+    display: none;
+}
+
 #container1, #container2
 {
     position: relative;
@@ -681,19 +685,29 @@ textarea
 #bodyPanel 
 { 
     display: none; 
+    -webkit-transition: left 0.5s ease;
+    -webkit-transform: translate3d(0,0,0);
 }
 
 #menuPanel 
 {
-    left: -324px;
+    zleft: -320px;
+    -webkit-transform: translate3d(-320px,0,0);
     z-index: 4;
-    box-shadow: 0px 0px 8px #000;
+    z-box-shadow: 0px 0px 8px #000;
+    border-right: 1px solid #888;
     -webkit-transition: left 0.5s ease;
-    width: 320px;
-    -webkit-transform: translate3d(0,0,0);
+    width: 319px;
 }
 
-#btnMenu { display: block;     width: 16px;
+#btnBack, #btnMenu, #btnEdit
+{
+    margin-top: 6px;
+}
+#btnMenu 
+{ 
+    display: block;     
+    width: 16px; 
 }
 #btnMenu span
 {
