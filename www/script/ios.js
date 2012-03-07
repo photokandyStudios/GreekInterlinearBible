@@ -696,24 +696,56 @@ function toggleMenu()
 function hideMenu ()
 {
     menuVisible = false;
-    $("menuPanel").style.left = "-324px";
+
+    $("menuPanel").style.webkitTransition = "left,-webkit-transform 0.5s ease-in-out";
+    $("bodyPanel").style.webkitTransition = "left,-webkit-transform 0.5s ease-in-out";
+    $("tabBar").style.webkitTransition = "left,-webkit-transform 0.5s ease-in-out";
+
+    $("menuPanel").style.webkitTransform = "translate3d(-320px,0,0)";
+    $("bodyPanel").style.webkitTransform = "translate3d(0,0,0)";
+    $("tabBar").style.webkitTransform = "translate3d(0,0,0)";
+    
+    setTimeout ( function() 
+                 {
+                    $("menuPanel").style.webkitTransition = "left 0.5s ease-in-out";
+                    $("bodyPanel").style.webkitTransition = "left 0.5s ease-in-out";
+                    $("tabBar").style.webkitTransition = "left 0.5s ease-in-out";
+                 }, 525 );
+
 }
 
 function showMenu ()
 {
     menuVisible = true;
-    $("menuPanel").style.left = "0px";
+
+    $("menuPanel").style.webkitTransition = "left,-webkit-transform 0.5s ease-in-out";
+    $("bodyPanel").style.webkitTransition = "left,-webkit-transform 0.5s ease-in-out";
+    $("tabBar").style.webkitTransition = "left,-webkit-transform 0.5s ease-in-out";
+
+    $("menuPanel").style.webkitTransform = "translate3d(0,0,0)";
+    $("bodyPanel").style.webkitTransform = "translate3d(320px,0,0)";
+    $("tabBar").style.webkitTransform = "translate3d(320px,0,0)";
+    
+    setTimeout ( function() 
+                 {
+                    $("menuPanel").style.webkitTransition = "left 0.5s ease-in-out";
+                    $("bodyPanel").style.webkitTransition = "left 0.5s ease-in-out";
+                    $("tabBar").style.webkitTransition = "left 0.5s ease-in-out";
+                 }, 525 );
+
     setTimeout(function () {
         resetSB ( sbMenu );
-    }, 375);
-    if (onMenuDisplayed) { onMenuDisplayed (); }
+        if (onMenuDisplayed) { onMenuDisplayed (); }
+    }, 550);
 }
 
 function defaultSwipe ( e )
 {
     if (disableGestures) { return; }
 //TODO: handle iPhone here
- if ( (e.x < 240 && isIPad()) || menuVisible )
+ if ( (e.x < 240 && isIPad()) || 
+      (e.x <  32 && isIPhone()) ||
+       menuVisible )
  {
     if (e.direction == "left")
     {
