@@ -701,20 +701,22 @@ function drawPage ( pageNumber )
         }
 
         // now, try to be fancy?
-        var lingrad = ctx.createLinearGradient(0,Math.floor(pages[pageNumber].verseYStart[i]),
-                                               0,Math.floor(pages[pageNumber].verseYStart[i]+50));
-        lingrad.addColorStop(0,      'rgba(0,16,32,0.0625)');
-        lingrad.addColorStop(0.125,  'rgba(0,16,32,0)');
-        lingrad.addColorStop(1,      'rgba(0,16,32,0)');
-        
-        ctx.fillStyle = lingrad;
-        ctx.fillRect ( 0,           pages[pageNumber].verseYStart[i], 
-                       canvasWidth, 50 );
+        if (pages[pageNumber].verseYStart[i] != canvasMargin )
+        {
+            var lingrad = ctx.createLinearGradient(0,Math.floor(pages[pageNumber].verseYStart[i]),
+                                                   0,Math.floor(pages[pageNumber].verseYStart[i]+50));
+            lingrad.addColorStop(0,      'rgba(0,16,32,0.0625)');
+            lingrad.addColorStop(0.125,  'rgba(0,16,32,0)');
+            lingrad.addColorStop(1,      'rgba(0,16,32,0)');
+            
+            ctx.fillStyle = lingrad;
+            ctx.fillRect ( 0,           pages[pageNumber].verseYStart[i], 
+                           canvasWidth, 50 );
 
-        ctx.fillStyle = "rgba(0,16,32,0.25)";
-        ctx.fillRect ( 0,           Math.floor(pages[pageNumber].verseYStart[i]), 
-                       canvasWidth, 1 );
-        
+            ctx.fillStyle = "rgba(0,16,32,0.25)";
+            ctx.fillRect ( 0,           Math.floor(pages[pageNumber].verseYStart[i]), 
+                           canvasWidth, 1 );
+        }
       }
     }
     
