@@ -168,7 +168,8 @@
     
     function loadBible( bc )
     {
-        //console.log ("attempted to load " + bc);
+        if (bc == "ste") { bc = "byzp"; }
+        console.log ("attempted to load " + bc);
         if (bc == "kjv" || bc == "ylt")
         {
             if (bibleRightCode == bc)
@@ -191,7 +192,9 @@
         newScript.charset = "utf-8";
         newScript.src = "./bibles/unbound/" + bc + ".js";
         //console.log (newScript);
+        //console.log ("loading: " + newScript.src );
         $("bodyPanel").appendChild (newScript);
+        //console.log ("loaded.");
         if (bc == "kjv" || bc == "ylt")
         {
             selectedRightText = bc;
@@ -315,8 +318,11 @@
     }
     function loadCloud()
     {
+        console.log ("loading cloud...");
         clsLoadedOnce = false;
         checkCloudSetting();
+        
+        console.log ("starting app...");
         startApp();
     }
     function resume()
@@ -329,7 +335,7 @@
     }
     function getGoing()
     {
-        
+        console.log ("loading settings...");
         // load app settings and go
         setTimeout (function()
                     { 

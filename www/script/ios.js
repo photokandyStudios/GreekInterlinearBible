@@ -2181,6 +2181,23 @@ function saveNotes()
     hideNotes();
 }
 
+// overlay functionality
+function showOverlay ( i )
+{
+    console.log ("showing Overlay: " + i );
+    disableGestures = true;
+    $("imgOverlay").style.display = "block";
+    $("imgOverlay").style.backgroundImage = "url('"+i+"')";
+}
+
+function hideOverlay ( i )
+{
+    console.log ("hiding Overlay.");
+    disableGestures = false;
+    $("imgOverlay").style.display = "none";
+    $("imgOverlay").style.backgroundImage = "none";
+}
+
 //
 // end ios.js
 //

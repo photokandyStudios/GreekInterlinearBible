@@ -227,6 +227,7 @@ function generateImport ( whichStuff )
                         if (!e)
                         { 
                             navigator.notification.alert ("Import completed successfully.", null, "Import Status" );
+                            cls.updatedItem(); // tell the cloud we got new stuff!
                         }
                         else
                         {

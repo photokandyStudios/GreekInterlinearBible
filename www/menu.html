@@ -10,6 +10,18 @@
        o.nextSibling.nextSibling.classList.toggle("open");
        resetSB ( sbMenu, 550 );
   }
+  onMenuDisplayed = function()
+  {
+    // also, if this is our first time, show the help :-)
+    if (!localStorage.firstTimeUserPage2)
+    {
+        console.log ("first time, determine help to show.");
+        localStorage.firstTimeUserPage2 = "yes";
+        if ( isIPad() && isLandscape() ) { showOverlay ( "./images/help/help-ipad-landscape-page2.png" ); }
+        if ( isIPad() && isPortrait()  ) { showOverlay ( "./images/help/help-ipad-portrait-page2.png"  ); }
+        if ( isIPhone() )                { showOverlay ( "./images/help/help-iphone-portrait-page2.png"); }
+    }
+  }
  </script>
     <div id="mnuBooks">
         <a title="Matthew 1" onclick="toggleGrid(this);" class="navSubItem">Matthew</a>

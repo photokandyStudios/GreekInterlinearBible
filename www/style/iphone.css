@@ -63,3 +63,8 @@
 {
     width: 110px;
 }
+
+.iphone #imgOverlay
+{
+    background-size: 100% 100%;
+}
