@@ -807,9 +807,9 @@ textarea
     background-image: -webkit-linear-gradient(#CECECE, #FBFBFB);
     background-image: -moz-linear-gradient(#CECECE, #FBFBFB);
     background-image: -o-linear-gradient(#CECECE, #FBFBFB);
-    -o-transition: all 0.125s ease-in-out;
+  /*  -o-transition: all 0.125s ease-in-out;
     -webkit-transition: all 0.125s ease-in-out;
-    -moz-transition: all 0.125s ease-in-out;
+    -moz-transition: all 0.125s ease-in-out; */
     -o-transform: translateX(0px);
     -webkit-transform: translate3d(0,0,0);
     -moz-transform: translateX(0px);
