@@ -158,9 +158,9 @@
         {
             curPage = 0;    // catch it if curPage isn't defined
         }
-        console.log ("drawing page " + curPage );
+        //console.log ("drawing page " + curPage );
         drawPage (curPage);
-        console.log ("calc top ref.");
+        //console.log ("calc top ref.");
         if (!noCalcTopRef) { calcTopRef(); }
     }
     
@@ -796,7 +796,7 @@
         $("c").addEventListener ( "touchend", canvasMUp, false );
         $("bibleLoadingText").innerHTML = "";
         // and, if possible, hide the splash
-        console.log ("Done. Nuke splash.");
+        //console.log ("Done. Nuke splash.");
         if (navigator)
         {
             if (navigator.splashscreen)
