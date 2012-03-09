@@ -3,6 +3,57 @@
         showSearch( doSearchBible );
         setPageTitle ("About");
     </script>
+    <h3>How to use the Greek Interlinear Bible</h3>
+    <p>You can think of this application in much the same way as a book -- that is, there are books, chapters, and pages,
+       and you can highlight verses, add annotations, and add bookmarks.</p>
+    <h4>Navigation</h4>
+    <p>To go from page to page in the Bible, search results, or Strong's Lookup results, just swipe left to go to the
+       next page, and right to go to the previous page.</p>
+    <p>To go to another location (book, chapter, bookmark, etc.), open the left-side menu. You can do this by clicking on the ≡ button at
+       the upper-left corner of the screen, or by swiping from the left side of the screen to the right.</p>
+    <p>Once the menu is displayed, you can choose from all the Books and Chapters in the New Testament. To select a Book, 
+       click on the Book's name. The available chapters (if there are more than one) will expand underneath. You can then
+       pick a chapter number to navigate to that Book and Chapter.</p>
+    <p>You can also navigate to your highlights, bookmarks, and/or notes from the menu. Just press the appropriate button
+       at the top of the menu, and then select the item you want to navigate to.</p>
+    <p>While the menu will close automatically when you select an item, if you wish to close it manually, press the ≡
+       button again, or swipe to the right.</p>
+    <h4>Selecting Verses and Managing Highlights, Bookmarks, and Notes</h4>
+    <p>You can select a verse simply by tapping it. Once tapped, it will turn a light blue color. Any verses you select
+       will be used when applying highlights, bookmarks, or notes.</p>
+    <p>To create or remove highlights, bookmarks, and/or notes, tap-and-hold on a verse. A popover will appear
+       giving you the options of highlighting using a specific color, removing those highlights, creating a bookmark,
+       removing a bookmark, creating a note, editing a note, and/or removing a note.</p>
+    <p>You can also hold-and-tap on a word to display a popover which can be used to search the Bible for the word,
+       to search Strong's for the word, and more.</p>
+    <h4>Searching</h4>
+    <p>You can search the Bible from the text directly by tapping-and-holding your finger on the word you want to search,
+       and then selecting "Search Bible..." from the resulting popover. Alternatively, you can use the searchbar in the
+       upper-right part of your screen. Just tap in it, and then type a word (or words) in it. When finished, click the
+       "Search" button on the popup keyboard.</p>
+    <p>You can search for a Greek word directly, without tapping-and-holding on a word, by prefixing your search term
+       with the text "greek:". You can then use either transliteration to spell out the Greek word using English
+       letterforms, or you can type in a Greek word directly from the device's built-in Greek keyboard.</p>
+    <p>The search may take a few seconds to appear. Once it does, it will display the reference(s) where the
+       search text was found. On the iPad, the entire verse is displayed (in both Greek and English), while on the
+       iPhone and iPod Touch, only the reference is displayed. To go to the verse, just tap the item.</p>
+    <p>Some searches may result in more than one page of results. To go between pages, just swipe left to go to the
+       next page, and right to go to the previous page.</p>
+    <h4>Strong's Lookup</h4>
+    <p>You can search Strong's from the text directly by tapping-and-holding your finger on a Strong's G-Number, then
+       selecting "Search Strong's..." from the resulting popover. You can also search the entire Strong's dictionary
+       for any word (or words) by selecting "Strong's Lookup" from the tab bar at the bottom of the screen, and then
+       entering your search words in the upper-right searchbar.</p>
+    <p>The search results may result in more than one page. To navigate pages, swipe left to go the next page, and
+       wipe right to go to the previous page.</p>
+    <p>If you tap on a search result item, you'll be taken to a search results page indicating everywhere that G-Number
+       is used.</p>
+    
+    <h3>Morphology</h3>
+    <p>Where available, the morphology of the Greek word is displayed in green text. This code describes the type of word,
+       the person used (that is, first, second, third person), and various tenses. An exhaustive key of what these mean
+       is located at <a href="#" onclick="return openWebPage('http://koti.24.fi/jusalak/GreekNT/PARSINGS.TXT');">http://koti.24.fi/jusalak/GreekNT/PARSINGS.TXT</a>.
+    
     <h3>About the Greek Interlinear Bible v1.0</h3>
     <p>&copy; Copyright 2012 by Kerri Shotts and photoKandy Studios LLC. Portions of the work are obtained from Public Domain and CC-BY-SA sources.</p>
     <h3>Application Design</h3>
@@ -11,15 +62,19 @@
         <li>Books of the bible, chapter count, and verse count obtained from http://www.deafmissions.com/tally/bkchptrvrs.html</li>
         <li>BlockMove from http://matt.might.net/articles/how-to-native-iphone-ipad-apps-in-javascript/</li>
         <li>processScriptTags based on http://bytes.com/topic/javascript/answers/513633-innerhtml-script-tag</li>
-        <li>AJAX SUPPORT MODIFIED FROM http://www.tek-tips.com/viewthread.cfm?qid=1622697&amp;page=13</li>
+        <li>XmlHttpRequest http://www.tek-tips.com/viewthread.cfm?qid=1622697&amp;page=13</li>
         <li>iOS Switches as seen on http://vxjs.org/switch.html, with corresponding code.</li>
         <li>iScroll4, as seen here: http://cubiq.org/iscroll-4 with minor bugfixes.</li>
+        <li>Determining offset based on parent offset as here: http://stackoverflow.com/a/5932203</li>
+        <li>Button CSS based on http://vxjs.org/CSS3/UI/Back_Next_Buttons.htm</li>
+        <li>Click-buster and fast buttons from http://code.google.com/intl/en/mobile/articles/fast_buttons.html</li>
+        <li>Force Mobile Safari to repaint: http://mrdarcymurphy.tumblr.com/post/5574489334/force-mobile-safari-to-repaint-redraw</li>
+        <li>URL Argument Parsing: http://stackoverflow.com/a/7826782</li>
+        <li>Left/Right Swipe Detection: http://rabblerule.blogspot.com/2009/08/detecting-swipe-in-webkit.html</li>
     </ul>
-    <p>Background image of book by Loreine Barbosa. Courtesy of Stock Exchange. Image at http://www.sxc.hu/photo/1204769</p>
-    <p>Some images by Glyphish (http://glyphish.com). Copyright Joseph Wain. Licensed under CC-BY-SA v3.</p>
     <h3>Biblical Texts</h3>
     <p><B>Note:</B> All Biblical text sources are found at <a href="#" onclick="return openWebPage('http://www.unboundbible.com/index.cfm?method=downloads.showDownloadMain');">
-       The Unbound Bible</a>. Converted from original format to JavaScript notation by Kerri Shotts. Conversion maintains oroginal text, references, and order. Empty verses that
+       The Unbound Bible</a>. Converted from original format to JavaScript notation by Kerri Shotts. Conversion maintains original text, references, and order. Empty verses that
        appear in some texts have been replaced with "[...]" to make this clear.</p>
     <h3>Greek NT: Byzantine/Majority Text (2000)</h3>
     <p>The Greek New Testament according to the Byzantine Textform, edited by Maurice A. Robinson and William G. Pierpont, 2000 edition

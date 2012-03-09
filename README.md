@@ -3,9 +3,7 @@ Greek Interlinear Bible
 
 Project code for the Greek Interlinear Bible iOS application. This code is COPYRIGHT (C) 2011-2012 photoKandy Studios LLC. Portions are CC-BY-SA and MIT, and the texts are Public Domain. The icons and graphics are COPYRIGHT their respective owners.
 
-If using to learn PhoneGap, feel free to use this code to "inspire" you, but please, don't copy verbatim the code that is not placed under a CC-BY-SA or MIT license. This is to say that the files located under www/scripts are free to copy and re-use, but those in www are not (they are the actual content of the app). 
-
-The following code is licensed under a CC-BY-SA or MIT license:
+If using to learn PhoneGap, feel free to use this code to "inspire" you, but please, don't copy verbatim the code that is not placed under a CC-BY-SA or MIT license. The following code is licensed under a CC-BY-SA or MIT license:
 
     /www/style/ios.css
     /www/style/ipad-landscape.css
@@ -16,23 +14,19 @@ The following code is licensed under a CC-BY-SA or MIT license:
     /www/style/iphone.css
     /www/style/glossy-black.css
     
-    /www/script/gplusStream.js ***
     /www/script/ios.js
-    /www/script/iscroll.js (modified to support longpress)
-    /www/script/podcastList.js ***
-    /www/script/twitterStream.js ***
+    /www/script/iscroll-lite.js (modified to support longpress)
     /www/script/utility.js
     
     /www/index.html +++
     /www/ChildBrowser.js
+    /www/ICloudPlugin.js
     /www/ActionSheet.js (modified to support iPad)
     /www/phonegap-1.3.0.js
     /www/PhoneGapShim1.js
     /www/PhoneGapShim2.js
     /www/clipboardPlugin.js
     
-Files marked with *** have API KEYS THAT MUST BE CHANGED PRIOR TO YOUR USE.
-
 Files marked with +++ have portions of (C) code. These are marked by comments in the text.
 
 Attributions
@@ -52,6 +46,15 @@ Application Designed by photoKandy Studios LLC in HTML, CSS, and Javascript usin
 *    AJAX SUPPORT MODIFIED FROM http://www.tek-tips.com/viewthread.cfm?qid=1622697&amp;page=13
 *    iOS Switches as seen on http://vxjs.org/switch.html, with corresponding code.
 *    iScroll4, as seen here: http://cubiq.org/iscroll-4 with minor bugfixes.
+*    Determining offset based on parent offset as here: http://stackoverflow.com/a/5932203
+*    Button CSS based on http://vxjs.org/CSS3/UI/Back_Next_Buttons.htm
+*    Click-buster and fast buttons from http://code.google.com/intl/en/mobile/articles/fast_buttons.html
+*    Force Mobile Safari to repaint: http://mrdarcymurphy.tumblr.com/post/5574489334/force-mobile-safari-to-repaint-redraw
+*    URL Argument Parsing: http://stackoverflow.com/a/7826782
+*    Left/Right Swipe Detection: http://rabblerule.blogspot.com/2009/08/detecting-swipe-in-webkit.html
+
+
+
 
 Biblical Texts
 ----
