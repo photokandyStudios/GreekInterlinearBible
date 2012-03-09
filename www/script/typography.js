@@ -65,8 +65,8 @@ var pageReferences = Array();
  * formats a chapter using the page and word objects.
  *
  */
-    var canvasWidth = 1024;         // width. TODO: change based on orientation
-    var canvasHeight = 676;        // height: TODO: change based on orientation
+    var canvasWidth = 1024;         // width. will change based on orientation
+    var canvasHeight = 676;        // height: will change based on orientation
 
 function formatChapter ( passage )
 {
@@ -148,7 +148,13 @@ function formatChapter ( passage )
     var thisPageNumber = 0;
     var y = canvasMargin;       // starting at top of page
     var x = 0;
-    var columnHeight = (lineHeight * 3.5); // can change if morphology is omitted.
+    var settingsLayoutShowMorphology;
+    settingsLayoutShowMorphology = localStorage.getItem ( "LayoutShowMorphology" );
+    if (!settingsLayoutShowMorphology)
+    {
+        settingsLayoutShowMorphology = "on";
+    }
+    var columnHeight = (lineHeight * ( ( settingsLayoutShowMorphology=="on" ) ? 3.5 : 2.5 )); // can change if morphology is omitted.
     var thisPage;
     
     // if we're non-parsed, columnHeight should be lineHeight...
@@ -367,7 +373,11 @@ function formatChapter ( passage )
                         }
                         for ( var j=0; j<prevWords.length; j++)
                         {
+                            if ( ( settingsLayoutShowMorphology=="on" ) ||
+                                 ( ( settingsLayoutShowMorphology=="off" ) && prevWords[j].wordType != 40)
+                               ) {
                             thisPage.addWord ( prevWords[j] );
+                            }
                         }
                         // clear prevWords
                         prevWords = Array();
@@ -425,7 +435,11 @@ function formatChapter ( passage )
                 }
                 for ( var j=0; j<prevWords.length; j++)
                 {
+                    if ( ( settingsLayoutShowMorphology=="on" ) ||
+                         ( ( settingsLayoutShowMorphology=="off" ) && prevWords[j].wordType != 40)
+                       ) {
                     thisPage.addWord ( prevWords[j] );
+                    }
                 }
             
             // end drawing the verse
