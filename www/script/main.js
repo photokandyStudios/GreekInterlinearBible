@@ -336,11 +336,14 @@
     function getGoing()
     {
         console.log ("loading settings...");
+        loadCloud();
+        /*
         // load app settings and go
         setTimeout (function()
                     { 
                        loadLocalStorageAndSync ( loadCloud ); // start the app after we load the settings!
                     }, 250);
+         */
                        
     }
     
