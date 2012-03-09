@@ -28,7 +28,7 @@
  *
  */
 
-var consoleLogging = true;                                          // PUBLIC
+var consoleLogging = false;                                          // PUBLIC
  
 var currentPageURL;                                                 // PUBLIC
 var currentContainer;
@@ -742,8 +742,7 @@ function showMenu ()
 function defaultSwipe ( e )
 {
     if (disableGestures) { return; }
-//TODO: handle iPhone here
- if ( (e.x < 240 && isIPad()) || 
+ if ( (e.x < 32 && isIPad()) || 
       (e.x <  32 && isIPhone()) ||
        menuVisible )
  {
