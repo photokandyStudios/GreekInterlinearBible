@@ -260,6 +260,7 @@ function generateImport ( whichStuff )
         </li>
         <li class="listItem">Show Notes Inline<div class="switch"><span class="thumb"></span><input type="checkbox" localStorage="LayoutInlineNotes"/></div></li>
         <li class="listItem">English Transliteration<div class="switch"><span class="thumb"></span><input type="checkbox" localStorage="LayoutTransliteration"/></div></li>
+        <li class="listItem">Show Morphology<div class="switch"><span class="thumb"></span><input type="checkbox" default="on" localStorage="LayoutShowMorphology"/></div></li>
     </ul>
     <h3>Layout</h3>
     <ul class="listGroup">
@@ -317,7 +318,7 @@ function generateImport ( whichStuff )
         <li class="listItem" onclick="generateExport(0);" >Export...</li>
     </ul>
     <p style="text-align: center">Export will create a file (export_YYYYMMDD_HHMMSS.dat) that you can
-                                  download when you connect your device to iTunes. It contains
+                                   download when you connect your device to iTunes. It contains
                                   all your settings, notes, bookmarks, and highlights.</p>
         
     <ul class="listGroup">
