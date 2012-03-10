@@ -3,7 +3,6 @@
     setPageTitle ("Interlinear");
     showSearch( doSearchBible );
     disableContentScrollBar();
-    showLoader();
     
     var currentReference;
     var settingsInlineNotes = localStorage.getItem ("LayoutInlineNotes");
@@ -369,12 +368,14 @@
             // determine visibility of certain popover elements
             if (theWord && (whichSide==1 || whichSide==2))                        { items.push ("Search Bible..."); }
             if (theWord && (whichSide==1 || whichSide==2))                      { items.push ("Search Strong's..."); }
+            if (theWord && (whichSide==2)) { items.push ("Define..."); }
             if (currentReference && window.navigator.onLine)
             {
                 items.push ("Explain (Online)...");
             }
-            if (theWord && window.navigator.onLine && whichSide==2)
-                                                { items.push ("BLB LexiConc (Online)..."); }
+            
+            //if (theWord && window.navigator.onLine && whichSide==2)
+            //                                    { items.push ("BLB LexiConc (Online)..."); }
                                                           //  //console.log ("4");
             if (numSelected == 0)
             {
@@ -387,13 +388,28 @@
                                                            // //console.log ("5");
             //addClick(x,y);
             var actionTitle = "";
+            if (theWord && theWord.length > 0)
+            {
+                if (actionTitle && actionTitle.length>0)
+                {
+                    actionTitle = actionTitle + "; ";
+                }
+                if (theWord.match (/G[0-9]+/g))
+                {
+                    if (strongsGreekDictionary[theWord])
+                    {
+                        actionTitle = actionTitle + theWord + ": " + strongsGreekDictionary[theWord].strongs_def;
+                    }
+                }
+            }
+
             if (currentReference && currentReference.length > 0)
             {
                 if (actionTitle && actionTitle.length>0)
                 {
-                    actionTitle = actionTitle + ", ";
+                    actionTitle = actionTitle + "\n\n";
                 }
-                actionTitle = actionTitle + "With verse " + cvtToProperReference (currentReference);
+                actionTitle = actionTitle + cvtToProperReference (currentReference);
             }
 
             if (theWord && theWord.length > 0)
@@ -402,12 +418,16 @@
                 {
                     actionTitle = actionTitle + ", ";
                 }
-                actionTitle = actionTitle + "With word " + theWord;
+                actionTitle = actionTitle + "and word " + theWord;
             }
 
             if ((actionTitle && actionTitle.length == 0) || !actionTitle)
             {
                 actionTitle = "What do you want to do?";
+            }
+            else
+            {
+                actionTitle = actionTitle + ":";
             }
             drawCurrentPage();
             window.plugins.actionSheet.create(actionTitle, 
@@ -428,6 +448,7 @@
                                    if (buttonValue == "Search Strong's...")    { searchStrongs(); }
                                    if (buttonValue == "Explain (Online)...")   { explainPassage(); }
                                    if (buttonValue == "BLB LexiConc (Online)...") { lexiConc(); }
+                                   if (buttonValue == "Define...") { defineWord(); }
                                    if (buttonValue == "Cancel Selection")   { cancelSelection(); }
                                }, 
                                {destructiveButtonIndex: -1, cancelButtonIndex: -1},
@@ -699,6 +720,12 @@
         
     }
     
+    function defineWord ()
+    {
+        var definition = new PGDefinition();
+        definition.showDefinition ( theWord );
+    }
+    
     function define( s )
     {
         // this deals with the currently selected word, set when the popover was triggered.
@@ -769,6 +796,7 @@
 
     function populateBible()
     {
+        hideLoader();
         console.log ("in PopulateBible()");
         hideLoader();
         if (!passage)
@@ -830,12 +858,15 @@
         }
         afterBothLoaded = populateBible;
         leftLoaded = false; rightLoaded = false;
-        loadBible ( selectedGreekText );
-        loadBible ( selectedRightText );
+        showLoader (0);
+        delayThis (30, function() {
+                                        loadBible ( selectedGreekText );
+                                        loadBible ( selectedRightText );
+                                    } );
     }
 
 </script>
-    <div style="clear: both"></div><div id="bibleLoadingText">Loading...</div>
+    <div style="clear: both"></div><div id="bibleLoadingText"></div>
     <br/><br/><br/><br/><br/><br/>
     <br/><br/><br/><br/><br/><br/>
     <br/><br/><br/><br/><br/><br/>
