@@ -45,6 +45,12 @@
 		6A6E428314FF2883004D1B1E /* GreekInterlinearBibleIcon-64.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A6E427D14FF2883004D1B1E /* GreekInterlinearBibleIcon-64.png */; };
 		6A6E428414FF2883004D1B1E /* GreekInterlinearBibleIcon-144.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A6E427E14FF2883004D1B1E /* GreekInterlinearBibleIcon-144.png */; };
 		6A6E428514FF2883004D1B1E /* GreekInterlinearBibleIcon-320.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A6E427F14FF2883004D1B1E /* GreekInterlinearBibleIcon-320.png */; };
+		6A7887A2150B14AB0067F0CF /* LoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A78879A150B14AB0067F0CF /* LoadingView.m */; };
+		6A7887A3150B14AB0067F0CF /* notificationex.js in Sources */ = {isa = PBXBuildFile; fileRef = 6A78879C150B14AB0067F0CF /* notificationex.js */; };
+		6A7887A4150B14AB0067F0CF /* NotificationEx.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A78879D150B14AB0067F0CF /* NotificationEx.m */; };
+		6A7887A5150B14AB0067F0CF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 6A78879E150B14AB0067F0CF /* README.md */; };
+		6A7887A6150B14AB0067F0CF /* UIColor-Expanded.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7887A0150B14AB0067F0CF /* UIColor-Expanded.m */; };
+		6A7887AB150B244A0067F0CF /* PGDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7887A9150B244A0067F0CF /* PGDefinition.m */; };
 		6AB8EF6A14D26A2800CD7189 /* GreekInterlinearBibleIcon-iPad72.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AB8EF6914D26A2800CD7189 /* GreekInterlinearBibleIcon-iPad72.png */; };
 		6AC0324614CE6DB4001F06EF /* clipboardPlugin.js in Sources */ = {isa = PBXBuildFile; fileRef = 6AC0324314CE6DB4001F06EF /* clipboardPlugin.js */; };
 		6AC0324714CE6DB4001F06EF /* ClipboardPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC0324414CE6DB4001F06EF /* ClipboardPlugin.m */; };
@@ -110,6 +116,16 @@
 		6A6E427D14FF2883004D1B1E /* GreekInterlinearBibleIcon-64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreekInterlinearBibleIcon-64.png"; sourceTree = SOURCE_ROOT; };
 		6A6E427E14FF2883004D1B1E /* GreekInterlinearBibleIcon-144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreekInterlinearBibleIcon-144.png"; sourceTree = SOURCE_ROOT; };
 		6A6E427F14FF2883004D1B1E /* GreekInterlinearBibleIcon-320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreekInterlinearBibleIcon-320.png"; sourceTree = SOURCE_ROOT; };
+		6A788799150B14AB0067F0CF /* LoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingView.h; sourceTree = "<group>"; };
+		6A78879A150B14AB0067F0CF /* LoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingView.m; sourceTree = "<group>"; };
+		6A78879B150B14AB0067F0CF /* NotificationEx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationEx.h; sourceTree = "<group>"; };
+		6A78879C150B14AB0067F0CF /* notificationex.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = notificationex.js; sourceTree = "<group>"; };
+		6A78879D150B14AB0067F0CF /* NotificationEx.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationEx.m; sourceTree = "<group>"; };
+		6A78879E150B14AB0067F0CF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		6A78879F150B14AB0067F0CF /* UIColor-Expanded.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor-Expanded.h"; sourceTree = "<group>"; };
+		6A7887A0150B14AB0067F0CF /* UIColor-Expanded.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor-Expanded.m"; sourceTree = "<group>"; };
+		6A7887A7150B244A0067F0CF /* PGDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGDefinition.h; sourceTree = "<group>"; };
+		6A7887A9150B244A0067F0CF /* PGDefinition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PGDefinition.m; sourceTree = "<group>"; };
 		6AB8EF6914D26A2800CD7189 /* GreekInterlinearBibleIcon-iPad72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreekInterlinearBibleIcon-iPad72.png"; sourceTree = SOURCE_ROOT; };
 		6AC0324214CE6DB4001F06EF /* ClipboardPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClipboardPlugin.h; sourceTree = "<group>"; };
 		6AC0324314CE6DB4001F06EF /* clipboardPlugin.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = clipboardPlugin.js; sourceTree = "<group>"; };
@@ -310,6 +326,8 @@
 		6A56E06914CA475100F3F8BB /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
+				6A788797150B14AB0067F0CF /* NotificationEx */,
+				6A788796150B0FFF0067F0CF /* PGDefinition */,
 				6A275F73150695A000B5D180 /* iCloudPlugin */,
 				6AF041BE14DE475E00658AE7 /* ActionSheet */,
 				6AE9627E14D09D0D0016DF97 /* ChildBrowser */,
@@ -317,6 +335,30 @@
 				6A56E06A14CA475100F3F8BB /* README */,
 			);
 			name = Plugins;
+			sourceTree = "<group>";
+		};
+		6A788796150B0FFF0067F0CF /* PGDefinition */ = {
+			isa = PBXGroup;
+			children = (
+				6A7887A7150B244A0067F0CF /* PGDefinition.h */,
+				6A7887A9150B244A0067F0CF /* PGDefinition.m */,
+			);
+			name = PGDefinition;
+			sourceTree = "<group>";
+		};
+		6A788797150B14AB0067F0CF /* NotificationEx */ = {
+			isa = PBXGroup;
+			children = (
+				6A788799150B14AB0067F0CF /* LoadingView.h */,
+				6A78879A150B14AB0067F0CF /* LoadingView.m */,
+				6A78879B150B14AB0067F0CF /* NotificationEx.h */,
+				6A78879C150B14AB0067F0CF /* notificationex.js */,
+				6A78879D150B14AB0067F0CF /* NotificationEx.m */,
+				6A78879E150B14AB0067F0CF /* README.md */,
+				6A78879F150B14AB0067F0CF /* UIColor-Expanded.h */,
+				6A7887A0150B14AB0067F0CF /* UIColor-Expanded.m */,
+			);
+			path = NotificationEx;
 			sourceTree = "<group>";
 		};
 		6AC0324114CE6DB4001F06EF /* ClipboardPlugin */ = {
@@ -440,6 +482,7 @@
 				6A6E428314FF2883004D1B1E /* GreekInterlinearBibleIcon-64.png in Resources */,
 				6A6E428414FF2883004D1B1E /* GreekInterlinearBibleIcon-144.png in Resources */,
 				6A6E428514FF2883004D1B1E /* GreekInterlinearBibleIcon-320.png in Resources */,
+				6A7887A5150B14AB0067F0CF /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -477,6 +520,11 @@
 				6AF041C414DE475E00658AE7 /* ActionSheet.m in Sources */,
 				6A275F771506960B00B5D180 /* ICloudPlugin.m in Sources */,
 				6A275F7A1506999A00B5D180 /* ICloudDocument.m in Sources */,
+				6A7887A2150B14AB0067F0CF /* LoadingView.m in Sources */,
+				6A7887A3150B14AB0067F0CF /* notificationex.js in Sources */,
+				6A7887A4150B14AB0067F0CF /* NotificationEx.m in Sources */,
+				6A7887A6150B14AB0067F0CF /* UIColor-Expanded.m in Sources */,
+				6A7887AB150B244A0067F0CF /* PGDefinition.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -574,7 +622,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "PHONEGAP_FRAMEWORK=YES";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "GreekInterlinearBible/GreekInterlinearBible-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					UIKit,
@@ -604,7 +652,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "PHONEGAP_FRAMEWORK=YES";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "GreekInterlinearBible/GreekInterlinearBible-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					UIKit,
