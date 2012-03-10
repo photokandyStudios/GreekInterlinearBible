@@ -80,7 +80,6 @@
     
     function searchStrongs ( theWord, whichSide, allRequired, thePage, translit)
     {
-        showLoader();
         var page = (thePage) ? thePage : 1;
         var pageStart = ( (page-1) * 100) + 1;
         var pageEnd   = ( page * 100 );
@@ -177,21 +176,23 @@
     {
         showSearch( doSearchStrongs ); // search us instead
         setPageTitle ("Strong's Lookup");
-        $("searchingFor").innerHTML = "Loading...";
-    
-        if (englishWord)
-        {
-            if (englishWord)
-            {
-//                console.log ("searching english");
-                searchStrongs ( englishWord, 2, true, curPage, false );
-            }
-        }
-        else
-        {
-            $("searchingFor").innerHTML = "Strong's Lookup";        
-        }
-    
+        if (englishWord) { showLoader (0, "Searching..."); }
+        delayThis ( 30, function() {
+                                        $("searchingFor").innerHTML = "";
+                                    
+                                        if (englishWord)
+                                        {
+                                            if (englishWord)
+                                            {
+                                //                console.log ("searching english");
+                                                searchStrongs ( englishWord, 2, true, curPage, false );
+                                            }
+                                        }
+                                        else
+                                        {
+                                            $("searchingFor").innerHTML = "Strong's Lookup";        
+                                        }
+                                    } );
     }
     
     function doSearchStrongs()

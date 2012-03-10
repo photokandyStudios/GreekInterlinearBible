@@ -95,7 +95,6 @@
     
     function searchBible ( theWord, whichSide, allRequired, thePage, translit)
     {
-        showLoader();
         var page = (thePage) ? thePage : 1;
         var pageLength = 25;
         var pageStart = ( (page-1) * pageLength) + 1;
@@ -182,47 +181,46 @@
     
     function handleScroll ()
     {
-//        resetContentScrollBar((scrollTo ? 1125 : 500));
-          resetContentScrollBar(0);
-          setTimeout (function() {
-        if (scrollTo)
-        {
-            scrollBodyToElement ($(scrollTo),0);
-            scrollTo = null;
-        }
-        else
-        {
-            scrollBodyTo (0,0,0);
-            //sb[sbBody].scrollTo (0,1,0);
-        }
-//        },scrollTo ? 1250 : 550 );
-        },125 );
-        hideLoader();
+      hideLoader();
+      resetContentScrollBar(0);
+      setTimeout (function() {
+                                if (scrollTo)
+                                {
+                                    scrollBodyToElement ($(scrollTo),0);
+                                    scrollTo = null;
+                                }
+                                else
+                                {
+                                    scrollBodyTo (0,0,0);
+                                }
+                            },125 );
     }
     
     function searchStart()
     {
 //        console.log ("In Search Start");
-        showLoader();
-        $("SBsearchingFor").innerHTML = "Loading...";
-        repaint();
-        if (englishWord || greekWord)
-        {
-            if (englishWord)
+        if (englishWord || greekWord) { showLoader( 0, "Searching..." ); }
+        delayThis ( 30, function() {
+            $("SBsearchingFor").innerHTML = "";
+            repaint();
+            if (englishWord || greekWord)
             {
-//                console.log ("Treating as English");
-                searchBible ( englishWord, 2, true, curPage, false );
+                if (englishWord)
+                {
+    //                console.log ("Treating as English");
+                    searchBible ( englishWord, 2, true, curPage, false );
+                }
+                else
+                {
+    //                console.log ("Treating as Greek");
+                    searchBible ( greekWord, 1, true, curPage, true);
+                }
             }
             else
             {
-//                console.log ("Treating as Greek");
-                searchBible ( greekWord, 1, true, curPage, true);
+                $("SBsearchingFor").innerHTML = "Search";
             }
-        }
-        else
-        {
-            $("SBsearchingFor").innerHTML = "Search";
-        }
+        } );
     
     }
     

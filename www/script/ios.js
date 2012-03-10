@@ -75,6 +75,9 @@ var onOrientation = null;                                           // fires whe
 
 var disableGestures = false;
 
+var globalLoader = Array();                                            // global timer for the PG loader
+var globalLoaderT = Array();                                            // global timer for the PG loader Hider
+
 /**
  *
  * "Fast Buttons" / Ghost Click Buster.
@@ -793,10 +796,31 @@ function defaultSwipe ( e )
  *
  * This will display the #loader spinner
  */
-function showLoader()
+function showLoader( dly, txt )
 {
+   var idly;
+   if (dly != undefined)
+   {
+    idly = dly;
+   }
+   if (idly == undefined)
+   {
+    idly = 750;
+   }
+   
+   
    // $("loader").style.display = "block";
-   // setTimeout ( function() { hideLoader();}, 10000 );
+   console.log ("showLoader(): push.");
+   globalLoader.push ( setTimeout ( function() { 
+                                            navigator.notificationEx.loadingStart( { fullScreen: false, labelText:(txt?txt:"Loading") });
+                                               console.log ("showLoader(): pop.");
+                                            globalLoader.pop(); 
+                                          } , idly) );
+   globalLoaderT.push ( setTimeout ( function() { 
+                            hideLoader();
+                            globalLoaderT.pop();
+                               console.log ("showLoader(): pop T.");
+                           }, 10000 ) );
 }
 
 /**
@@ -806,7 +830,41 @@ function showLoader()
  */
 function hideLoader()
 {
-   // $("loader").style.display = "none";
+    // $("loader").style.display = "none";
+    try
+    {
+        if (globalLoader.length > 0)
+        {
+            console.log ("hideLoader(): pop.");
+            clearTimeout ( globalLoader.pop());
+        }
+    }
+    catch (e)
+    {
+        console.log ('Loading Spinner Error: ' + e.message);
+    }
+    try
+    {
+        if (globalLoaderT.length > 0)
+        {
+            console.log ("hideLoader(): pop T.");
+            clearTimeout ( globalLoaderT.pop());
+        }
+    }
+    catch (e)
+    {
+        console.log ('Loading Spinner Error: ' + e.message);
+    }       
+
+    try
+    {
+        navigator.notificationEx.loadingStop();
+        console.log ("hideLoader(): done.");
+    }
+    catch (e)
+    {
+        console.log ('Loading Spinner Error: ' + e.message);
+    }
 }
 
 /**
@@ -2195,6 +2253,12 @@ function hideOverlay ( i )
     disableGestures = false;
     $("imgOverlay").style.display = "none";
     $("imgOverlay").style.backgroundImage = "none";
+}
+
+// delay functionality
+function delayThis ( dly, f )
+{
+    return setTimeout ( f, dly );
 }
 
 //
