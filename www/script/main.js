@@ -409,6 +409,16 @@ function updateControlBar( url )
             // load our first bibles
             onDeviceReady = function () { 
                 console.log ("Device is ready.");
+                setTimeout ( function() {
+                                            if (navigator)
+                                            {
+                                                if (navigator.splashscreen)
+                                                {
+                                                    navigator.splashscreen.hide();
+                                                }
+                                            }
+                                        }, 10000 ); // in 10s, we kill the splash. NO MATTER WHAT
+                
                 afterBothLoaded = getGoing; // starter
                 leftLoaded = false; rightLoaded = false;
                 loadBible ( selectedGreekText );
