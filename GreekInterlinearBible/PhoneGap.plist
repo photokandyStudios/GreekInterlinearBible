@@ -93,6 +93,10 @@
 		<string>ICloudPlugin</string>
 		<key>ICloudDocument</key>
 		<string>ICloudDocument</string>
+		<key>NotificationEx</key>
+		<string>NotificationEx</string>
+		<key>PGDefinition</key>
+		<string>PGDefinition</string>
 	</dict>
 </dict>
 </plist>
