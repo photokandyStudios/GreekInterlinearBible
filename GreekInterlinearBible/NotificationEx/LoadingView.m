@@ -156,7 +156,7 @@
 		bounceAnimation:(BOOL)bounceAnimation boxLength:(CGFloat)boxLength
 {
 	NExLoadingView *loadingView =
-	[[[NExLoadingView alloc] initWithFrame:[aSuperview bounds]] autorelease];
+	[[NExLoadingView alloc] initWithFrame:[aSuperview bounds]] ;
 	if (!loadingView)
 	{
 		return nil;
@@ -176,7 +176,7 @@
 	const CGFloat DEFAULT_LABEL_WIDTH = 280.0;
 	const CGFloat DEFAULT_LABEL_HEIGHT = 50.0;
 	CGRect labelFrame = CGRectMake(0, 0, DEFAULT_LABEL_WIDTH, DEFAULT_LABEL_HEIGHT);
-	loadingView.textLabel = [[[UILabel alloc] initWithFrame:labelFrame] autorelease];
+	loadingView.textLabel = [[UILabel alloc] initWithFrame:labelFrame] ;
 	loadingView.textLabel.text = labelText;
 	loadingView.textLabel.textColor = strokeColor;
 	loadingView.textLabel.backgroundColor = [UIColor clearColor];
@@ -189,7 +189,7 @@
 	UIViewAutoresizingFlexibleBottomMargin;
 	
 	[loadingView addSubview:loadingView.textLabel];
-	UIActivityIndicatorView *activityIndicatorView = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge] autorelease];
+	UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
 	[loadingView addSubview:activityIndicatorView];
 	activityIndicatorView.autoresizingMask =
 	UIViewAutoresizingFlexibleLeftMargin |
@@ -271,7 +271,7 @@
 		// Set up the animation
 		CATransition *animation = [CATransition animation];
 		[animation setType:kCATransitionFade];
-		
+		animation.duration = 0.25;
 		[[aSuperview layer] addAnimation:animation forKey:@"layerAnimation"];		
 	}
 	else
@@ -357,7 +357,7 @@
 	self.timestamp = nil;
 	self.strokeColor = nil;
 	self.textLabel = nil;
-    [super dealloc];
+    //[super dealloc];
 }
 
 @end

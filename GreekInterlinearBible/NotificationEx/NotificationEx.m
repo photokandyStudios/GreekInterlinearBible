@@ -26,6 +26,7 @@
 	if (self.loadingView != nil) {
 		return;
 	}
+    NSLog(@"Loading start");
 	
 	CGFloat strokeOpacity, backgroundOpacity;
 	CGFloat boxLength = [NExLoadingView defaultBoxLength];
@@ -86,7 +87,7 @@
 										  strokeColor:strokeColor fullScreen:fullScreen labelText:labelText 
 									  bounceAnimation:bounceAnimation boxLength:boxLength];
 	
-	NSRange minMaxDuration = NSMakeRange(2, 3600);// 1 hour max? :)
+	NSRange minMaxDuration = NSMakeRange(0.5, 3600);// 1 hour max? :)
 	NSString* durationKey = @"duration";
 	// the view will be shown for a minimum of this value if durationKey is not set
 	self.loadingView.minDuration = [options integerValueForKey:@"minDuration" defaultValue:minMaxDuration.location withRange:minMaxDuration];
