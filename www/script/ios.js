@@ -2208,7 +2208,7 @@ function showNotes ( title, k, saveCallback, override )
     
     //$("nw_btnFocus").click();       // so try faking it this way... (neither way appears to work -- click is called,
                                       // but no focus.
-    delayThis ( 30, function () {
+/*    delayThis ( 30, function () {
     console.log ("trying to fake click...");
     var evt = document.createEvent("MouseEvents");
     console.log ("new event...");
@@ -2220,7 +2220,7 @@ function showNotes ( title, k, saveCallback, override )
     var cb = document.getElementById("nw_btnFocus");
     cb.dispatchEvent(evt);
     console.log ("sent event...");
-    } );
+    } ); */ // ISSUE #7
 }
 
 function hideNotes ()
