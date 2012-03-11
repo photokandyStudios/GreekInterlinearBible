@@ -13,3 +13,19 @@ body.landscape.ipad #bodyPanel .content
     padding: 1em 10em !important;
 }
 
+body.landscape.ipad
+#noteWindow
+{
+    width: 768px;
+    height: 300px;
+    position: absolute;
+    top: 128px;
+    left: 128px;
+    border: 1px inset #777;
+}
+
+body.landscape.ipad
+#noteWindow textarea
+{
+    width: 748px;
+}
