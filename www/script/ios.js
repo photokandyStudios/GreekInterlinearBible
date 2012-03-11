@@ -2203,7 +2203,24 @@ function showNotes ( title, k, saveCallback, override )
     // show it
     $("nw_hide").style.display = "block";
     $("noteWindow").style.display = "block";
-    $("nw_txtNote").focus();
+    //$("nw_txtNote").focus();        // this doesn't work -- the keyboard doesn't come up
+                                      // apparently it has to come from a "click" event... !?
+    
+    //$("nw_btnFocus").click();       // so try faking it this way... (neither way appears to work -- click is called,
+                                      // but no focus.
+    delayThis ( 30, function () {
+    console.log ("trying to fake click...");
+    var evt = document.createEvent("MouseEvents");
+    console.log ("new event...");
+
+    evt.initMouseEvent("click", true, true, window, 1, 512, 384, 512, 384,
+        false, false, false, false, 0, null);
+    console.log ("created event");
+
+    var cb = document.getElementById("nw_btnFocus");
+    cb.dispatchEvent(evt);
+    console.log ("sent event...");
+    } );
 }
 
 function hideNotes ()
