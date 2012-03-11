@@ -22,8 +22,12 @@
 	/** If you need to do any extra app-specific initialization, you can do it here
 	 *  -jm
 	 **/
+     
+
+     
     return [super init];
 }
+
 
 /**
  * This is main kick off after the app inits, the views and Settings are setup here. (preferred - iOS4 and up)
@@ -75,16 +79,44 @@
 	
 	 // Black base color for background matches the native apps
    	theWebView.backgroundColor = [UIColor blackColor];
+
+    // register for keyboard show event
+    [[NSNotificationCenter defaultCenter] 
+     addObserver:self  
+     selector:@selector(keyboardWillShow:) 
+     name:UIKeyboardWillShowNotification 
+     object:nil];     
     
- /*   for (id subview in theWebView.subviews)
-    {
-        if ([[subview class] isSubclassOfClass: [UIScrollView class]])
-        {
-            ((UIScrollView *)subview).bounces = NO;
+	return [ super webViewDidFinishLoad:theWebView ];
+}
+
+// hiding UIWebviewAccessary 
+// http://ios-blog.co.uk/iphone-development-tutorials/rich-text-editing-a-simple-start-part-1/
+
+- (void)keyboardWillShow:(NSNotification *)note {
+    [self performSelector:@selector(removeBar) withObject:nil afterDelay:0];
+}
+- (void)removeBar {
+    // Locate non-UIWindow.
+    UIWindow *keyboardWindow = nil;
+    for (UIWindow *testWindow in [[UIApplication sharedApplication] windows]) {
+        if (![[testWindow class] isEqual:[UIWindow class]]) {
+            keyboardWindow = testWindow;
+            break;
         }
     }
-  */  
-	return [ super webViewDidFinishLoad:theWebView ];
+
+    // Locate UIWebFormView.
+    for (UIView *possibleFormView in [keyboardWindow subviews]) {       
+        // iOS 5 sticks the UIWebFormView inside a UIPeripheralHostView.
+        if ([[possibleFormView description] rangeOfString:@"UIPeripheralHostView"].location != NSNotFound) {
+            for (UIView *subviewWhichIsPossibleFormView in [possibleFormView subviews]) {
+                if ([[subviewWhichIsPossibleFormView description] rangeOfString:@"UIWebFormAccessory"].location != NSNotFound) {
+                    [subviewWhichIsPossibleFormView removeFromSuperview];
+                }
+            }
+        }
+    }
 }
 
 /*
@@ -309,6 +341,9 @@
 {
 	return [ super execute:command];
 }
+
+
+
 
 - (void)dealloc
 {
