@@ -41,4 +41,5 @@ body.portrait.iphone #noteWindow textarea
 body.portrait.iphone .dropdown
 {
     width: 150px;
+    background-position: 126px center;
 }

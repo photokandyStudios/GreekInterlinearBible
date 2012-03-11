@@ -18,8 +18,8 @@
 .iphone .navBar #navTitleArea
 {
     position: absolute;
-    left: 0px;
-    right: 0px;
+    left: 40px;
+    right: 40px;
 }
 
 .iphone #pnlBodyArea .content
@@ -68,3 +68,4 @@
 {
     background-size: 100% 100%;
 }
+

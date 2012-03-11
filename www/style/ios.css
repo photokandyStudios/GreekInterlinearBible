@@ -137,6 +137,7 @@ body
     text-align: right;
     background-color: transparent;
     font-size: 14px;
+    margin-top: -1px;
     font-weight: normal;
     border: none;    
     background-image: url('../images/masks/BracketRightGrey@2x.png');
@@ -147,6 +148,7 @@ body
     float: right;    
     width: 250px;
     color: #5E6A85;
+    text-overflow: ellipsis;
 }
 
 .container
@@ -241,7 +243,7 @@ body
     border-radius: 5px;
     border: 1px single #717880;
     margin: 3px;
-    margin-bottom: 2px;
+    margin-top: 4px;
     margin-left:12px;
     margin-right: 12px;
     -webkit-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.5);
@@ -702,7 +704,7 @@ textarea
 
 #btnBack, #btnMenu, #btnEdit
 {
-    margin-top: 6px;
+    margin-top: 7px;
 }
 #btnMenu 
 { 
