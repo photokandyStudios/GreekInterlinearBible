@@ -11,7 +11,7 @@
 		6A19777014CB805B00DB6AD9 /* Default-Portrait~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A19776F14CB805B00DB6AD9 /* Default-Portrait~ipad.png */; };
 		6A275F771506960B00B5D180 /* ICloudPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A275F761506960B00B5D180 /* ICloudPlugin.m */; };
 		6A275F7A1506999A00B5D180 /* ICloudDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A275F791506999A00B5D180 /* ICloudDocument.m */; };
-		6A56E02814CA475000F3F8BB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A56E02714CA475000F3F8BB /* Foundation.framework */; };
+		6A56E02814CA475000F3F8BB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A56E02714CA475000F3F8BB /* Foundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		6A56E02A14CA475000F3F8BB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A56E02914CA475000F3F8BB /* UIKit.framework */; };
 		6A56E02C14CA475000F3F8BB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A56E02B14CA475000F3F8BB /* CoreGraphics.framework */; };
 		6A56E02E14CA475000F3F8BB /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A56E02D14CA475000F3F8BB /* AddressBook.framework */; };
@@ -622,7 +622,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "PHONEGAP_FRAMEWORK=YES";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "GreekInterlinearBible/GreekInterlinearBible-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					UIKit,
@@ -652,7 +652,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "PHONEGAP_FRAMEWORK=YES";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "GreekInterlinearBible/GreekInterlinearBible-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					UIKit,
