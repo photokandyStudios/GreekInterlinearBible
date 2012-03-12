@@ -1,8 +1,6 @@
 <div class="content white" id="bibleContent">
 <script type="text/javascript">
     setPageTitle ("Interlinear");
-    showSearch( doSearchBible );
-    disableContentScrollBar();
     
     var currentReference;
     var settingsInlineNotes = localStorage.getItem ("LayoutInlineNotes");
@@ -65,7 +63,7 @@
         topReference = localStorage.topReference;
     }
     
-    var scrollTo = "";
+    var scrollToE = "";
     var scrollToPos;
     var highlightText = argsParsed["highlight"];
     var incomingRef = argsParsed["ref"];
@@ -73,7 +71,7 @@
     if (incomingRef)
     {
         // we've an incoming passage. Handle with care!
-        scrollTo = incomingRef;
+        scrollToE = incomingRef;
         passage = incomingRef.substr(0, incomingRef.lastIndexOf("."));
         topReference = incomingRef;
         //console.log ('Forced navigation to ' + passage);
@@ -105,7 +103,7 @@
     width:100%; height:100%;
     
 }
-.iphone #a
+/*.iphone #a
 {
     top:23px;
 }
@@ -116,8 +114,8 @@
     border-bottom: 1px solid #248;
     text-align: center;
     margin-top: -5px;
-}
-.ipad #iphoneReference
+}*/
+#iphoneReference
 {
     display: none;
 }
@@ -128,8 +126,6 @@
 }
 #c
 {
-    zmax-width: 75%;
-    zmax-height: 100%;
     margin: 0 auto;
     position: relative;
 }
@@ -793,6 +789,13 @@
             loadContent(url, updateMainMenuandTabBar, 'slideOut' , './bible.html?ignore&ref=' + topReference );
         }
     }
+    
+    onPageBeforeShow = function ()
+    {
+        scrollBodyTo ( 0, 0 );
+        disableContentScrollBar();
+        showSearch( doSearchBible );
+    }
 
     function populateBible()
     {
@@ -823,6 +826,9 @@
         $("c").addEventListener ( "touchmove", canvasMove, false );
         $("c").addEventListener ( "touchend", canvasMUp, false );
         $("bibleLoadingText").innerHTML = "";
+        
+
+
         // and, if possible, hide the splash
         //console.log ("Done. Nuke splash.");
         if (navigator)
@@ -867,11 +873,11 @@
 
 </script>
     <div style="clear: both"></div><div id="bibleLoadingText"></div>
+    <!--<br/><br/><br/><br/><br/><br/>
     <br/><br/><br/><br/><br/><br/>
     <br/><br/><br/><br/><br/><br/>
     <br/><br/><br/><br/><br/><br/>
     <br/><br/><br/><br/><br/><br/>
     <br/><br/><br/><br/><br/><br/>
-    <br/><br/><br/><br/><br/><br/>
-    <br/><br/><br/><br/><br/><br/>
+    <br/><br/><br/><br/><br/><br/>-->
 </div>
