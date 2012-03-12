@@ -64,6 +64,7 @@ var onPageNext = null;                                              // PUBLIC: c
 var onPagePrev = null;                                              // PUBLIC: called when a page swipe occurs
 
 var onPageLoaded = null;                                            // PUBLIC: called when page is finished loading
+var onPageBeforeShow = null;
 var onMenuLoaded = null;
 var onMenuDisplayed = null;
 
@@ -176,6 +177,7 @@ document.addEventListener ( 'click', clickBuster, true );
 
 function _repaint ()
 {
+    return;
     // with props to Darcy Murphy. Here: http://mrdarcymurphy.tumblr.com/post/5574489334/force-mobile-safari-to-repaint-redraw
     var ss = document.styleSheets[0];
     try { ss.addRule('.xxxxxx', 'position: relative'); }
@@ -334,6 +336,10 @@ function handleScrolling ( me, e, scrolling )
 
 function scrollBodyTo ( x, y, t )
 {
+    return; // scrolling doesn't work right. :-(
+    console.log ("Scrolling to " + x + ", " + y );
+    window.scrollTo ( x, y );
+    return; // native scroll
     var self = this;
     self.x = x;
     self.y = y;
@@ -353,6 +359,9 @@ function scrollBodyTo ( x, y, t )
 
 function scrollBodyToElement ( el, t )
 {
+    return; // scrolling doesn't work right. :-(
+    el.scrollIntoView ( true );
+    return; // native scroll
     var self = this;
     self.el = el;
     self.t = t;
@@ -371,6 +380,7 @@ function scrollBodyToElement ( el, t )
 
 function _newSB ( o )
 {
+    return; // native scroll
     if (sbAreas[o]!="pnlBodyArea") { sb[o] = new iScroll ( sbAreas[o], { hScrollbar: false, vScrollbar: false, 
                                                                          onScrollMove: function(me) {handleScrolling(this,null, true);},
                                                                          onScrollEnd:  function(me) {handleScrolling(this,null, false);} 
@@ -392,6 +402,7 @@ function _newSB ( o )
 function _resetSB ( o )
 {
     var refreshed = false;
+    return; // native scroll
     
     if (sb[o])
     {
@@ -430,6 +441,7 @@ function _resetSB ( o )
  */
 function resetSB ( o, dly )
 {
+    return; // native scroll
     setTimeout ( function () { _resetSB (o); }, (dly ? dly : 125) );
 }
  
@@ -444,6 +456,7 @@ function resetSB ( o, dly )
  */
 function destroySB ( o )
 {
+    return; // native scroll
     try {
         sb[o].destroy();
     }
@@ -459,6 +472,7 @@ function destroySB ( o )
 
 function disableSB ( o )
 {
+    return; // native scroll
     sbDisabled[o] = true;
     try{
         sb[o].disable();
@@ -476,12 +490,15 @@ function disableSB ( o )
  */
 function resetContentScrollBar (dly)
 {
+    return; // native scroll
     resetSB ( sbBody,dly );
     return true;
 }
 
 function disableContentScrollBar()
 {
+    $("pnlBodyArea").className = "container";
+    return; // native scroll
     disableSB (sbBody);
 }
 
@@ -701,18 +718,18 @@ function hideMenu ()
     menuVisible = false;
 
     $("menuPanel").style.webkitTransition = "left,-webkit-transform 0.5s ease-in-out";
-    $("bodyPanel").style.webkitTransition = "left,-webkit-transform 0.5s ease-in-out";
-    $("tabBar").style.webkitTransition = "left,-webkit-transform 0.5s ease-in-out";
+    //$("bodyPanel").style.webkitTransition = "left,-webkit-transform 0.5s ease-in-out";
+    //$("tabBar").style.webkitTransition = "left,-webkit-transform 0.5s ease-in-out";
 
     $("menuPanel").style.webkitTransform = "translate3d(-320px,0,0)";
-    $("bodyPanel").style.webkitTransform = "translate3d(0,0,0)";
-    $("tabBar").style.webkitTransform = "translate3d(0,0,0)";
+    //$("bodyPanel").style.webkitTransform = "translate3d(0,0,0)";
+    //$("tabBar").style.webkitTransform = "translate3d(0,0,0)";
     
     setTimeout ( function() 
                  {
                     $("menuPanel").style.webkitTransition = "left 0.5s ease-in-out";
-                    $("bodyPanel").style.webkitTransition = "left 0.5s ease-in-out";
-                    $("tabBar").style.webkitTransition = "left 0.5s ease-in-out";
+    //                $("bodyPanel").style.webkitTransition = "left 0.5s ease-in-out";
+    //                $("tabBar").style.webkitTransition = "left 0.5s ease-in-out";
                  }, 525 );
 
 }
@@ -722,18 +739,18 @@ function showMenu ()
     menuVisible = true;
 
     $("menuPanel").style.webkitTransition = "left,-webkit-transform 0.5s ease-in-out";
-    $("bodyPanel").style.webkitTransition = "left,-webkit-transform 0.5s ease-in-out";
-    $("tabBar").style.webkitTransition = "left,-webkit-transform 0.5s ease-in-out";
+    //$("bodyPanel").style.webkitTransition = "left,-webkit-transform 0.5s ease-in-out";
+    //$("tabBar").style.webkitTransition = "left,-webkit-transform 0.5s ease-in-out";
 
     $("menuPanel").style.webkitTransform = "translate3d(0,0,0)";
-    $("bodyPanel").style.webkitTransform = "translate3d(320px,0,0)";
-    $("tabBar").style.webkitTransform = "translate3d(320px,0,0)";
+    //$("bodyPanel").style.webkitTransform = "translate3d(320px,0,0)";
+    //$("tabBar").style.webkitTransform = "translate3d(320px,0,0)";
     
     setTimeout ( function() 
                  {
                     $("menuPanel").style.webkitTransition = "left 0.5s ease-in-out";
-                    $("bodyPanel").style.webkitTransition = "left 0.5s ease-in-out";
-                    $("tabBar").style.webkitTransition = "left 0.5s ease-in-out";
+    //                $("bodyPanel").style.webkitTransition = "left 0.5s ease-in-out";
+    //                $("tabBar").style.webkitTransition = "left 0.5s ease-in-out";
                  }, 525 );
 
     setTimeout(function () {
@@ -969,6 +986,17 @@ function hidePopOver ()
     }
 }
 
+function focusSearch()
+{
+    $("hideSearch").style.display = "block";
+    disableGestures = true;
+}
+
+function blurSearch()
+{
+    $("hideSearch").style.display = "none";
+    disableGestures = false;
+}
 function showSearch(callback)
 {
     if (callback)
@@ -976,14 +1004,31 @@ function showSearch(callback)
         onSearch = callback;
     }
     $("theSearch").style.display = "block";
-    if (isIPhone()) { $("navTitleArea").style.display = "none"; }
+    if (isIPhone()) 
+    { 
+        // we do funny things for an iPhone -- essentially give it its own content area
+        $("navBodyArea").style.height = "77px";
+        $("pnlBodyArea").style.top = "79px";
+        $("theSearch").style.left = "10px";
+        $("theSearch").style.width = "auto";
+        $("theSearch").style.right = "10px";
+        $("theSearch").style.top = "42px"
+        //$("navTitleArea").style.display = "none"; 
+    }
 }
 
 function hideSearch()
 {
     onSearch = null;
+    disableGestures = false;
     $("theSearch").style.display = "none";
-    if (isIPhone()) { $("navTitleArea").style.display = "block"; }
+    $("hideSearch").style.display = "none";
+    if (isIPhone()) 
+    { 
+        $("navBodyArea").style.height = "42px";
+        $("pnlBodyArea").style.top = "44px";
+    //$("navTitleArea").style.display = "block"; 
+    }
 }
 
 function editButton ()
@@ -1106,8 +1151,11 @@ function loadContent(url, callback, animate, backTo) {
         returnTo = Array(); // clear our history
     }                                       
                                                                                     //console.log ("800");
-    // if we have a back button, hide it.             
-    $("btnBack").style.display="none";   
+    // if we have a back button, hide it.  
+    if (returnTo.length == 0)
+    {           
+        $("btnBack").style.display="none";   
+    }
                                                                                     //console.log ("803");
     if (window.XMLHttpRequest) // if Mozilla, Safari etc
     {
@@ -1136,6 +1184,7 @@ function loadContent(url, callback, animate, backTo) {
     onPageNext = null;
     onPagePrev = null;
     onPageLoaded = null;
+    onPageBeforeShow = null;
     pageLoaded = false;
     onOrientation = null;
     hideEdit();
@@ -1197,8 +1246,11 @@ function loadContent(url, callback, animate, backTo) {
                     // set the content
                     otherContainer.innerHTML = page_request.responseText;
                     // process scripts
+                    $("pnlBodyArea").className = "container scrollable";
                     processScriptTags(otherContainer.getAttribute("id"));
+                    if (onPageBeforeShow) { onPageBeforeShow(); }
                     hideLoader();
+
                     
                     var tempContainer;
                     tempContainer = otherContainer;
@@ -1238,7 +1290,8 @@ function loadContent(url, callback, animate, backTo) {
                         // are we an iPhone? Move the title over, possibly
                         if ( isIPhone() )
                         {
-                            $("navTitleArea").style.left = "80px";
+                            $("navTitleArea").style.left = "122px";
+                            $("navTitleArea").style.right = "0px";
                         }
                     }
                     else
@@ -1246,7 +1299,8 @@ function loadContent(url, callback, animate, backTo) {
                         $("btnBack").style.display="none";
                         if ( isIPhone() )
                         {
-                            $("navTitleArea").style.left = "0px";
+                            $("navTitleArea").style.left = "50px";
+                            $("navTitleArea").style.right = "50px";
                         }
                     }
                     
@@ -2136,7 +2190,7 @@ function addSwipeListener(el, listener)
    if (direction == null)
    {
     direction = dx;
-    e.preventDefault();
+    //e.preventDefault();
    }
    else if ((direction < 0 && dx > 0) || (direction > 0 && dx < 0) || Math.abs(dy) > 75) // 50 //25
    {
