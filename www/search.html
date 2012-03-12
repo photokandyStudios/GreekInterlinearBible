@@ -21,7 +21,7 @@
     var forceParsings = argsParsed["forcep"];
     var maxPages = 1;
     var maxResults = 0;
-    var scrollTo = argsParsed["scrollto"];
+    var scrollToE = argsParsed["scrollto"];
     if (!curPage)
     {
         curPage = 1;
@@ -37,9 +37,9 @@
         greekWord = "";
     }
     
-    if (!scrollTo)
+    if (!scrollToE)
     {
-        scrollTo = "";
+        scrollToE = "";
     }
     
 //    console.log ("on search page. args:" + englishWord + ", " + greekWord + ", " + curPage);
@@ -184,10 +184,10 @@
       hideLoader();
       resetContentScrollBar(0);
       setTimeout (function() {
-                                if (scrollTo)
+                                if (scrollToE)
                                 {
-                                    scrollBodyToElement ($(scrollTo),0);
-                                    scrollTo = null;
+                                    scrollBodyToElement ($(scrollToE),0);
+                                    scrollToE = null;
                                 }
                                 else
                                 {
