@@ -650,6 +650,16 @@ textarea
     line-height: 28px;
     border: none;
 }
+#hideSearch
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    display: none;
+}
 
 #btnBack, #btnMenu, #theSearch
 {
@@ -675,6 +685,7 @@ textarea
     left: 0;
     width: 100%;
     height: auto;
+    -webkit-transform: translate3d(0px,0px,0px);
 }
 		
 #loader
@@ -965,7 +976,7 @@ div.spinner div {
     font-size: 16px;
 }
 
-.zscrollable
+.scrollable
 {
     overflow: scroll;
     -webkit-overflow-scrolling: touch;
