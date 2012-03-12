@@ -717,6 +717,7 @@ function drawPage ( pageNumber )
         }
 
         // now, try to be fancy?
+        /*
         if (pages[pageNumber].verseYStart[i] != canvasMargin )
         {
             var lingrad = ctx.createLinearGradient(0,Math.floor(pages[pageNumber].verseYStart[i]),
@@ -737,6 +738,7 @@ function drawPage ( pageNumber )
             ctx.fillRect ( 0,           Math.floor(pages[pageNumber].verseYStart[i])-1, 
                            canvasWidth, 1 );
         }
+        */
       }
     }
     
@@ -788,10 +790,10 @@ function drawPage ( pageNumber )
                 ctx.fillStyle = "#FFF";
                 var xx = pages[pageNumber].words[i].x;
                 var yy = pages[pageNumber].words[i].y;
-                var ww = (isIPad() ? 80 : 60);    // iPhone needs this smaller
-                xx = xx + ( (pages[pageNumber].words[i].width*1.5) / 2);
+                var ww = (isIPad() ? 80 : 54);    // iPhone needs this smaller
+                xx = xx + ( (pages[pageNumber].words[i].width*(isIPad()?1.5:1.25)) / 2);
                 xx = xx - (ww/2); // should now be center of the verse #
-                yy = yy - (isIPad() ? 24 : 18) - 1;
+                yy = yy - (isIPad() ? 24 : 14) - 1;
                 ctx.drawImage ( bmImage, xx, yy, ww, ww);
             }
             // check for notes
@@ -800,7 +802,7 @@ function drawPage ( pageNumber )
                 theText = theText + "*";
             }
             yOffset = 3;
-            ctx.font = (settingsLayoutTextSize*1.5) + "px " + settingsLayoutFontFamily;      // font
+            ctx.font = (settingsLayoutTextSize*(isIPad()?1.5:1.25)) + "px " + settingsLayoutFontFamily;      // font
         }
         
         ctx.fillText(theText, 
