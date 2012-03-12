@@ -34,9 +34,25 @@ body.portrait.iphone #noteWindow textarea
     top: 54px;
     left: 10px;
     right: 10px;
-    bottom: 6px;
+    bottom: 210px;
     position: absolute;
 }
+
+body.portrait.iphone #nw_iPhoneBar
+{
+    margin-top:210px;
+    color: #FFF;
+    padding-left:10px;
+}
+
+body.portrait.iphone #nw_iPhoneBar
+.content a, 
+body.portrait.iphone #nw_iPhoneBar
+.content a:visited
+{
+    color: #FFF;
+} 
+
 
 body.portrait.iphone .dropdown
 {
