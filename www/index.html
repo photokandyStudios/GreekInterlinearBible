@@ -42,7 +42,7 @@
         <script src="./bibles/grlex.js" type="application/javascript"></script>
 
     </head>
-    <body class="ipad landscape" id="pnlBody" ontouchmove="BlockMove(event);" >
+    <body class="ipad landscape" id="pnlBody" onouchmove="BlockMove(event);" >
         <div class="panel" id="menuPanel">
             <div class="arrow"><span></span></div>
             <div class="navBar" id="navMainArea">
@@ -61,7 +61,7 @@
                 </div>
                 <a id="btnBack" href="javascript:loadContent (returnTo.pop(), updateMainMenuandTabBar, 'slideBack')" class="button back black"><span></span>Back</a>
                 <a id="btnMenu" href="javascript:toggleMenu ()" class="button black"><span>&nbsp;</span></a>
-                <form onsubmit="doSearch(); return false;"><div id="theSearch"><span class="searchIcon"></span><input id="txtSearch" type="search" size=20 /><span onclick="$('txtSearch').value='';" id="btnClearSearch" class="clearSearch"></span></div></form>
+                <form onsubmit="doSearch(); return false;"><div id="theSearch"><span class="searchIcon"></span><input onFocus="focusSearch();" onBlur="blurSearch();" id="txtSearch" type="search" size=20 /><span onclick="$('txtSearch').value='';" id="btnClearSearch" class="clearSearch"></span></div></form>
                 <a id="btnEdit" href="javascript:editButton ()" class="button black">Edit</a>
             </div>
             <div class="container scroll scrollable"  id="pnlBodyArea" >
@@ -73,6 +73,7 @@
                     <!-- this to be replaced by content at startup -->
                  </div>
                  <div style="clear: both;"></div>
+                 <div id="hideSearch" onclick="$('txtSearch').blur();"></div>
              </div>
             </div>
         </div>
@@ -92,6 +93,10 @@
                     <form>
                         <textarea id="nw_txtNote" rows=10 cols=40></textarea>
                     </form>
+                    <div id="nw_iPhoneBar" class="iphoneOnly">
+                        <a id="nw_btnCancel2" href="javascript:cancelNotes();" class="button black">Cancel</a>
+                        <a id="nw_btnSave2"   href="javascript:saveNotes();" class="button black" style="float: right; margin-right:10px;">Save</a>
+                    </div>
                 </div>
             </div>
         </div>
