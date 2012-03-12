@@ -2,7 +2,7 @@
 body
 {
     margin: 0 0;
-    font-family: Arial, Helvetica, Serif;
+    font-family: Helvetica, Arial, Serif;
     font-size: 15px;
     line-height: 150%;
     color: #333;
@@ -41,7 +41,10 @@ body
     -webkit-user-select: none;
     color: #717880;
 }
-
+#bodyPanel .navBar, #menuPanel .navBar
+{
+    border-radius: 0 !important;
+}
 .navBar .button
 {
     margin-top: 8px;
@@ -62,7 +65,7 @@ body
     background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#808080), to(#282828));
     border: none;
     border-bottom: 1px solid #202020;
-    border-top: 1px solid #202020;
+    border-top: 1px solid #606060;
     color: #E8E8E8;
     position: fixed;
     bottom: 0;

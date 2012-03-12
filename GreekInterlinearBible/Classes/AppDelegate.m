@@ -36,7 +36,8 @@
 {
     // Uncomment to enable remote debugging
     //[NSClassFromString(@"WebView") _enableRemoteInspector];
-    
+    [NSClassFromString(@"WebView") performSelector:@selector(_enableRemoteInspector)];
+
     NSURL* url = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
     if (url && [url isKindOfClass:[NSURL class]])
     {

@@ -220,7 +220,7 @@ function formatChapter ( passage )
         // create a new word that is the verse #
         thisPage.addWord ( new wordObject ( columnLeft [ 3 ] + ((columnWidth [ 3 ])/2) // center
                          - (ctx.measureText ( i ).width / 2) // center the #
-                         , y, ctx.measureText ( i ).width, lineHeight, "#333", i, 99, 0, i, 3 ));
+                         , y, ctx.measureText ( i ).width, lineHeight, "#806040", i, 99, 0, i, 3 ));
 
         // start both verses
             y=curY;
@@ -296,7 +296,7 @@ function formatChapter ( passage )
                         if (curWord.match ( /G[0-9]+/g))
                         {
                             wt = 20; // Strong's
-                            c = "#248";
+                            c = "#406080";
                             yOffset += (lineHeight*1);
                             // do we have anything in _gl?
                             /*
@@ -310,17 +310,18 @@ function formatChapter ( passage )
                         {
                             wt = 5; // Just a variant.
                             curWord = curWord.replace ( /VAR([0-9])/g, "$1"); // simplify it.
+                            
                         }
                         else if (curWord.match ( /\[\[([A-Za-z0-9\-]*)\]\]/g))
                         {
-                            c = "#842";
+                            c = "#806040";
                             wt = 30;    // Grenglish
                             yOffset += (lineHeight);
                             curWord = curWord.replace ( /\[\[([A-Za-z0-9\-]*)\]\]/g, "$1"); // simplify it.
                         }
                         else if (curWord.match ( /([A-Z\-]{2,}[A-Z\-0-9]+)/g ) )
                         {
-                            c = "#284";
+                            c = "#408060";
                             wt = 40; // morphology
                             yOffset += (lineHeight * 2);
                         }
@@ -676,6 +677,7 @@ function clearCtx ( ctx )
 
 function drawPage ( pageNumber )
 {
+    var yOffset = 0;
     // set the page title to the top verse
     setPageTitle ( cvtToProperReference ( passage + "." + pages[pageNumber].verseYStart.indexOf(canvasMargin)) );
     $("iphoneReference").innerHTML = cvtToProperReference ( passage + "." + pages[pageNumber].verseYStart.indexOf(canvasMargin));
@@ -719,16 +721,20 @@ function drawPage ( pageNumber )
         {
             var lingrad = ctx.createLinearGradient(0,Math.floor(pages[pageNumber].verseYStart[i]),
                                                    0,Math.floor(pages[pageNumber].verseYStart[i]+50));
-            lingrad.addColorStop(0,      'rgba(0,16,32,0.0625)');
-            lingrad.addColorStop(0.125,  'rgba(0,16,32,0)');
-            lingrad.addColorStop(1,      'rgba(0,16,32,0)');
+            lingrad.addColorStop(0,      'rgba(255,255,255,0.75)');
+            lingrad.addColorStop(0.25,  'rgba(255,255,255,0)');
+            lingrad.addColorStop(1,      'rgba(255,255,255,0)');
             
             ctx.fillStyle = lingrad;
             ctx.fillRect ( 0,           pages[pageNumber].verseYStart[i], 
                            canvasWidth, 50 );
 
-            ctx.fillStyle = "rgba(0,16,32,0.25)";
-            ctx.fillRect ( 0,           Math.floor(pages[pageNumber].verseYStart[i]), 
+            ctx.fillStyle = "rgba(255,255,255,0.75)";
+            ctx.fillRect ( 0,           Math.floor(pages[pageNumber].verseYStart[i]) , 
+                           canvasWidth, 1 );
+
+            ctx.fillStyle = "rgba(0,0,0,0.25)";
+            ctx.fillRect ( 0,           Math.floor(pages[pageNumber].verseYStart[i])-1, 
                            canvasWidth, 1 );
         }
       }
@@ -738,6 +744,7 @@ function drawPage ( pageNumber )
     // draw the words
     for (var i=0; i<pages[pageNumber].words.length; i++)
     {
+        yOffset = 0;
         // determine if this word should be highlighted
         var ref = passage + "." + pages[pageNumber].words[i].verse;
         var highlightNum = -1;
@@ -782,9 +789,9 @@ function drawPage ( pageNumber )
                 var xx = pages[pageNumber].words[i].x;
                 var yy = pages[pageNumber].words[i].y;
                 var ww = (isIPad() ? 80 : 60);    // iPhone needs this smaller
-                xx = xx + (pages[pageNumber].words[i].width / 2);
+                xx = xx + ( (pages[pageNumber].words[i].width*1.5) / 2);
                 xx = xx - (ww/2); // should now be center of the verse #
-                yy = yy - (isIPad() ? 24 : 18);
+                yy = yy - (isIPad() ? 24 : 18) - 1;
                 ctx.drawImage ( bmImage, xx, yy, ww, ww);
             }
             // check for notes
@@ -792,11 +799,13 @@ function drawPage ( pageNumber )
             {
                 theText = theText + "*";
             }
+            yOffset = 3;
+            ctx.font = (settingsLayoutTextSize*1.5) + "px " + settingsLayoutFontFamily;      // font
         }
         
         ctx.fillText(theText, 
                      pages[pageNumber].words[i].x, 
-                     pages[pageNumber].words[i].y);
+                     pages[pageNumber].words[i].y - yOffset);
     }
     ctx.restore();
     repaint();

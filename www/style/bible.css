@@ -15,3 +15,89 @@
     font-style: italic;
     padding-right: 10px;
 }
+
+/* UI interface theme overrides */
+.bottomTabs
+{
+    background-color:#404850;
+    background-size:400px 400px;
+    background-image:url('../images/textures/fzm-leather-blue.jpg');
+    -webkit-box-shadow:inset 0px 10px 10px #202428;
+}
+
+.bottomTabs .barItem.sel
+{
+    border-radius:0;
+    background-color: rgba(32,36,40,0.5);
+    -webkit-box-shadow: inset 1px 0px 1px rgba(0,0,0,0.125), inset -1px 0px 1px rgba(255,255,255,0.125);
+    color:#FFF;
+}
+
+.bottomtabs .baritem.sel span 
+{
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFF), to(#FFF));
+}
+
+.navbar
+{
+    border-top: 1px solid rgba(255,255,255,0.25);
+    border-bottom: 1px solid rgba(0,0,0,0.25);
+    color: #FFF;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+    background-size:400px 400px;
+    background-image:url('../images/textures/fzm-leather-blue.jpg');
+}
+
+#menuPanel
+{
+    border-right:1px solid #404850;
+}
+
+.button.black 
+{
+    text-shadow: 0px -1px 1px #000;
+    background-color: rgba(0,0,0,0.25);
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,0.25)), to(rgba(0,0,0,0.25)));
+    -webkit-box-shadow: 0px 0px 1px rgba(255,255,255,0.5);
+}
+
+.segmentedcontrolbar 
+{
+    border-radius: 5px;
+    border: 1px solid rgba(0,0,0,0.25);
+    margin: 3px;
+    margin-top: 3px;
+    margin-left: 12px;
+    margin-right: 12px;
+    -webkit-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.5);
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,0.50)), to(rgba(0,0,0,0)));
+}
+.segmentedcontrolbar a 
+{
+    border-right: 1px solid rgba(255,255,255, 0.125);
+    border-left: 1px solid rgba(0,0,0, 0.125);
+    text-shadow: 1px 1px 1px #FFF;
+    color: rgba(255,255,255,.75);
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+}
+.segmentedcontrolbar a.sel 
+{
+    -webkit-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.5);
+    color: #FFF;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+    background-color: rgba(0,0,0,0.25);
+    background-image: -webkit-gradient(linear, 0% 100%, 0% 0%, from(rgba(255,255,255,0.125)),to(rgba(0,0,0,0.125)));
+}
+.content
+{
+    color: #573920;
+}
+.panel, .content.white
+{
+    background-color: #f1eee5;
+}
+.navsubitem
+{
+    border-bottom: 1px solid rgba(0,0,0,0.125);
+    border-top: 1px solid rgba(255,255,255,0.75);
+}
