@@ -242,73 +242,51 @@ function generateImport ( whichStuff )
     <h3>Text</h3>
     <ul class="listGroup">
         <li class="listItem">Greek Text
-            <select id="ddGreekText" class="dropdown" default="byzp" localStorage="TextGreekText">
-                <option value="byz">Byzantine (2000)</option>
-                <option value="byzp">Byzantine (2000) Parsed</option>
-                <option value="tr">Textus Receptus (1894)</option>
-                <option value="trp">Textus Receptus (1894) Parsed</option>
-                <option value="tis">Tischendorf 8th Edition</option>
-                <option value="wch">Westcott-Hort</option>
-                <option value="wchp">Westcott-Hort Parsed</option>
-            </select>
+            <div class="popdrop" 
+                 title = "Select Greek Text" default="byzp" localStorage="TextGreekText"
+                 values ="byz:byzp:tr:trp:tis:wch:wchp"
+                 options="Byzantine (2000):Byzantine (2000) Parsed:Textus Receptus (1894):Textus Receptus (1894) Parsed:Tischendorf 8th Edition:Westcott-Hort:Westcott-Hort (Parsed)">...</div>
         </li>
         <li class="listItem">English Text
-            <select id="ddRightText" class="dropdown" default="ylt" localStorage="TextRightText">
-                <option value="kjv">King James Version/Authorized Version</option>
-                <option value="ylt">Young's Literal Translation</option>
-            </select>
+            <div class="popdrop"
+                 title = "Select English Text" default="ylt" localStorage = "TextRightText"
+                 values = "kjv:ylt"
+                 options ="Authorized Version:Young's Literal Translation">...</div>
         </li>
-        <li class="listItem">Show Notes Inline<div class="switch"><span class="thumb"></span><input type="checkbox" localStorage="LayoutInlineNotes"/></div></li>
-        <li class="listItem">English Transliteration<div class="switch"><span class="thumb"></span><input type="checkbox" localStorage="LayoutTransliteration"/></div></li>
-        <li class="listItem">Show Morphology<div class="switch"><span class="thumb"></span><input type="checkbox" default="on" localStorage="LayoutShowMorphology"/></div></li>
+        <li class="listItem checkmark" localStorage="LayoutInlineNotes" default="off" >Show Notes Inline</li>
+        <li class="listItem checkmark" localStorage="LayoutTransliteration" default="off">English Transliteration</li>
+        <li class="listItem checkmark" default="on" localStorage="LayoutShowMorphology">Show Morphology</li>
     </ul>
     <h3>Layout</h3>
     <ul class="listGroup">
         <li class="listItem">Column Width
-            <select id="ddColumnWidths" class="dropdown" default="600930" localStorage="LayoutColumnWidths">
-                <option value="600930">Wide Greek Column</option>
-                <option value="300960">Wide English Column</option>
-                <option value="450945">Equal Width Columns</option>
-            </select>
+            <div class="popdrop"
+                 title="Select Desired Column Widths" default="600930" localStorage="LayoutColumnWidths"
+                 values = "600930:300960:450945"
+                 options= "Wide Greek Column:Wide English Column:Equal-width Columns">
         </li>
         <li class="listItem">Text Size
-            <select id="ddTextSize" class="dropdown" default="12" localStorage="LayoutTextSize">
-                <option value="8">Tiny Print</option>
-                <option value="10">Smaller Print</option>
-                <option value="12">Small Print</option>
-                <option value="14">Normal Print</option>
-                <option value="16">Large Print</option>
-                <option value="18">Larger Print</option>
-                <option value="20">Extra Large Print</option>
-                <option value="22">Huge Print</option>
-                <option value="24">Humongous Print</option>
-            </select>
+            <div class="popdrop"
+                 title="Select Text Size" default="12" localStorage="LayoutTextSize"
+                 values = "8:10:12:14:16:18:20:22:24"
+                 options= "6pt:7pt:9pt:11pt:12pt:14pt:15pt:17pt:18pt">...</div>
         </li>
         <li class="listItem">Typeface
-            <select id="ddTypeface" class="dropdown" default="Helvetica" localStorage="LayoutFontFamily">
-                <option value="Arial">Arial</option>
-                <option value="Courier">Courier</option>
-                <option value="Georgia">Georgia</option>
-                <option value="Helvetica">Helvetica</option>
-                <option value="Palatino">Palatino</option>
-                <option value="Times">Times</option>
-                <option value="Verdana">Verdana</option>
-            </select>
+            <div class="popdrop"
+                 title="Select Typeface" default="Helvetica" localStorage="LayoutFontFamily"
+                 values = "Arial:Courier:Georgia:Helvetica:Palatino:Times:Verdana"
+                 options= "Arial:Courier:Georgia:Helvetica:Palatino:Times:Verdana">...</div>
         </li>
         <li class="listItem">Line Spacing
-            <select id="ddLineSpacing" class="dropdown" default="75" localStorage="LayoutLineSpacing">
-                <option value="50">Tightest Spacing</option>
-                <option value="66">Tighter Spacing</option>
-                <option value="75">Tight Spacing</option>
-                <option value="100">Normal Spacing</option>
-                <option value="125">One and one-half Spacing</option>
-                <option value="150">Double Spacing</option>
-            </select>
+            <div class="popdrop"
+                 title="Select Line Spacing" default="75" localStorage="LayoutLineSpacing"
+                 values="50:66:75:100:125:150"
+                 options="Squished:Cramped:Tight:Normal:Large:Largest">...</div>
         </li>
     </ul>
     <h3>iCloud</h3>
     <ul class="listGroup">
-        <li class="listItem">Use iCloud<div class="switch"><span class="thumb"></span><input type="checkbox" localStorage="settingsUseCloud"/></div></li>        
+        <li class="listItem checkmark" localStorage = "settingsUseCloud" default="off">Use iCloud</li>
     </ul>
     <p style="text-align: center">Enabling iCloud will permit you to keep your notes, bookmarks, and
                                   highlights in sync across all your devices. It is suggested you export your content
@@ -336,6 +314,8 @@ function generateImport ( whichStuff )
     {
         processCheckBoxes();
         processDropDowns();
+        processPopDrops();
+        processCheckMarks();
     }
     </script>
 </div>

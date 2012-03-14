@@ -133,7 +133,7 @@ body
     background-image:-webkit-gradient(linear, 0% 0%, 0% 75%, from(#C0D8FF), to(#FFF));
 }
 
-.dropdown
+.dropdown, .popdrop
 {
     -webkit-appearance: none;
     line-height: 24px;
@@ -152,6 +152,10 @@ body
     width: 250px;
     color: #5E6A85;
     text-overflow: ellipsis;
+}
+.popdrop
+{
+    background-position: 250px center;
 }
 
 .container
@@ -316,6 +320,13 @@ body
     position: relative;
     list-style: none;
 }
+.listItem.checked
+{
+    background-image: url('../images/color/Check-Medium@2x.png');
+    background-size: 36px 36px;
+    background-repeat: no-repeat;
+    background-position: 99% center;
+}
 .listItem .minor
 {
     font-weight: normal;
@@ -420,6 +431,7 @@ body
     z-webkit-transition: max-height 0.5s ease;
     max-height: 0px;
     overflow: hidden;
+    background-color: #FFF;
 }
 
 .gridExpander.open

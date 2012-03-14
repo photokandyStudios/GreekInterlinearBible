@@ -59,3 +59,8 @@ body.portrait.iphone .dropdown
     width: 150px;
     background-position: 126px center;
 }
+body.portrait.iphone .popdrop
+{
+    width: 150px;
+    background-position: 150px center;
+}

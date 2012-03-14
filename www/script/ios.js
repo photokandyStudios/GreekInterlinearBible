@@ -177,7 +177,6 @@ document.addEventListener ( 'click', clickBuster, true );
 
 function _repaint ()
 {
-    return;
     // with props to Darcy Murphy. Here: http://mrdarcymurphy.tumblr.com/post/5574489334/force-mobile-safari-to-repaint-redraw
     var ss = document.styleSheets[0];
     try { ss.addRule('.xxxxxx', 'position: relative'); }
@@ -186,6 +185,7 @@ function _repaint ()
 }
 function repaint ()
 {
+    return;
     setTimeout ( function() { _repaint(); }, 25 );
 }
 
@@ -679,7 +679,7 @@ function updateOrientation()
         $("menuPanel").style.display = "none";
     }
     */
-    
+    setTimeout (_repaint, 50);
     if (onOrientation)
     {
         onOrientation();
@@ -1826,6 +1826,117 @@ var processDropDowns = function()
         //alert (i);
     }
 };
+
+
+var processPopDrops = function() 
+{
+    var objs = allClasses(".popdrop");                     
+    var ddControl;
+    for (var i=0; i<objs.length; i++)
+    {                                                       
+        ddControl = objs[i];                                
+        var lS = ddControl.getAttribute("localStorage");    
+        var def= ddControl.getAttribute("default");         
+        var vals = ddControl.getAttribute("values").split(":");
+        var opts = ddControl.getAttribute("options").split(":");
+        
+        if (lS)
+        {                                                   
+            if (!localStorage.getItem(lS))
+            {
+                localStorage.setItem(lS,def);               
+            }
+        }
+        
+        ddControl.innerHTML = opts[ vals.indexOf(localStorage.getItem ( lS )) ];
+
+        ddControl.addEventListener("click", 
+                                   function() 
+                                    {
+                                        var self = this;
+                                        var lS = this.getAttribute("localStorage");    
+                                        var def= this.getAttribute("default");         
+                                        var vals = this.getAttribute("values").split(":");
+                                        var opts = this.getAttribute("options").split(":");
+
+                                        window.plugins.actionSheet.create(this.getAttribute("title"), 
+                                           opts,
+                                           function(buttonValue, buttonIndex) 
+                                           { 
+                                                self.innerHTML = opts[buttonIndex];
+                                                if (lS)
+                                                {
+                                                    localStorage.setItem (lS, vals[buttonIndex]);
+                                                }
+                                           }, 
+                                           {destructiveButtonIndex: -1, cancelButtonIndex: -1},
+                                           -1, -1, -1, -1
+                                        );                              
+                                    }
+        , false);
+    }
+};
+
+var processCheckMarks = function() 
+{
+    var objs = allClasses(".checkmark");                     
+    var ddControl;
+    for (var i=0; i<objs.length; i++)
+    {                                                       
+        ddControl = objs[i];                                
+        var lS = ddControl.getAttribute("localStorage");    
+        var def= ddControl.getAttribute("default");         
+        
+        if (lS)
+        {                                                   
+            if (!localStorage.getItem(lS))
+            {
+                localStorage.setItem(lS,def);               
+            }
+        }
+        
+        var curValue = localStorage.getItem (lS);
+        if ( curValue == "off" )
+        {
+            ddControl.classList.remove ("checked");
+        }
+        if ( curValue == "on" )
+        {
+            ddControl.classList.add ("checked");
+        }
+
+        ddControl.addEventListener("click", 
+                                   function() 
+                                    {
+                                        var self = this;
+                                        var lS = this.getAttribute("localStorage");    
+                                        var def= this.getAttribute("default");         
+                                        
+                                        var curValue = localStorage.getItem ( lS );
+                                        if (curValue != "on")
+                                        {
+                                            curValue = "on";
+                                        }   
+                                        else
+                                        {
+                                            curValue = "off";
+                                        }
+                                        localStorage.setItem ( lS, curValue );
+                                        if ( curValue == "off" )
+                                        {
+                                            this.classList.remove ("checked");
+                                        }
+                                        if ( curValue == "on" )
+                                        {
+                                            this.classList.add ("checked");
+                                        }
+                                        
+                                    }
+        , false);
+    }
+};
+
+
 
 /**
  * getWordFromPoint returns the word under the given x,y coords.
