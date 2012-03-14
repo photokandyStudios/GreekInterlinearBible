@@ -417,7 +417,7 @@ body
 
 .gridExpander
 {
-    -webkit-transition: max-height 0.5s ease;
+    z-webkit-transition: max-height 0.5s ease;
     max-height: 0px;
     overflow: hidden;
 }
@@ -429,8 +429,8 @@ body
 
 .gridItem
 {
-    display: block;
-    float: left;
+    display: inline-block;
+    zfloat: left;
     background-color: white;
     width: 40px;
     height: 40px;
