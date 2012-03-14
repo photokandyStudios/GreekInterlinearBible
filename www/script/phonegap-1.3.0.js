@@ -147,7 +147,7 @@ PhoneGap.createGapBridge = function() {
     gapBridge.setAttribute("height","0px");
     gapBridge.setAttribute("width","0px");
     gapBridge.setAttribute("frameborder","0");
-    document.documentElement.appendChild(gapBridge);
+    //document.documentElement.appendChild(gapBridge);      // Fix Issue #15, native scrolling
     return gapBridge;
 }
 
@@ -249,7 +249,8 @@ PhoneGap.exec = function() {
             PhoneGap.gapBridge = PhoneGap.createGapBridge();
         }
 
-        PhoneGap.gapBridge.src = "gap://ready";
+//        PhoneGap.gapBridge.src = "gap://ready";
+          window.location.href = "gap://ready";     // Fix Issue #15, native scrolling
     }
 }
 
