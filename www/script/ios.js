@@ -989,6 +989,12 @@ function hidePopOver ()
 function focusSearch()
 {
     $("hideSearch").style.display = "block";
+    $("hideSearch").style.top = "44px";     // FIX ISSUE #22
+    // unless we're an iPhone...
+    if (isIPhone())
+    {
+        $("hideSearch").style.top = "79px";
+    }   
     disableGestures = true;
 }
 
