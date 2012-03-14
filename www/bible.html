@@ -322,6 +322,26 @@
             }
             ////console.log (theWord);
             ////console.log (whichSide);
+            // strip symbols from theWord
+            if (theWord)                    // FIX ISSUE #21
+            {
+                theWord = theWord.replace (",", "");
+                theWord = theWord.replace (";", "");
+                theWord = theWord.replace (".", "");
+                theWord = theWord.replace (":", "");
+                theWord = theWord.replace ("/", "");
+                theWord = theWord.replace ("?", "");
+                theWord = theWord.replace ("'", "");
+                theWord = theWord.replace ('"', "");
+                theWord = theWord.replace ("“", "");
+                theWord = theWord.replace ("”", "");
+                theWord = theWord.replace ("‘", "");
+                theWord = theWord.replace ("’", "");
+                theWord = theWord.replace ("-", "");
+                theWord = theWord.replace ("–", "");
+                theWord = theWord.replace ("`", "");
+                theWord = theWord.trim();
+            }
             
             var numSelected = 0;
             var numBookmarked = 0;
