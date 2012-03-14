@@ -793,7 +793,7 @@ function drawPage ( pageNumber )
                 var ww = (isIPad() ? 80 : 54);    // iPhone needs this smaller
                 xx = xx + ( (pages[pageNumber].words[i].width*(isIPad()?1.5:1.25)) / 2);
                 xx = xx - (ww/2); // should now be center of the verse #
-                yy = yy - (isIPad() ? 24 : 14) - 1;
+                yy = yy - (isIPad() ? 24 : 14);
                 ctx.drawImage ( bmImage, xx, yy, ww, ww);
             }
             // check for notes
