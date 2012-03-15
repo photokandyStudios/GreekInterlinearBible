@@ -61,6 +61,8 @@ body.portrait.iphone .dropdown
 }
 body.portrait.iphone .popdrop
 {
-    width: 150px;
-    background-position: 150px center;
+    width: 126px;
+    background-position: 126px center;
+    overflow: hidden;
+    height: 24px;
 }
