@@ -1858,18 +1858,24 @@ var processPopDrops = function()
                                         var def= this.getAttribute("default");         
                                         var vals = this.getAttribute("values").split(":");
                                         var opts = this.getAttribute("options").split(":");
+                                        if (isIPhone())
+                                        {
+                                            opts.push ("Cancel");
+                                        }
 
                                         window.plugins.actionSheet.create(this.getAttribute("title"), 
                                            opts,
                                            function(buttonValue, buttonIndex) 
-                                           { 
+                                           {
+                                                if ( buttonIndex < 0 ) { return; }
+                                                if ( isIPhone() && buttonIndex == opts.length-1 ) { return; }
                                                 self.innerHTML = opts[buttonIndex];
                                                 if (lS)
                                                 {
                                                     localStorage.setItem (lS, vals[buttonIndex]);
                                                 }
                                            }, 
-                                           {destructiveButtonIndex: -1, cancelButtonIndex: -1},
+                                           {destructiveButtonIndex: -1, cancelButtonIndex: (isIPhone()?opts.length-1:-1)},
                                            -1, -1, -1, -1
                                         );                              
                                     }
