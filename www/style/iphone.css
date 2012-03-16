@@ -3,7 +3,7 @@
     border-radius: 0 0 0 0;
     background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#7C93B5), to(#73859d));
     color: #FFFFFF;
-    text-shadow: 0px -1px 1px #4A586E;
+    text-shadow: 0px -1px 0px #4A586E;
     -webkit-box-shadow: inset 0px 21px 0px rgba(255,255,255,0.125);
     border-top: 1px solid #C9D1E5;
     border-bottom: 1px solid #000000;
