@@ -406,6 +406,8 @@ function updateControlBar( url )
             var myStartName = "Interlinear";
             var myTabBar = "./tabs.html";
             
+            visualTheme = "blueTheme";
+            
             // load our first bibles
             onDeviceReady = function () { 
                 console.log ("Device is ready.");
