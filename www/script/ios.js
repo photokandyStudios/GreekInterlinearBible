@@ -67,7 +67,7 @@ var onPageLoaded = null;                                            // PUBLIC: c
 var onPageBeforeShow = null;
 var onMenuLoaded = null;
 var onMenuDisplayed = null;
-
+var onMenuWillDisplay = null;
 var onEditClicked = null;                                           // PUBLIC: called when the "edit" button is
                                                                     // clicked
 var editState = false;                                              // PUBLIC: Edit State
@@ -79,6 +79,8 @@ var disableGestures = false;
 var globalLoader = Array();                                            // global timer for the PG loader
 var globalLoaderT = Array();                                            // global timer for the PG loader Hider
 
+
+var visualTheme = "";
 /**
  *
  * "Fast Buttons" / Ghost Click Buster.
@@ -666,7 +668,7 @@ function updateOrientation()
     curDevice = isIPad() ? "ipad" : isIPhone() ? "iphone" : "mobile";
     curOrientation = isPortrait() ? "portrait" : "landscape";
     
-    $("pnlBody").setAttribute("class", curDevice + " " + curOrientation );
+    $("pnlBody").setAttribute("class", curDevice + " " + curOrientation + " " + visualTheme );
     
     /*
     // if we are an ipad and now in lanscape, make sure the left menu is showing!
@@ -738,6 +740,8 @@ function showMenu ()
 {
     menuVisible = true;
 
+    if (onMenuWillDisplay) { onMenuWillDisplay (); }
+
     $("menuPanel").style.webkitTransition = "left,-webkit-transform 0.5s ease-in-out";
     //$("bodyPanel").style.webkitTransition = "left,-webkit-transform 0.5s ease-in-out";
     //$("tabBar").style.webkitTransition = "left,-webkit-transform 0.5s ease-in-out";
@@ -752,6 +756,7 @@ function showMenu ()
     //                $("bodyPanel").style.webkitTransition = "left 0.5s ease-in-out";
     //                $("tabBar").style.webkitTransition = "left 0.5s ease-in-out";
                  }, 525 );
+
 
     setTimeout(function () {
         resetSB ( sbMenu );
@@ -1445,6 +1450,7 @@ function loadMenu(url, callback) {
     setTimeout ( function() { hideLoader();}, 10000 );    
     
     onMenuLoaded = null;
+    onMenuWillDisplay = null;
     onMenuDisplayed = null;
     
     page_request = new XMLHttpRequest()
