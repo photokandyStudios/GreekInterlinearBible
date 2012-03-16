@@ -17,7 +17,7 @@
 }
 
 /* UI interface theme overrides */
-body.ipad .bottomTabs
+body.ipad.blueTheme .bottomTabs
 {
     background-color:#404850;
     background-size:1024px 100px;
@@ -25,14 +25,14 @@ body.ipad .bottomTabs
     -webkit-box-shadow:none; 
 }
 
-body.ipad .bottomTabs .barItem
+body.ipad.blueTheme .bottomTabs .barItem
 {
     border-left: 1px solid transparent;
     border-right: 1px solid transparent;
     margin-top: 5px;
 }
 
-body.ipad .bottomTabs .barItem.sel
+body.ipad.blueTheme .bottomTabs .barItem.sel
 {
     border-radius:0;
     background-color: rgba(32,36,40,0.5);
@@ -41,17 +41,17 @@ body.ipad .bottomTabs .barItem.sel
     -webkit-box-shadow: none; 
     color:#FFF;
 }
-body.ipad .bottomtabs .barItem span
+body.ipad.blueTheme .bottomtabs .barItem span
 {
-    margin-bottom: -28px;
+    margin-bottom: -27px;
     margin-top: -2px;
 }
-body.ipad .bottomtabs .baritem.sel span 
+body.ipad.blueTheme .bottomtabs .baritem.sel span 
 {
     background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFF), to(#FFF));
 }
 
-body.ipad .navbar
+body.ipad.blueTheme .navbar
 {
     border-top: 1px solid rgba(255,255,255,0.25);
     border-bottom: 1px solid rgba(0,0,0,0.25);
@@ -62,12 +62,12 @@ body.ipad .navbar
     background-color:#404850;
 }
 
-body.ipad #menuPanel
+body.ipad.blueTheme #menuPanel
 {
     border-right:1px solid #404850;
 }
 
-body.ipad .button.black, body.ipad .button
+body.ipad.blueTheme .button.black, body.ipad .button
 {
     text-shadow: 1px 1px 1px #000;
     background-color: #404850;
@@ -75,27 +75,27 @@ body.ipad .button.black, body.ipad .button
     -webkit-box-shadow: none; 
 }
 
-body.ipad .back.black > span
+body.ipad.blueTheme .back.black > span
 {
     background-color: #404850;
     background-image: -webkit-gradient(linear, left top, right bottom, from(rgba(255,255,255,0.25)), to(rgba(0,0,0,0.25)));
 }
 
-body.ipad .segmentedcontrolbar 
+body.ipad.blueTheme .segmentedcontrolbar 
 {
     border-radius: 5px;
     -webkit-box-shadow: none; 
     background-color: #404850;
     background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,0.50)), to(rgba(0,0,0,0)));
 }
-body.ipad .segmentedcontrolbar a 
+body.ipad.blueTheme .segmentedcontrolbar a 
 {
     border-right: 1px solid rgba(255,255,255, 0.125);
     border-left: 1px solid rgba(0,0,0, 0.125);
     color: rgba(255,255,255,.75);
     text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
 }
-body.ipad .segmentedcontrolbar a.sel 
+body.ipad.blueTheme .segmentedcontrolbar a.sel 
 {
     -webkit-box-shadow: none; 
     color: #FFF;
