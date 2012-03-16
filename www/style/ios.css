@@ -30,7 +30,7 @@ body
     text-align: center;
     height:42px;
     line-height: 42px;
-    text-shadow: 1px 1px 1px #FFF;
+    text-shadow: 1px 1px 0px #FFF;
     width:100%;
     border-radius: 5px 5px 0px 0px;
     background-color: #CCC;
@@ -207,7 +207,7 @@ body
 
 .content h1
 {
-   text-shadow: 2px 2px 2px #FFF;
+   text-shadow: 2px 2px 0px #FFF;
 }
 
 .content h2, .listHeader
@@ -232,7 +232,7 @@ body
 
 .content p
 {
-    text-shadow: 1px 1px 1px #FFF;
+    text-shadow: 1px 1px 0px #FFF;
 }
 .content.white p
 {
@@ -267,7 +267,7 @@ body
     display: inline-block;
     font-size: 12pt;
     font-weight: bold;
-    text-shadow: 1px 1px 1px #FFF;
+    text-shadow: 1px 1px 0px #FFF;
     color: #717880;
     line-height: 1.75em;
 }
@@ -378,7 +378,7 @@ body
 .navSubItem
 {
     color: #333;
-    text-shadow: 1px 1px 1px #FFF;
+    text-shadow: 1px 1px 0px #FFF;
     font-size:20px;
     line-height:42px;
     zheight:42px;
@@ -554,14 +554,14 @@ textarea
 			z-index: 1;
 			background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#93A4BE),color-stop(0.5, #627AA8), color-stop(0.5, #456395), to(#4B6B94));
 			border: solid 1px rgba(79, 79, 79, 0.75);
-			text-shadow: 0px -1px 1px #000;
+			text-shadow: 0px -1px 0px #000;
             -webkit-appearance: none;
 		}
 		
 		.button.black {
 			background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#93A4BE),color-stop(0.5, #627AA8), color-stop(0.5, #456395), to(#4B6B94));
 			border: solid 1px rgba(79, 79, 79, 0.75);
-			text-shadow: 0px -1px 1px #000;
+			text-shadow: 0px -1px 0px #000;
 		}
 
 		header.button
