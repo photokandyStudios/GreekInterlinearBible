@@ -1,6 +1,8 @@
 Greek Interlinear Bible
 =======================
 
+NOTE: THIS PROJECT IS NO LONGER UNDER ACTIVE MAINTENANCE. FOR THE NEW PROJECT, PLEASE VISIT https://github.com/photokandyStudios/gbible
+
 Project code for the Greek Interlinear Bible iOS application. This code is COPYRIGHT (C) 2011-2012 photoKandy Studios LLC. Portions are CC-BY-SA and MIT, and the texts are Public Domain. The icons and graphics are COPYRIGHT their respective owners.
 
 If using to learn PhoneGap, feel free to use this code to "inspire" you, but please, don't copy verbatim the code that is not placed under a CC-BY-SA or MIT license. The following code is licensed under a CC-BY-SA or MIT license:
